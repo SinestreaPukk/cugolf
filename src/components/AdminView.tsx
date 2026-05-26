@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import golfersSilhouette from "../assets/images/golfers_silhouette.png";
 import { DatabaseState, NewsItem, Player, Staff, TournamentScore, GalleryImage, PlayerScore, WelcomeSection, Sponsor, SiteSettings } from "../types";
 import {
   loginAdmin,
@@ -2241,7 +2242,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
                   {/* Right Col preview: 3-Golfers Premium Artwork Block */}
                   <div className="p-3 md:col-span-2 bg-white flex items-center justify-center min-h-[130px] md:min-h-[150px] relative overflow-hidden">
                     <img
-                      src="/src/assets/images/golfers_silhouette.png"
+                      src={golfersSilhouette}
                       alt="Three Chula golfers in color silhouette overlays"
                       referrerPolicy="no-referrer"
                       className="w-full h-auto max-h-[140px] md:max-h-[160px] scale-[1.12] md:scale-[1.18] object-contain select-none relative z-10"

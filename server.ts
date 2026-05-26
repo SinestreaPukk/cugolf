@@ -8,7 +8,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Initialize Gemini client conditionally if API key exists
 const geminiApiKey = process.env.GEMINI_API_KEY;
@@ -261,7 +261,7 @@ The recruits will undergo our rigorous summer training camp at Alpine Golf Club,
     }
   ],
   welcomeSection: {
-    imageUrl: "/src/assets/images/regenerated_image_1779791459213.jpg",
+    imageUrl: "/uploads/windsor_team_legacy.png",
     titleThai: "จุฬาลงกรณ์มหาวิทยาลัยกอล์ฟคลับ",
     titleEnglish: "CHULALONGKORN UNIVERSITY GOLF CLUB",
     legacyQuote: "To wear the pale-pink athletic blazer of Chulalongkorn is to represent a hundred years of sportsmanship, absolute integrity, and peak physical performance on the championship green.",

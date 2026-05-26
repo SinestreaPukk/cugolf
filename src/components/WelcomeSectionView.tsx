@@ -1,4 +1,6 @@
 import { WelcomeSection, SiteLabels } from "../types";
+import golfersSilhouette from "../assets/images/golfers_silhouette.png";
+import defaultBanner from "../assets/images/regenerated_image_1779791459213.jpg";
 
 interface WelcomeSectionViewProps {
   welcomeSection: WelcomeSection;
@@ -15,7 +17,7 @@ export default function WelcomeSectionView({ welcomeSection, setCurrentTab, site
       {/* 1. Large Wide Panoramic Team / Welcoming Photo (matching premium full-bleed imagery) */}
       <div className="relative w-screen left-1/2 -translate-x-1/2 -mt-10 md:-mt-14 border-b border-stone-200/80 bg-neutral-950 overflow-hidden h-[320px] sm:h-[400px] md:h-[480px] shadow-xs transition-all duration-500">
         <img
-          src={welcomeSection.imageUrl || "/src/assets/images/regenerated_image_1779791459213.jpg"}
+          src={welcomeSection.imageUrl || defaultBanner}
           alt="Chulalongkorn University Golf Club Team welcoming banner"
           referrerPolicy="no-referrer"
           className="w-full h-full object-cover select-none object-center transition-transform duration-700 hover:scale-[1.01] brightness-[0.4]"
@@ -68,7 +70,7 @@ export default function WelcomeSectionView({ welcomeSection, setCurrentTab, site
         >
           {/* Three Golfers PNG Silhouette Art */}
           <img
-            src="/src/assets/images/golfers_silhouette.png"
+            src={golfersSilhouette}
             alt="Three Chula golfers in color silhouette overlays"
             referrerPolicy="no-referrer"
             className="w-full h-auto max-h-[230px] md:max-h-[270px] scale-[1.12] md:scale-[1.18] object-contain select-none relative z-10 transition-transform duration-500 group-hover:scale-[1.25]"

@@ -1,0 +1,6 @@
+{
+  "name": "CU Golf Club",
+  "description": "Editorial-style sports magazine and official CMS portal for Chulalongkorn University Golf Club.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

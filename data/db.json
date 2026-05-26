@@ -1,0 +1,320 @@
+{
+  "news": [
+    {
+      "id": "news-1779806466286",
+      "title": "Friendly Match Chula x Meiji Golf",
+      "excerpt": "We’re so happy to welcome Meiji University students to Thailand! We truly appreciate your long journey from Tokyo to be here. It was a wonderful time playing golf with all of you at Lotus Valley Golf Resort 🥰 Definitely grateful for this opportunity🙇🏻‍♀️ We’re looking forward to the day we can play golf together again",
+      "content": "東京から来てくれた明治大学のみなさん、タイへようこそ！長い旅本当にお疲れ様でした。Lotus Valleyゴルフリゾートで、みなさんと一緒にプレーできて、本当に楽しかったです🥰　このような機会をいただき、心から感謝しています🙇🏻‍♀️ またゴルフができる日を楽しみにしています🤍⛳️",
+      "publishDate": "2026-03-18",
+      "imageUrl": "/uploads/Screenshot_2026-05-26_at_21_40_12-1779806464400.png"
+    },
+    {
+      "id": "news-1",
+      "title": "INTHANIN GAMES 2026",
+      "excerpt": "ชมรมกอล์ฟจุฬาฯ ได้ส่งนักกีฬาจำนวน 7 คนเข้าร่วมการแข่งขันกีฬามหาวิทยาลัยแห่งประเทศไทยครั้งที่ 51 “อินทนิลเกมส์” ณ สนามกอล์ฟลานนา จ. เชียงใหม่ ระหว่างวันที่ 15-16 มกราคม พ.ศ. 2569 ที่ผ่านมา  ขอขอบคุณนักกีฬาทุกคนที่ทุ่มเทแรงกายแรงใจในการฝึกซ้อมและเข้าร่วมการแข่งขันกีฬามหาวิทยาลัยในครั้งนี้ รวมถึงโปรเอิร์ทและโปรทีมที่คอยดูแลนักกีฬา ให้คำแนะนำ และเป็นผู้อยู่เบื้องหลังความสำเร็จของการแข่งขันนี้  ขอขอบคุณสปอนเซอร์ MONOMAX และ JAS ที่ให้การสนับสนุนพวกเราจนการแข่งขันสำเร็จลุล่วงไปได้ด้วยดี การแข่งขันในครั้งนี้จะไม่สามารถเกิดขึ้นได้เลยหากไม่ได้รับการสนับสนุนจากผู้ใหญ่ใจดีทุกๆท่าน",
+      "content": ".",
+      "publishDate": "2026-01-19",
+      "imageUrl": "/uploads/Screenshot_2026-05-25_at_22_11_42-1779803096327.png"
+    },
+    {
+      "id": "news-2",
+      "title": "Golf Chulalympics 2026",
+      "excerpt": "This year we’re bringing more than just Putting — ⛳ Putting ⛳ Long Drive ⛳ Close to the Pin",
+      "content": "-Men Long Drive Result-\nFirst Place: ภัทรดร สมินทรปัญญา\nSecond Place: ฉัตริน รัชกิจพิพัฒน์\nThird Place: ศักดิธัช พุกกะณะสุต\n\n-Women Long Drive Result-\nFirst Place: พิชชาภา กิจถาวรรัตน์\nSecond Place: สิตานัน มิยามาเอะ\nThird Place: สุชาวลี เอียดทอง\n\n-Men Closest to the Pin Result-\nFirst Place: ภูกฤษ ชูชินวัตร\nSecond Place: ภัทรดร สมินทรปัญญา\nThird Place: ก้องภพ ศรีรัตน์\n\n-Women Closest to the Pin Result-\nFirst Place: พิชชาภา กิจถาวรรัตน์\nSecond Place:สิตานัน มิยามาเอะ\nThird Place: สุชาวลี เอียดทอง\n\n",
+      "publishDate": "2026-04-03",
+      "imageUrl": "/uploads/Screenshot_2026-05-26_at_20_51_55-1779803526349.png"
+    }
+  ],
+  "roster": [
+    {
+      "id": "player-1779804556216",
+      "name": "Natakorn Petcharanon",
+      "handicap": 2,
+      "year": "Freshman",
+      "faculty": "Faculty of Engineering",
+      "imageUrl": "/uploads/Screenshot_2026-05-26_at_21_43_48-1779806681797.png",
+      "isFeatured": false
+    },
+    {
+      "id": "player-1779804578276",
+      "name": "ภัทรดร สมินทรปัญญา",
+      "handicap": 1.5,
+      "year": "Freshman",
+      "faculty": "Faculty of Arts",
+      "imageUrl": "/uploads/Screenshot_2026-05-26_at_21_44_08-1779806699751.png",
+      "isFeatured": false
+    },
+    {
+      "id": "player-1779804592675",
+      "name": "ศักดิธัช พุกกะณะสุต",
+      "handicap": 1.5,
+      "year": "Freshman",
+      "faculty": "Faculty of Commerce and Accountancy",
+      "imageUrl": "/uploads/Screenshot_2026-05-26_at_21_44_02-1779806713551.png",
+      "isFeatured": false
+    },
+    {
+      "id": "player-1779804608310",
+      "name": "Pakorn Phusitaphorn",
+      "handicap": 1.5,
+      "year": "Freshman",
+      "faculty": "Faculty of Engineering",
+      "imageUrl": "/uploads/Screenshot_2026-05-26_at_21_43_59-1779806872930.png",
+      "isFeatured": false
+    },
+    {
+      "id": "player-1779804646008",
+      "name": "เสฏฐ์ ณรงค์วณิชย์",
+      "handicap": 1.5,
+      "year": "Junior",
+      "faculty": "Faculty of Science",
+      "imageUrl": "/uploads/Screenshot_2026-05-26_at_21_43_54-1779806890840.png",
+      "isFeatured": false
+    },
+    {
+      "id": "player-1779804662928",
+      "name": "สิตานัน มิยามาเอะ",
+      "handicap": 1.5,
+      "year": "Sophomore",
+      "faculty": "Faculty of Political Science",
+      "imageUrl": "/uploads/Screenshot_2026-05-26_at_21_44_04-1779806916079.png",
+      "isFeatured": false
+    },
+    {
+      "id": "player-1779804683223",
+      "name": "ภูกฤษ ชูชินวัตร",
+      "handicap": 1.5,
+      "year": "Freshman",
+      "faculty": "Faculty of Law",
+      "imageUrl": "/uploads/Screenshot_2026-05-26_at_21_43_44-1779806932927.png",
+      "isFeatured": false
+    },
+    {
+      "id": "player-1779804702323",
+      "name": "ภูริช ชาววังฆ้อง",
+      "handicap": 1.5,
+      "year": "Freshman",
+      "faculty": "Faculty of Economics",
+      "imageUrl": "/uploads/Screenshot_2026-05-26_at_21_43_52-1779806948246.png",
+      "isFeatured": false
+    }
+  ],
+  "staff": [
+    {
+      "id": "staff-1779804765606",
+      "name": "อ.ดร.ธงทิศ ฉายากุล",
+      "role": "อาจารย์ที่ปรึกษา",
+      "year": "Faculty of Engineering",
+      "imageUrl": "/uploads/thongthit-1779807134558.webp",
+      "order": 1
+    },
+    {
+      "id": "staff-1779804787810",
+      "name": "ศักดิธัช พุกกะณะสุต",
+      "role": "President",
+      "year": "Faculty of Engineering",
+      "imageUrl": "/uploads/Screenshot_2026-05-26_at_21_44_02-1779806963893.png",
+      "order": 2
+    },
+    {
+      "id": "staff-1779804844178",
+      "name": "นาย ภูกฤษ ชูชินวัตร",
+      "role": "Vice President",
+      "year": "Faculty of Engineering",
+      "imageUrl": "/uploads/Screenshot_2026-05-26_at_21_43_44-1779806980463.png",
+      "order": 3
+    },
+    {
+      "id": "staff-1779804875360",
+      "name": "ภูริช ชาววังฆ้อง",
+      "role": "Treasurer",
+      "year": "Faculty of Engineering",
+      "imageUrl": "/uploads/Screenshot_2026-05-26_at_21_43_52-1779806996136.png",
+      "order": 4
+    },
+    {
+      "id": "staff-1779804960538",
+      "name": "ศิวกร เจริญจิตต์",
+      "role": "Secretary",
+      "year": "Faculty of Science",
+      "imageUrl": "/uploads/Screenshot_2026-05-26_at_21_50_45-1779807074953.png",
+      "order": 5
+    },
+    {
+      "id": "staff-1779805016754",
+      "name": "อินทรายุธ จันทรัตน์",
+      "role": "Head Coach",
+      "year": "Master of Science, Faculty of Sport Science.",
+      "imageUrl": "/uploads/Screenshot_2026-05-26_at_21_44_20-1779807014139.png",
+      "order": 6
+    },
+    {
+      "id": "staff-1779805055802",
+      "name": "กฤตณัฐ ชีนาเรือนทอง",
+      "role": "Coach Assistance",
+      "year": "Faculty of Sport Science",
+      "imageUrl": "/uploads/Screenshot_2026-05-26_at_21_50_25-1779807089655.png",
+      "order": 8
+    }
+  ],
+  "scores": [
+    {
+      "id": "score-1779806581817",
+      "tournamentName": "Chang U. Golf Championship Qualifying M.1",
+      "date": "2026-06-07",
+      "result": "Enlisted",
+      "playersCount": 0,
+      "scoresList": []
+    }
+  ],
+  "gallery": [
+    {
+      "id": "photo-2",
+      "title": "Morning Tee Off at Amata Spring",
+      "imageUrl": "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&q=80&w=800",
+      "date": "2026-04-10",
+      "category": "Practice"
+    },
+    {
+      "id": "photo-3",
+      "title": "Team Meeting at Driving Range",
+      "imageUrl": "https://images.unsplash.com/photo-1471440671318-55ddd5f546c3?auto=format&fit=crop&q=80&w=800",
+      "date": "2026-03-15",
+      "category": "Training"
+    },
+    {
+      "id": "photo-4",
+      "title": "Precision Wedge Diagnostic Session",
+      "imageUrl": "https://images.unsplash.com/photo-1593111774240-d529f52ee4de?auto=format&fit=crop&q=80&w=800",
+      "date": "2026-02-28",
+      "category": "Tech Analysis"
+    }
+  ],
+  "welcomeSection": {
+    "imageUrl": "/src/assets/images/regenerated_image_1779791459213.jpg",
+    "titleThai": "น้ำใจน้องพี่สีชมพู",
+    "titleEnglish": "CHULALONGKORN UNIVERSITY GOLF CLUB",
+    "legacyQuote": "To wear the pale-pink athletic blazer of Chulalongkorn is to represent a hundred years of sportsmanship, absolute integrity, and peak physical performance on the championship green.",
+    "legacyQuoteAuthor": "The Chulalongkorn Golf Charter, Section IV",
+    "description": "With a legacy of excellence on campus, the Chulalongkorn University Golf Club is actively expanding.\n\nWe are actively looking for new members to help shape the future of the club. Join us on the course to build lasting memories, enjoy your time at Chula University"
+  },
+  "upcomingActivity": {
+    "title": "VARSITY TRAINING CAMP 2026",
+    "description": "Our annual intensive training session focusing on precision iron play and mental fortitude. Open to all active squad members and potential trialists.",
+    "imageUrl": "https://images.unsplash.com/photo-1471440671318-55ddd5f546c3?auto=format&fit=crop&q=80&w=1200",
+    "date": "July 12-15, 2026",
+    "location": "Alpine Golf Club, Pathum Thani",
+    "registrationUrl": "https://docs.google.com/forms/d/e/1FAIpQLSdaKMAAJw0pSaf7k9atDaUiuws7zpuYg6-903oI2qt2Qk4UIg/viewform?usp=sharing",
+    "showSection": false
+  },
+  "sponsors": [
+    {
+      "id": "sponsor-1779815788835",
+      "name": "FLOG ",
+      "description": "Chulalongkorn Golf Team wants to say a huge thank you to F•L•O•G for sponsoring and giving us this great opportunity to use F•L•O•G equipments in this upcoming Chang U. Golf Championship tournament.",
+      "websiteUrl": "https://floggolf.com/",
+      "imageUrl": "/uploads/fog-1-1779818636623.png",
+      "isActive": true
+    }
+  ],
+  "siteSettings": {
+    "marqueeText": "Chulalongkorn University Golf Club • Flog X Chula",
+    "contactPhone": "+66 (0) 83-0506293",
+    "contactEmail": "sakditouch.pu@gmail.com",
+    "contactAddress": "Chula Sports Complex, Phayathai Rd, Pathum Wan, Bangkok 10330, Thailand",
+    "academicAffiliation": "Sports Student Government of Chulalongkorn University",
+    "showMarquee": true,
+    "showHomeBlog": true,
+    "showHomeWelcome": true,
+    "showHomeScores": true,
+    "showFooterMission": false,
+    "showFooterLegacy": false,
+    "showNavbarRoster": true,
+    "showNavbarStaff": true,
+    "showNavbarScores": true,
+    "showNavbarSponsors": true
+  },
+  "siteLabels": {
+    "homeBlogTitle": "ACTIVITIES BLOG & STORIES",
+    "homeBlogSubtitle": ".",
+    "homeWelcomeHeroTitle": "Longstanding",
+    "homeWelcomeHeroSubtitle": "Legacy",
+    "homeWelcomeHeroSocial": "cugolfclub @Student Government of Chulalongkorn University",
+    "rosterTitle": "The 2026 Chang U. Golf Squad",
+    "rosterSubtitle": "ACTIVE PLAYERS MATRIX",
+    "rosterVerifiedLabel": "HANDICAP REGISTRATION RECORD VERIFIED • THAILAND AMATEUR INDEX",
+    "staffTitle": "EXECUTIVE COMMITTEE & STAFF",
+    "staffSubtitle": "WORKING STAFF",
+    "staffVerifiedLabel": "ADMINISTRATOR BOARD • ATHLETIC DEPARTMENT APPOINTMENTS",
+    "scoresTitle": "TOURNAMENT RESULTS & STATS",
+    "scoresSubtitle": "OFFICIAL LEADERS RECORD",
+    "scoresVerifiedLabel": "VARSITY LEAGUE ARCHIVES • AMATA SPRING & ALPINE LOGS VERIFIED",
+    "scoresRecapTitle": "ATHLETIC SEASON RECAP",
+    "scoresRecapSubtitle": "CU GOLF BY THE NUMBERS",
+    "footerMissionTitle": "OUR Vision",
+    "footerMissionDescription": "The Chulalongkorn University Golf Club is committed to being one of the leading university sports clubs in the country.\n\nIt aims to promote the development of students' athletic skills alongside leadership qualities, responsibility,\nand sportsmanship.\n\nIn addition to providing a space for golf enthusiasts to practice and compete continuously, the club also aims\nto be a central hub for sports learning within the university, inspiring future generations to appreciate the value\nof discipline, effort, and teamwork.",
+    "footerLegacyTitle": "",
+    "footerLegacyDescription": "",
+    "navHome": "HOME",
+    "navRoster": "TEAM ROSTER",
+    "navStaff": "STAFF & BOARD",
+    "navScores": "SCORES & STATS",
+    "navSponsors": "Sponsors",
+    "navAdmin": "ADMIN CMS",
+    "navBrandTitle": "cugolfclub.",
+    "navBrandSubtitle": "[Official] Chulalongkorn University Golf Club",
+    "navAdminActive": "REGISTRY ACTIVE",
+    "navAdminCms": "ADMIN CMS",
+    "homeFeaturedActivityBadge": "FEATURED ACTIVITY",
+    "homeRecentUpdatesLabel": "RECENT UPDATES",
+    "homeReadCoverageButton": "READ COVERAGE",
+    "homeReadStoryButton": "READ STORY",
+    "homeLiveStandingsTitle": "LIVE STANDINGS",
+    "homeFullLeaderboardButton": "FULL LEADERBOARD",
+    "homeNoBlogs": "No activities blogs published yet.",
+    "homeActivityLabel": "ACTIVITY",
+    "homeNoScores": "No tournament scores listed yet.",
+    "homeModalOfficialBadge": "OFFICIAL EDITORIAL",
+    "homeModalEditorialBoard": "CU GOLF CLUB SPORTS EDITORIAL BOARD",
+    "homeModalLocation": "BANGKOK, THAILAND",
+    "rosterSearchPlaceholder": "Search roster registry...",
+    "rosterFilterLabel": "CLASS YEAR:",
+    "rosterStatusLabel": "STATUS:",
+    "rosterNoResultsTitle": "No registrants found",
+    "rosterNoResultsDesc": "There are no players currently recorded matching your search parameters or select class year filters.",
+    "rosterSquadLeadBadge": "SQUAD LEAD",
+    "rosterIndexLabel": "INDEX",
+    "rosterAthleteLabel": "CU ATHLETE",
+    "rosterStatusActive": "STATUS: ACTIVE SQUAD",
+    "scoresOfficialStatsBadge": "OFFICIAL STATS",
+    "scoresViewStandingsButton": "VIEW STANDINGS",
+    "scoresHideStandingsButton": "HIDE STANDINGS",
+    "scoresTablePlayerHeader": "PLAYER NAME",
+    "scoresTableScoreHeader": "STROKE SCORE",
+    "scoresTablePositionHeader": "POSITION",
+    "scoresAttestationLabel": "CU OFFICIAL GOLF SCORECARD ATTESTATION",
+    "scoresVerifiedDirectoryLabel": "COACH VERIFIED DIRECTORY",
+    "scoresDetailedLeaderboardTitle": "DETAILED COMPETITIVE LEADERBOARD",
+    "sponsorsContactTitle": "GET IN TOUCH WITH US",
+    "sponsorsContactDescription": "For partnership inquiries, commercial alignment, or facility support, please reach out to our executive board.",
+    "sponsorsOfficiallyAssociatedLabel": "OFFICIALLY ASSOCIATED 2026",
+    "footerDirectoryTitle": "DIRECTORY",
+    "footerHeadquartersTitle": "HEADQUARTERS",
+    "footerAffiliationsTitle": "AFFILIATIONS",
+    "footerRightsReserved": "© {year} CHULALONGKORN UNIVERSITY GOLF CLUB. ALL RIGHTS RESERVED.",
+    "footerCmsLogin": "CMS LOG-IN",
+    "footerPrivacyDisclosure": "  ",
+    "footerTermsOfTradition": "  ",
+    "footerDirectoryNewsRoom": "Blogs",
+    "footerDirectoryRoster": "Team Roster",
+    "footerDirectoryScores": "Scoreboard",
+    "footerAffiliationsChulaMain": "CHULA MAIN",
+    "footerAffiliationsSportsOffice": "CU SPORTS OFFICE",
+    "welcomeHeroTitle": "Longstanding",
+    "welcomeHeroSubtitle": "Legacy",
+    "welcomeHeroSocial": "cugolfclub @Student Government of Chulalongkorn University",
+    "homeMembershipTitle": "Become a member of the CU GOLF CLUB.",
+    "homeMembershipDescription": "Expand your network and elevate your game. We are actively looking for new student members to join our representative squads and co-curricular programs.",
+    "homeMembershipButtonText": "REGISTER NOW"
+  }
+}

@@ -12,28 +12,28 @@ export default function WelcomeSectionView({ welcomeSection, setCurrentTab, site
   if (!welcomeSection) return null;
 
   return (
-    <section id="welcome_legacy_section" className="mx-auto max-w-7xl pt-2 animate-fade-in space-y-12">
+    <section id="welcome_legacy_section" className="mx-auto max-w-7xl pt-2 animate-fade-in space-y-10">
       
       {/* 1. Large Wide Panoramic Team / Welcoming Photo (matching premium full-bleed imagery) */}
-      <div className="relative w-screen left-1/2 -translate-x-1/2 -mt-10 md:-mt-14 border-b border-neutral-950 bg-neutral-950 overflow-hidden h-[400px] sm:h-[500px] md:h-[600px] shadow-sm transition-all duration-500">
+      <div className="relative w-screen left-1/2 -translate-x-1/2 -mt-10 md:-mt-14 border-b border-stone-200/80 bg-neutral-950 overflow-hidden h-[320px] sm:h-[400px] md:h-[480px] shadow-xs transition-all duration-500">
         <img
           src={welcomeSection.imageUrl || defaultBanner}
           alt="Chulalongkorn University Golf Club Team welcoming banner"
           referrerPolicy="no-referrer"
-          className="w-full h-full object-cover select-none object-center transition-transform duration-1000 hover:scale-[1.02] brightness-[0.45]"
+          className="w-full h-full object-cover select-none object-center transition-transform duration-700 hover:scale-[1.01] brightness-[0.4]"
         />
         {/* Subtle premium dark gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
         
         {/* Align overlay to max-w-7xl container bounds */}
         <div className="absolute inset-0 flex items-end">
-          <div className="mx-auto max-w-7xl px-4 md:px-6 w-full pb-12 text-white space-y-4 z-10 drop-shadow-lg">
-            <h1 className="font-thai text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold leading-[0.85] tracking-tight uppercase">
+          <div className="mx-auto max-w-7xl px-4 md:px-6 w-full pb-8 text-white space-y-2 z-10 drop-shadow-md">
+            <p className="font-sans text-5xl sm:text-6xl md:text-7xl font-black leading-[0.9] uppercase tracking-tighter border-0 border-[#000000]">
               {siteLabels?.welcomeHeroTitle || "Longstanding"}
               <br />
-              <span className="text-[#da5f8e] italic">{siteLabels?.welcomeHeroSubtitle || "Legacy"}</span>
-            </h1>
-            <p className="text-[10px] md:text-[11px] text-stone-300 font-mono tracking-[0.4em] font-black uppercase pt-2">
+              <span className="text-[#da5f8e] text-[78px] italic font-['Georgia',serif] font-black">{siteLabels?.welcomeHeroSubtitle || "Legacy"}</span>
+            </p>
+            <p className="text-[9px] md:text-[10px] text-stone-200 font-['Verdana',sans-serif] tracking-[0.25em] font-bold pt-0">
               {siteLabels?.welcomeHeroSocial || "cugolfclub @Student Government of Chulalongkorn University"}
             </p>
           </div>
@@ -41,23 +41,23 @@ export default function WelcomeSectionView({ welcomeSection, setCurrentTab, site
       </div>
 
       {/* 2. Structured Magazine Content Grid (Sleek minimalist Split block) */}
-      <div className="grid grid-cols-1 md:grid-cols-6 bg-white border border-neutral-950 overflow-hidden">
+      <div className="grid grid-cols-1 md:grid-cols-6 bg-white overflow-hidden">
         
         {/* Left Col (4/6 wide): Big Typography, Description and Quotes of Chula Golf legacy */}
-        <div className="p-8 md:p-12 md:col-span-4 flex flex-col justify-center bg-white text-neutral-950 space-y-8">
+        <div className="p-6 md:p-8 pt-5 md:pt-6 md:col-span-4 flex flex-col justify-start bg-white text-stone-900 space-y-3.5">
           
           {/* Main Title Headers */}
-          <div className="space-y-2">
-            <h2 className="font-thai text-5xl md:text-6xl lg:text-7xl font-bold italic text-[#da5f8e] tracking-tight leading-none antialiased">
+          <div className="space-y-1">
+            <h1 className="font-thai text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold italic text-[#da5f8e] tracking-wide leading-[1.15] py-0 antialiased">
               {welcomeSection.titleThai || "น้ำใจน้องพี่สีชมพู"}
-            </h2>
-            <h3 className="font-mono text-xs md:text-sm font-black text-neutral-400 tracking-[0.3em] uppercase">
+            </h1>
+            <h2 className="font-display text-[14px] md:text-base font-bold text-neutral-500 tracking-widest leading-none uppercase">
               {welcomeSection.titleEnglish || "CHULALONGKORN UNIVERSITY GOLF CLUB"}
-            </h3>
+            </h2>
           </div>
 
           {/* Secondary explanation of Chula golf legacy */}
-          <p className="font-serif text-lg md:text-xl font-medium text-neutral-700 leading-relaxed text-justify whitespace-pre-line italic">
+          <p className="font-sans text-[12px] md:text-[13px] font-medium text-stone-600 leading-relaxed text-justify whitespace-pre-line">
             {welcomeSection.description || `With a legacy of excellence on campus, the Chulalongkorn University Golf Club is actively expanding.\n\nWe are actively looking for new members to help shape the future of the club. Join us on the course to build lasting memories, enjoy your time at Chula University`}
           </p>
         </div>
@@ -65,7 +65,7 @@ export default function WelcomeSectionView({ welcomeSection, setCurrentTab, site
         {/* Right Col (2/6 wide): 3-Golfers Premium Artwork Block */}
         <div 
           onClick={() => setCurrentTab("roster")}
-          className="md:col-span-2 bg-neutral-50 flex items-center justify-center p-8 min-h-[300px] md:min-h-[400px] relative overflow-hidden cursor-pointer group transition-all duration-500 hover:bg-neutral-100 border-l border-neutral-950"
+          className="md:col-span-2 bg-white flex items-center justify-center p-3.5 min-h-[210px] md:min-h-[250px] relative overflow-hidden cursor-pointer group transition-all duration-300 hover:brightness-95"
           title="Click to view our Varsity Squad Roster"
         >
           {/* Three Golfers PNG Silhouette Art */}
@@ -73,12 +73,8 @@ export default function WelcomeSectionView({ welcomeSection, setCurrentTab, site
             src={golfersSilhouette}
             alt="Three Chula golfers in color silhouette overlays"
             referrerPolicy="no-referrer"
-            className="w-full h-auto max-h-[300px] md:max-h-[350px] scale-[1.1] md:scale-[1.15] object-contain select-none relative z-10 transition-transform duration-700 group-hover:scale-[1.2] group-hover:rotate-1"
+            className="w-full h-auto max-h-[230px] md:max-h-[270px] scale-[1.12] md:scale-[1.18] object-contain select-none relative z-10 transition-transform duration-500 group-hover:scale-[1.25]"
           />
-          {/* Subtle vertical text accent */}
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 vertical-text font-mono text-[10px] font-black text-neutral-200 tracking-[0.5em] select-none group-hover:text-neutral-300 transition-colors uppercase">
-            VARSITY ROSTER
-          </div>
         </div>
 
       </div>

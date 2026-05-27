@@ -37,37 +37,37 @@ export default function Navbar({ currentTab, setCurrentTab, isAdminLoggedIn, sit
   ].filter(link => link.show);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-neutral-950 bg-white/95 backdrop-blur-md">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 md:py-8">
+    <header className="sticky top-0 z-50 border-b border-stone-200 bg-white/90 backdrop-blur-md transition-all duration-350">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:py-5">
         {/* Logo / Brand Name in impact editorial typography */}
         <button
           onClick={() => {
             setCurrentTab("home");
             setIsOpen(false);
           }}
-          className="group flex items-center gap-4 text-left cursor-pointer transition-all"
+          className="group flex items-center gap-3 text-left cursor-pointer transition-all hover:opacity-90"
         >
           <Logo showText={false} size="md" />
           <div className="flex flex-col">
-            <span className="font-thai text-3xl md:text-4xl font-bold tracking-tight text-neutral-950 leading-none">
+            <span className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-neutral-950 leading-none">
               {siteLabels?.navBrandTitle || "cugolfclub."}
             </span>
-            <span className="font-mono text-[8px] font-black tracking-[0.3em] text-neutral-400 mt-1 uppercase">
+            <span className="font-mono text-[7.5px] font-bold tracking-wider text-neutral-400 mt-1">
               {siteLabels?.navBrandSubtitle || "[Official] Chulalongkorn University Golf Club"}
             </span>
           </div>
         </button>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden items-center gap-10 lg:flex">
+        <nav className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
             <button
               key={link.id}
               onClick={() => setCurrentTab(link.id)}
-              className={`relative py-1 font-mono text-[10px] font-black tracking-[0.3em] uppercase transition-all duration-300 cursor-pointer ${
+              className={`relative py-1 font-sans text-[11px] font-bold tracking-widest uppercase transition-all duration-200 cursor-pointer ${
                 currentTab === link.id
-                  ? "text-[#da5f8e] border-b-2 border-[#da5f8e]"
-                  : "text-neutral-400 hover:text-neutral-950"
+                  ? "text-neutral-950 border-b border-neutral-900"
+                  : "text-neutral-400 hover:text-neutral-900 hover:opacity-100"
               }`}
             >
               {link.label}
@@ -75,42 +75,42 @@ export default function Navbar({ currentTab, setCurrentTab, isAdminLoggedIn, sit
           ))}
         </nav>
 
-        {/* Action icons */}
-        <div className="hidden items-center gap-6 lg:flex">
+        {/* Action button - Admin portal trigger */}
+        <div className="hidden items-center gap-4 md:flex">
           <a
             href="https://www.instagram.com/cugolfclub/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-neutral-400 hover:text-[#da5f8e] transition-colors"
+            className="text-stone-400 hover:text-neutral-950 transition-colors p-1"
             title="Follow us on Instagram"
           >
-            <Instagram size={20} />
+            <Instagram size={18} />
           </a>
           <a
             href="https://www.tiktok.com/@cugolfclub"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-neutral-400 hover:text-[#da5f8e] transition-colors"
+            className="text-stone-400 hover:text-neutral-950 transition-colors p-1"
             title="Follow us on TikTok"
           >
-            <TikTokIcon size={20} />
+            <TikTokIcon size={18} />
           </a>
         </div>
 
         {/* Mobile menu panel trigger */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="p-2 text-neutral-950 lg:hidden cursor-pointer"
+          className="p-1.5 text-neutral-800 md:hidden cursor-pointer"
           aria-label="Toggle menu"
         >
-          {isOpen ? <X size={28} /> : <Menu size={28} />}
+          {isOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
 
       {/* Mobile Menu Panel */}
       {isOpen && (
-        <div className="fixed inset-x-0 top-[90px] h-screen bg-white border-t border-neutral-950 px-8 py-12 lg:hidden z-50 animate-fade-in">
-          <div className="flex flex-col gap-8">
+        <div className="fixed inset-x-0 top-[76px] border-b border-stone-200 bg-white/95 backdrop-blur-md px-6 py-8 md:hidden shadow-md animate-fade-in z-50">
+          <div className="flex flex-col gap-5">
             {navLinks.map((link) => (
               <button
                 key={link.id}
@@ -118,33 +118,35 @@ export default function Navbar({ currentTab, setCurrentTab, isAdminLoggedIn, sit
                   setCurrentTab(link.id);
                   setIsOpen(false);
                 }}
-                className={`text-left font-thai text-4xl font-bold tracking-tight py-2 uppercase transition-all ${
-                  currentTab === link.id ? "text-[#da5f8e] border-l-4 border-[#da5f8e] pl-6" : "text-neutral-950"
+                className={`text-left font-display text-base font-bold tracking-tight py-1.5 uppercase transition-all ${
+                  currentTab === link.id ? "text-neutral-950 pl-3 border-l-2 border-neutral-950" : "text-neutral-400"
                 }`}
               >
                 {link.label}
               </button>
             ))}
 
-            <div className="mt-12 pt-12 border-t border-neutral-950/5 flex flex-col gap-6">
+            <hr className="border-stone-150" />
+
+            <div className="flex flex-col gap-3">
               <a
                 href="https://www.instagram.com/cugolfclub/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-4 font-mono text-xs font-black tracking-[0.3em] text-neutral-400 uppercase"
+                className="flex items-center gap-2.5 font-sans text-[11px] font-bold tracking-widest text-stone-500 uppercase py-2"
               >
-                <Instagram size={20} />
-                <span>FOLLOW @CUGOLFCLUB</span>
+                <Instagram size={14} />
+                <span>FOLLOW @CUGOLFCLUB (IG)</span>
               </a>
 
               <a
                 href="https://www.tiktok.com/@cugolfclub"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-4 font-mono text-xs font-black tracking-[0.3em] text-neutral-400 uppercase"
+                className="flex items-center gap-2.5 font-sans text-[11px] font-bold tracking-widest text-stone-500 uppercase py-2"
               >
-                <TikTokIcon size={20} />
-                <span>FOLLOW @CUGOLFCLUB</span>
+                <TikTokIcon size={14} />
+                <span>FOLLOW @CUGOLFCLUB (TIKTOK)</span>
               </a>
             </div>
           </div>
@@ -153,3 +155,4 @@ export default function Navbar({ currentTab, setCurrentTab, isAdminLoggedIn, sit
     </header>
   );
 }
+

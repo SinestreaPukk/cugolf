@@ -212,12 +212,16 @@ export async function updateSiteLabels(item: Partial<SiteLabels>): Promise<{ suc
 }
 
 // PHOTO FILES ASYNC UPLOADER OR SYSTEM PERSISTENCE
-export async function uploadPhoto(filename: string, base64Data: string): Promise<{ success: boolean; url: string }> {
+export async function uploadPhoto(filename: string, base64Data: string): Promise<{ success: boolean; url: string; message?: string }> {
   const res = await fetch("/api/upload", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ filename, base64Data })
   });
-  if (!res.ok) throw new Error("Failed to upload local raw graphic material");
-  return res.json();
+  
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || "Failed to upload local raw graphic material");
+  }
+  return data;
 }

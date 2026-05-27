@@ -51,30 +51,39 @@ app.post("/api/upload", async (req, res) => {
   }
 
   try {
+    // Strip out base64 prefix headers
     const cleanBase64 = base64Data.replace(/^data:image\/\w+;base64,/, "");
     const buffer = Buffer.from(cleanBase64, "base64");
 
-    const ext = path.extname(filename) || ".png";
+    const ext = path.extname(filename).toLowerCase() || ".png";
     const baseName = path.basename(filename, ext).replace(/[^a-zA-Z0-9_-]/g, "_");
     const uniqueFilename = `${baseName}-${Date.now()}${ext}`;
+
+    // Normalize content type
+    let contentType = `image/${ext.replace(".", "")}`;
+    if (contentType === "image/jpg") contentType = "image/jpeg";
 
     const { data, error } = await supabase.storage
       .from("uploads")
       .upload(uniqueFilename, buffer, {
-        contentType: `image/${ext.replace(".", "")}`,
+        contentType,
         upsert: true
       });
 
-    if (error) throw error;
+    if (error) {
+      console.error("Supabase Storage error details:", error);
+      throw new Error(`Supabase Storage: ${error.message}`);
+    }
 
     const { data: { publicUrl } } = supabase.storage
       .from("uploads")
       .getPublicUrl(uniqueFilename);
 
+    console.log(`Successfully uploaded ${uniqueFilename} to Supabase.`);
     res.json({ success: true, url: publicUrl });
   } catch (err: any) {
-    console.error("Supabase Storage upload error:", err);
-    res.status(500).json({ success: false, message: err.message || "Failed to upload to Supabase." });
+    console.error("Back-end image upload execution error:", err);
+    res.status(500).json({ success: false, message: err.message || "Failed to process image upload." });
   }
 });
 

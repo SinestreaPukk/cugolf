@@ -63,7 +63,7 @@ function ImageUploadWidget({ id, value, onChange, label, placeholder, helperText
           if (res.success && res.url) {
             onChange(res.url);
           } else {
-            setError("Upload failed on database storage.");
+            setError(res.message || "Upload failed on database storage.");
           }
         } catch (err: any) {
           setError(err.message || "Failed to reach upload gateway.");

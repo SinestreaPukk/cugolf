@@ -20,43 +20,44 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
   const blogs = news.slice(0, 3);
   const quickScores = scores.slice(0, 3);
 
-  // Simple, ultra-robust Markdown parser for editorial rendering
+  // Impeccable editorial Markdown parser
   const renderMarkdown = (text: string) => {
     return text.split("\n").map((line, idx) => {
       const trimmed = line.trim();
       if (trimmed.startsWith("### ")) {
         return (
-          <h3 key={idx} className="font-display text-lg font-bold tracking-tight text-[#121212] mt-6 mb-3 border-b border-[#121212]/10 pb-1">
+          <h3 key={idx} className="font-thai text-3xl md:text-4xl font-bold tracking-tight text-neutral-950 mt-10 mb-5 border-b-2 border-neutral-950/10 pb-2">
             {trimmed.replace("### ", "")}
           </h3>
         );
       }
       if (trimmed.startsWith("#### ")) {
         return (
-          <h4 key={idx} className="font-display text-sm font-black uppercase tracking-wider text-black mt-4 mb-2">
+          <h4 key={idx} className="font-mono text-xs font-black uppercase tracking-[0.2em] text-[#da5f8e] mt-8 mb-4">
             {trimmed.replace("#### ", "")}
           </h4>
         );
       }
       if (trimmed.startsWith("> ")) {
         return (
-          <blockquote key={idx} className="border-l-4 border-black pl-4 italic my-4 font-serif text-black/85 bg-neutral-100 py-2 pr-2">
+          <blockquote key={idx} className="border-l-4 border-[#da5f8e] pl-8 italic my-10 font-serif text-xl md:text-2xl text-neutral-600 bg-neutral-50/50 py-6 pr-6">
             {trimmed.replace("> ", "")}
           </blockquote>
         );
       }
       if (trimmed.startsWith("- ")) {
         return (
-          <li key={idx} className="list-disc ml-6 my-1.5 text-xs text-[#121212]/85">
-            {trimmed.replace("- ", "")}
+          <li key={idx} className="list-none relative pl-8 my-4 text-base md:text-lg font-serif text-neutral-800 flex items-start gap-4">
+            <span className="text-[#da5f8e] mt-1.5">•</span>
+            <span>{trimmed.replace("- ", "")}</span>
           </li>
         );
       }
       if (trimmed === "") {
-        return <div key={idx} className="h-4" />;
+        return <div key={idx} className="h-6" />;
       }
       return (
-        <p key={idx} className="text-xs leading-relaxed text-[#121212]/80 my-2 text-justify">
+        <p key={idx} className="text-base md:text-lg font-serif leading-relaxed text-neutral-700 my-4 text-justify">
           {trimmed}
         </p>
       );
@@ -64,114 +65,118 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
   };
 
   return (
-    <div id="home_view" className="space-y-16 animate-fade-in px-4 md:px-0">
+    <div id="home_view" className="space-y-24 animate-fade-in px-4 md:px-0 bg-white">
       
       {/* Dynamic Legacy welcome slider and photo layout */}
       {(siteSettings?.showHomeWelcome ?? true) && (
-        <WelcomeSectionView welcomeSection={welcomeSection} setCurrentTab={setCurrentTab} siteLabels={siteLabels} />
+        <div className="mb-20">
+          <WelcomeSectionView welcomeSection={welcomeSection} setCurrentTab={setCurrentTab} siteLabels={siteLabels} />
+        </div>
       )}
       
       {/* 1. ACTIVITIES BLOG & STORIES - Showing exactly 3 blogs */}
       {(siteSettings?.showHomeBlog ?? true) && (
-        <section className="mx-auto max-w-7xl pt-4 md:pt-6 font-sans">
-          <div className="border-b border-stone-200 pb-4 flex items-center justify-between mb-8">
-            <h2 className="font-display text-xl md:text-2xl font-bold tracking-tight text-neutral-950 uppercase flex items-center gap-2.5">
-              <BookOpen size={20} className="text-[#da5f8e]" />
-              {siteLabels?.homeBlogTitle || "ACTIVITIES BLOG & STORIES"}
-            </h2>
-            <span className="font-mono text-[9px] md:text-[10px] font-bold text-stone-400 tracking-widest">
-              {siteLabels?.homeBlogSubtitle || "C.U.G.C. LATEST LOGS"}
-            </span>
+        <section className="mx-auto max-w-7xl pt-4 md:pt-6">
+          <div className="border-b-2 border-neutral-950 pb-6 flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+            <div className="space-y-1">
+              <span className="font-mono text-[10px] font-bold text-[#da5f8e] tracking-[0.3em] uppercase">
+                {siteLabels?.homeBlogSubtitle || "C.U.G.C. LATEST LOGS"}
+              </span>
+              <h2 className="font-thai text-5xl md:text-6xl font-bold tracking-tight text-neutral-950 leading-none">
+                {siteLabels?.homeBlogTitle || "ACTIVITIES BLOG & STORIES"}
+              </h2>
+            </div>
+            <div className="hidden md:block">
+              <BookOpen size={32} strokeWidth={1.5} className="text-neutral-950/20" />
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
             
             <div className="lg:col-span-8 flex flex-col justify-between">
               {blogs[0] ? (
-                <div className="border border-stone-200 bg-white rounded-lg overflow-hidden shadow-2xs hover:shadow-xs transition-all duration-300 group flex flex-col justify-between h-full">
+                <div className="border border-neutral-950 bg-white overflow-hidden transition-all duration-500 group flex flex-col justify-between h-full hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]">
                   <div>
-                    <div className="relative min-h-[250px] md:min-h-[350px] overflow-hidden bg-stone-50 border-b border-stone-150">
+                    <div className="relative min-h-[350px] md:min-h-[450px] overflow-hidden bg-stone-100 border-b border-neutral-950">
                       <img
                         src={blogs[0].imageUrl}
                         alt={blogs[0].title}
                         referrerPolicy="no-referrer"
-                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.015]"
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
                       />
-                      <div className="absolute top-4 left-4">
-                        <span className="bg-neutral-900 text-stone-100 font-mono text-[9px] font-bold px-2.5 py-1 tracking-widest uppercase rounded-xs">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60" />
+                      <div className="absolute top-6 left-6">
+                        <span className="bg-neutral-950 text-white font-mono text-[10px] font-bold px-4 py-2 tracking-[0.2em] uppercase">
                           {siteLabels?.homeFeaturedActivityBadge || "FEATURED ACTIVITY"}
                         </span>
                       </div>
                     </div>
 
-                    <div className="p-6 md:p-8 space-y-4">
-                      <div className="flex items-center gap-1.5 font-mono text-[10px] text-stone-400 font-semibold uppercase">
-                        <Calendar size={12} className="text-stone-300" />
+                    <div className="p-8 md:p-12 space-y-6">
+                      <div className="flex items-center gap-3 font-mono text-[11px] text-[#da5f8e] font-bold uppercase tracking-wider">
+                        <Calendar size={14} />
                         <span>{blogs[0].publishDate}</span>
                       </div>
-                      <h3 className="font-display text-2xl md:text-3xl font-extrabold leading-tight tracking-tight text-neutral-950 uppercase group-hover:text-stone-900 transition-colors">
+                      <h3 className="font-thai text-4xl md:text-5xl font-bold leading-[1.1] text-neutral-950 group-hover:text-[#da5f8e] transition-colors duration-300">
                         {blogs[0].title}
                       </h3>
-                      <p className="font-sans text-xs md:text-sm leading-relaxed text-stone-600 font-medium normal-case line-clamp-3">
+                      <p className="font-serif text-base md:text-lg leading-relaxed text-neutral-700 normal-case line-clamp-4 italic text-justify">
                         {blogs[0].excerpt}
                       </p>
                     </div>
                   </div>
 
-                  <div className="p-6 md:p-8 pt-0">
+                  <div className="p-8 md:p-12 pt-0">
                     <button
                       onClick={() => setSelectedArticle(blogs[0])}
-                      className="group inline-flex items-center gap-2 font-mono text-xs font-bold tracking-widest text-[#ffffff] bg-neutral-950 hover:bg-neutral-800 px-5 py-3 uppercase rounded-sm cursor-pointer transition-all duration-300"
+                      className="group inline-flex items-center gap-4 font-mono text-[11px] font-black tracking-[0.2em] text-white bg-neutral-950 hover:bg-[#da5f8e] px-8 py-5 uppercase transition-all duration-300 cursor-pointer"
                     >
                       {siteLabels?.homeReadCoverageButton || "READ COVERAGE"}
-                      <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
+                      <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform duration-300" />
                     </button>
                   </div>
                 </div>
               ) : (
-                <div className="border-2 border-dashed border-stone-200 aspect-[16/9] flex flex-col items-center justify-center rounded-lg p-8 text-stone-400 font-mono text-xs uppercase h-full min-h-[300px]">
-                  <BookOpen size={32} className="mb-3 text-stone-300" />
+                <div className="border-2 border-neutral-950/10 aspect-[16/9] flex flex-col items-center justify-center p-8 text-neutral-950/40 font-mono text-xs uppercase h-full min-h-[400px]">
+                  <BookOpen size={48} strokeWidth={1} className="mb-4 opacity-20" />
                   <span>{siteLabels?.homeNoBlogs || "No activities blogs published yet."}</span>
                 </div>
               )}
             </div>
 
-            <div className="lg:col-span-4 flex flex-col gap-8">
-              <div className="space-y-6 flex-grow flex flex-col">
-                <span className="font-mono text-[10px] font-bold tracking-widest text-neutral-500 uppercase block">
+            <div className="lg:col-span-4 flex flex-col gap-12">
+              <div className="space-y-8 flex-grow flex flex-col">
+                <span className="font-mono text-[11px] font-bold tracking-[0.25em] text-neutral-400 uppercase block border-b border-neutral-950/10 pb-2">
                   {siteLabels?.homeRecentUpdatesLabel || "RECENT UPDATES"}
                 </span>
 
-                <div className="space-y-6 flex-grow flex flex-col justify-start">
+                <div className="space-y-10 flex-grow flex flex-col justify-start">
                   {blogs.slice(1, 3).map((blog) => (
-                    <div key={blog.id} className="border border-stone-200 bg-white p-5 rounded-lg hover:shadow-2xs transition-all duration-300 group flex flex-col justify-between min-h-[140px]">
+                    <div key={blog.id} className="group flex flex-col justify-between min-h-[140px] cursor-pointer" onClick={() => setSelectedArticle(blog)}>
                       <div>
-                        <div className="flex items-center justify-between text-stone-400 font-mono text-[9px] mb-3 font-semibold">
-                          <span className="flex items-center gap-1.5 uppercase tracking-wide">
-                            <Clock size={11} className="text-stone-350" />
+                        <div className="flex items-center justify-between text-neutral-400 font-mono text-[10px] mb-4 font-bold tracking-wider">
+                          <span className="flex items-center gap-2 uppercase">
+                            <Clock size={12} className="text-[#da5f8e]" />
                             {blog.publishDate}
                           </span>
-                          <span className="text-neutral-500 uppercase tracking-widest font-bold text-[8.5px]">{siteLabels?.homeActivityLabel || "ACTIVITY"}</span>
+                          <span className="text-neutral-950/30 uppercase tracking-[0.2em] font-bold text-[9px]">{siteLabels?.homeActivityLabel || "ACTIVITY"}</span>
                         </div>
-                        <h4 className="font-display text-base font-bold leading-normal tracking-tight text-stone-900 mb-2 uppercase group-hover:text-[#da5f8e] transition-colors line-clamp-2">
+                        <h4 className="font-thai text-2xl font-bold leading-tight text-neutral-950 mb-3 group-hover:text-[#da5f8e] transition-colors duration-300 line-clamp-2">
                           {blog.title}
                         </h4>
-                        <p className="text-xs text-stone-600 leading-relaxed mb-4 line-clamp-2">
+                        <p className="font-serif text-sm text-neutral-600 leading-relaxed mb-4 line-clamp-2 italic">
                           {blog.excerpt}
                         </p>
                       </div>
-                      <button
-                        onClick={() => setSelectedArticle(blog)}
-                        className="flex items-center gap-1 font-mono text-[9px] font-bold uppercase text-[#da5f8e] hover:text-[#c24273] hover:underline cursor-pointer transition-colors pt-2 w-max"
-                      >
-                        {siteLabels?.homeReadStoryButton || "READ STORY"} <ChevronRight size={12} className="transition-transform group-hover:translate-x-0.5" />
-                      </button>
+                      <span className="inline-flex items-center gap-2 font-mono text-[10px] font-black uppercase text-neutral-950 group-hover:text-[#da5f8e] transition-colors duration-300 tracking-widest pt-2 w-max">
+                        {siteLabels?.homeReadStoryButton || "READ STORY"} <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                      </span>
                     </div>
                   ))}
 
                   {blogs.length < 3 && Array(Math.max(0, 3 - blogs.length)).fill(null).map((_, idx) => (
-                    <div key={idx} className="border border-dashed border-stone-200 rounded-lg p-5 flex flex-col items-center justify-center min-h-[130px] text-center bg-stone-50/20 text-stone-400 font-mono text-[10px] uppercase tracking-wider flex-grow">
-                      <BookOpen size={20} className="mb-2 text-stone-300" />
+                    <div key={idx} className="border border-neutral-950/5 p-8 flex flex-col items-center justify-center min-h-[160px] text-center bg-stone-50/30 text-neutral-900/20 font-mono text-[11px] uppercase tracking-widest flex-grow">
+                      <BookOpen size={24} strokeWidth={1} className="mb-3 opacity-20" />
                       <span>{siteLabels?.homeNoBlogs || "Story Slot Empty"}</span>
                     </div>
                   ))}
@@ -179,45 +184,45 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
               </div>
 
               {(siteSettings?.showHomeScores ?? true) && (
-                <div className="border border-stone-200 bg-stone-50 p-5 rounded-lg shadow-2xs space-y-4">
-                  <div className="flex items-center justify-between border-b border-stone-200 pb-2">
-                    <span className="font-display text-xs font-bold text-neutral-950 uppercase flex items-center gap-1.5">
-                      <Trophy size={14} className="text-[#da5f8e]" />
+                <div className="border border-neutral-950 bg-neutral-50 p-8 space-y-6">
+                  <div className="flex items-center justify-between border-b border-neutral-950/10 pb-4">
+                    <span className="font-thai text-xl font-bold text-neutral-950 flex items-center gap-3">
+                      <Trophy size={20} strokeWidth={1.5} className="text-[#da5f8e]" />
                       {siteLabels?.homeLiveStandingsTitle || "LIVE STANDINGS"}
                     </span>
                     <button
                       onClick={() => setCurrentTab("scores")}
-                      className="font-mono text-[8.5px] text-[#da5f8e] hover:text-[#c24273] font-bold transition-colors uppercase tracking-wider"
+                      className="font-mono text-[10px] text-neutral-950 hover:text-[#da5f8e] font-black transition-colors uppercase tracking-widest border-b border-neutral-950 hover:border-[#da5f8e] pb-0.5 cursor-pointer"
                     >
-                      {siteLabels?.homeFullLeaderboardButton || "FULL LEADERBOARD"}
+                      {siteLabels?.homeFullLeaderboardButton || "VIEW ALL"}
                     </button>
                   </div>
 
                   {quickScores[0] ? (
-                    <div className="space-y-3">
-                      <div className="space-y-1">
-                        <span className="font-mono text-[8px] text-stone-400 block font-semibold uppercase">{quickScores[0].date}</span>
-                        <h5 className="font-display text-xs font-bold text-neutral-950 uppercase leading-snug truncate">
+                    <div className="space-y-6">
+                      <div className="space-y-2">
+                        <span className="font-mono text-[10px] text-neutral-400 block font-bold tracking-widest uppercase">{quickScores[0].date}</span>
+                        <h5 className="font-thai text-lg font-bold text-neutral-950 leading-tight">
                           {quickScores[0].tournamentName}
                         </h5>
-                        <div className="text-[8.5px] font-mono font-bold text-emerald-800 bg-emerald-50 py-0.5 px-2 border border-emerald-150 inline-block uppercase tracking-wider rounded-xs mt-1">
-                          OFFICIAL STATS
+                        <div className="text-[10px] font-mono font-black text-white bg-neutral-950 py-1.5 px-3 inline-block uppercase tracking-[0.2em] mt-2">
+                          OFFICIAL RECORD
                         </div>
                       </div>
-                      <div className="space-y-1.5 pt-2 border-t border-stone-200/50">
-                        {quickScores[0].scoresList.slice(0, 2).map((sl, index) => (
-                          <div key={index} className="flex justify-between items-center text-[11px] text-stone-700">
-                            <span className="font-semibold uppercase truncate max-w-[130px]">{sl.playerName}</span>
-                            <div className="flex items-center gap-1.5 font-mono font-bold shrink-0">
-                              <span className="text-stone-400 text-[10px]">{sl.position}</span>
-                              <span className="text-neutral-900">{sl.score}</span>
+                      <div className="space-y-3 pt-4 border-t border-neutral-950/5">
+                        {quickScores[0].scoresList.slice(0, 3).map((sl, index) => (
+                          <div key={index} className="flex justify-between items-center text-sm text-neutral-800">
+                            <span className="font-bold uppercase tracking-wide truncate max-w-[130px]">{sl.playerName}</span>
+                            <div className="flex items-center gap-3 font-mono font-black shrink-0">
+                              <span className="text-neutral-950/30 text-[11px]">{sl.position}</span>
+                              <span className="text-neutral-950 bg-white border border-neutral-950 px-2 py-0.5 min-w-[32px] text-center">{sl.score}</span>
                             </div>
                           </div>
                         ))}
                       </div>
                     </div>
                   ) : (
-                    <div className="text-center py-2 text-stone-400 font-mono text-[10px] uppercase">
+                    <div className="text-center py-4 text-neutral-950/20 font-mono text-[11px] uppercase tracking-widest">
                       <span>{siteLabels?.homeNoScores || "No tournament scores listed yet."}</span>
                     </div>
                   )}
@@ -230,22 +235,22 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
 
       {/* 2. MEMBERSHIP INVITATION SECTION */}
       <section className="mx-auto max-w-7xl">
-        <div className="bg-stone-900 border border-stone-800 p-8 md:p-12 rounded-lg relative overflow-hidden group shadow-md">
+        <div className="bg-neutral-950 border border-neutral-950 p-12 md:p-20 relative overflow-hidden group">
           {/* Decorative Background Text */}
-          <div className="absolute right-[-2%] bottom-[-10%] text-[150px] font-display font-black leading-none text-white/[0.03] select-none uppercase tracking-tighter transition-all group-hover:translate-x-2">
-            JOIN
+          <div className="absolute right-[-2%] bottom-[-5%] text-[180px] md:text-[240px] font-display font-black leading-none text-white/[0.04] select-none uppercase tracking-tighter transition-all duration-1000 group-hover:translate-x-4">
+            LEGACY
           </div>
           
-          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-10">
-            <div className="space-y-4 md:max-w-2xl text-left">
-              <span className="inline-block bg-neutral-100 text-stone-950 font-mono text-[8.5px] px-2.5 py-1 tracking-widest uppercase font-bold rounded-xs">
+          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-16">
+            <div className="space-y-8 md:max-w-2xl text-left">
+              <span className="inline-block bg-[#da5f8e] text-white font-mono text-[11px] px-4 py-2 tracking-[0.3em] uppercase font-black">
                 VARSITY REGISTRATION
               </span>
-              <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-white uppercase leading-tight">
+              <h2 className="font-thai text-5xl md:text-6xl font-bold tracking-tight text-white leading-[1.1]">
                 {siteLabels?.homeMembershipTitle || "Become a member of the CU GOLF CLUB."}
               </h2>
-              <p className="font-sans text-xs md:text-sm text-stone-400 leading-relaxed max-w-xl">
-                {siteLabels?.homeMembershipDescription || "Expand your network and elevate your game. We are actively looking for new student members to join our representative squads and co-curricular programs."}
+              <p className="font-serif text-lg md:text-xl text-neutral-400 leading-relaxed max-w-xl italic">
+                {siteLabels?.homeMembershipDescription || "Expand your network and elevate your game. We are actively looking for new student members to join our representative squads."}
               </p>
             </div>
 
@@ -254,10 +259,10 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
                 href="https://docs.google.com/forms/d/e/1FAIpQLSdaKMAAJw0pSaf7k9atDaUiuws7zpuYg6-903oI2qt2Qk4UIg/viewform?usp=sharing&ouid=106138206988272329432"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-white text-stone-950 px-8 py-4 font-mono text-xs font-black tracking-widest uppercase rounded-xs hover:bg-[#ec4899] hover:text-white transition-all duration-300 shadow-lg group/btn"
+                className="inline-flex items-center gap-4 bg-white text-neutral-950 px-10 py-6 font-mono text-[11px] font-black tracking-[0.3em] uppercase hover:bg-[#da5f8e] hover:text-white transition-all duration-500 group/btn shadow-xl"
               >
                 {siteLabels?.homeMembershipButtonText || "REGISTER NOW"}
-                <ArrowRight size={14} className="transition-transform group-hover/btn:translate-x-1" />
+                <ArrowRight size={18} className="transition-transform duration-300 group-hover/btn:translate-x-2" />
               </a>
             </div>
           </div>
@@ -267,38 +272,38 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
       {/* 4. UPCOMING ACTIVITY SECTION */}
       {upcomingActivity?.showSection && (
         <section className="mx-auto max-w-7xl animate-fade-in">
-          <div className="flex flex-col md:flex-row bg-white border border-stone-200 rounded-lg overflow-hidden shadow-sm">
+          <div className="flex flex-col lg:flex-row bg-white border-2 border-neutral-950 overflow-hidden">
             {/* Image Side */}
-            <div className="md:w-1/2 h-64 md:h-auto relative overflow-hidden bg-stone-100">
+            <div className="lg:w-1/2 h-80 lg:h-auto relative overflow-hidden bg-stone-100 border-b lg:border-b-0 lg:border-r-2 border-neutral-950">
               <img 
                 src={upcomingActivity.imageUrl || "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&q=80&w=1200"} 
                 alt="Upcoming Activity" 
-                className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
               />
-              <div className="absolute top-4 left-4 bg-neutral-950 text-white font-mono text-[9px] font-bold px-3 py-1.5 uppercase tracking-widest rounded-xs">
-                Next Event
+              <div className="absolute top-8 left-8 bg-neutral-950 text-white font-mono text-[10px] font-bold px-4 py-2 uppercase tracking-[0.3em]">
+                NEXT EVENT
               </div>
             </div>
 
             {/* Content Side */}
-            <div className="md:w-1/2 p-8 md:p-12 flex flex-col justify-center space-y-6">
-              <div className="space-y-4">
-                <div className="flex flex-wrap gap-4 text-stone-400 font-mono text-[10px] font-bold uppercase tracking-wider">
-                  <div className="flex items-center gap-1.5">
-                    <Calendar size={12} className="text-[#da5f8e]" />
+            <div className="lg:w-1/2 p-10 md:p-16 flex flex-col justify-center space-y-10">
+              <div className="space-y-6">
+                <div className="flex flex-wrap gap-8 text-neutral-400 font-mono text-[11px] font-black uppercase tracking-[0.2em]">
+                  <div className="flex items-center gap-3">
+                    <Calendar size={14} className="text-[#da5f8e]" />
                     <span>{upcomingActivity.date || "TBD"}</span>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <MapPin size={12} className="text-[#da5f8e]" />
+                  <div className="flex items-center gap-3">
+                    <MapPin size={14} className="text-[#da5f8e]" />
                     <span>{upcomingActivity.location || "TBD"}</span>
                   </div>
                 </div>
 
-                <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-neutral-950 uppercase leading-tight">
+                <h2 className="font-thai text-4xl md:text-5xl font-bold tracking-tight text-neutral-950 leading-none">
                   {upcomingActivity.title || "UPCOMING ACTIVITY"}
                 </h2>
                 
-                <p className="font-sans text-sm text-stone-600 leading-relaxed">
+                <p className="font-serif text-lg text-neutral-600 leading-relaxed italic">
                   {upcomingActivity.description || "Stay tuned for our next competitive or social engagement. Updates are published here regularly."}
                 </p>
               </div>
@@ -309,9 +314,9 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
                     href={upcomingActivity.registrationUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 border-2 border-neutral-950 text-neutral-950 px-6 py-3 font-mono text-xs font-black tracking-widest uppercase hover:bg-neutral-950 hover:text-white transition-all duration-300 rounded-xs"
+                    className="inline-flex items-center gap-4 border-2 border-neutral-950 text-neutral-950 px-8 py-5 font-mono text-[11px] font-black tracking-[0.3em] uppercase hover:bg-neutral-950 hover:text-white transition-all duration-300 rounded-none cursor-pointer"
                   >
-                    SECURE YOUR SPOT <ArrowUpRight size={14} />
+                    SECURE YOUR SPOT <ArrowUpRight size={18} />
                   </a>
                 </div>
               )}
@@ -322,49 +327,51 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
 
       {/* 3. DETAILS MODAL OVERLAY */}
       {selectedArticle && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/75 p-4 backdrop-blur-xs animate-fade-in">
-          <div className="relative w-full max-w-2xl border border-stone-200 bg-white text-stone-900 flex flex-col max-h-[90vh] rounded-lg shadow-xl overflow-hidden">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-neutral-950/90 p-4 md:p-8 backdrop-blur-md animate-fade-in">
+          <div className="relative w-full max-w-4xl border-2 border-neutral-950 bg-white text-neutral-950 flex flex-col max-h-[95vh] shadow-2xl overflow-hidden">
             
-            <div className="border-b border-stone-150 p-4 md:p-5 flex items-center justify-between bg-white">
-              <div className="flex items-center gap-3">
-                <span className="font-mono text-[9px] bg-neutral-900 text-stone-100 font-bold px-2.5 py-1 tracking-widest uppercase rounded-xs">
+            <div className="border-b-2 border-neutral-950 p-6 md:p-8 flex items-center justify-between bg-white">
+              <div className="flex items-center gap-6">
+                <span className="font-mono text-[10px] bg-[#da5f8e] text-white font-black px-4 py-2 tracking-[0.3em] uppercase">
                   {siteLabels?.homeModalOfficialBadge || "OFFICIAL EDITORIAL"}
                 </span>
-                <span className="font-mono text-[9.5px] font-bold text-stone-400">{selectedArticle.publishDate}</span>
+                <span className="font-mono text-[11px] font-black text-neutral-400 tracking-widest">{selectedArticle.publishDate}</span>
               </div>
               <button
                 onClick={() => setSelectedArticle(null)}
-                className="font-mono text-[10px] font-bold border border-stone-200 hover:bg-neutral-950 hover:text-white px-4 py-2 hover:border-neutral-950 rounded-xs transition-all cursor-pointer uppercase tracking-wider"
+                className="group font-mono text-[11px] font-black text-neutral-950 hover:text-[#da5f8e] transition-colors cursor-pointer uppercase tracking-[0.3em] flex items-center gap-2"
               >
-                CLOSE [X]
+                CLOSE <span className="text-lg">[×]</span>
               </button>
             </div>
 
-            <div className="p-5 md:p-8 overflow-y-auto space-y-6">
-              <div className="h-44 md:h-60 border border-stone-150 overflow-hidden relative bg-stone-50 rounded-sm">
-                <img
-                  src={selectedArticle.imageUrl}
-                  alt={selectedArticle.title}
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover"
-                />
-              </div>
+            <div className="p-8 md:p-12 overflow-y-auto">
+              <div className="space-y-12 max-w-3xl mx-auto">
+                <div className="aspect-[16/9] border-2 border-neutral-950 overflow-hidden relative bg-stone-100">
+                  <img
+                    src={selectedArticle.imageUrl}
+                    alt={selectedArticle.title}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
 
-              <div>
-                <h2 className="font-display text-2xl font-extrabold leading-tight tracking-tight text-neutral-950 uppercase mb-3">
-                  {selectedArticle.title}
-                </h2>
-                <p className="font-sans text-xs italic text-stone-500 border-l-2 border-stone-900 pl-3 leading-relaxed mb-6">
-                  {selectedArticle.excerpt}
-                </p>
-              </div>
+                <div className="space-y-6">
+                  <h2 className="font-thai text-5xl md:text-6xl font-bold leading-none text-neutral-950">
+                    {selectedArticle.title}
+                  </h2>
+                  <p className="font-serif text-xl md:text-2xl italic text-neutral-500 border-l-4 border-[#da5f8e] pl-8 py-2 leading-relaxed">
+                    {selectedArticle.excerpt}
+                  </p>
+                </div>
 
-              <div className="font-sans text-stone-700 text-xs space-y-4">
-                {renderMarkdown(selectedArticle.content)}
+                <div className="font-serif text-neutral-800 text-lg md:text-xl space-y-8 leading-relaxed">
+                  {renderMarkdown(selectedArticle.content)}
+                </div>
               </div>
             </div>
 
-            <div className="border-t border-stone-150 p-4 bg-stone-50 flex justify-between items-center font-mono text-[9px] font-bold text-stone-400">
+            <div className="border-t-2 border-neutral-950 p-6 md:p-8 bg-neutral-50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 font-mono text-[10px] font-black text-neutral-400 tracking-[0.2em] uppercase">
               <span>{siteLabels?.homeModalEditorialBoard || "CU GOLF CLUB SPORTS EDITORIAL BOARD"}</span>
               <span>{siteLabels?.homeModalLocation || "BANGKOK, THAILAND"}</span>
             </div>

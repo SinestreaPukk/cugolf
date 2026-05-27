@@ -9,7 +9,7 @@ import { createClient } from "@supabase/supabase-js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
 // Initialize Supabase - with validation and production fallback
 const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;

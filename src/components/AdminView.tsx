@@ -1157,21 +1157,22 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
             </h1>
           </div>
 
-        <div className="flex items-center gap-4">
-          <button
-            onClick={refreshState}
-            className="border-2 border-black hover:bg-neutral-100 px-3.5 py-2 text-xs font-mono font-black text-black uppercase flex items-center gap-2 bg-neutral-50 cursor-pointer"
-          >
-            <RefreshCw size={13} />
-            SYNC DB STATE
-          </button>
-          <button
-            onClick={handleLogout}
-            className="border-2 border-black text-black bg-neutral-100 hover:bg-neutral-200 px-3.5 py-2 text-xs font-mono font-black uppercase flex items-center gap-2 cursor-pointer"
-          >
-            <LogOut size={13} />
-            REVOKE ACCESS
-          </button>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={refreshState}
+              className="border-2 border-neutral-950 hover:bg-neutral-50 px-3.5 py-2 text-xs font-mono font-black text-neutral-950 uppercase flex items-center gap-2 bg-white cursor-pointer"
+            >
+              <RefreshCw size={13} />
+              SYNC DB STATE
+            </button>
+            <button
+              onClick={handleLogout}
+              className="border-2 border-neutral-950 text-white bg-neutral-950 hover:bg-neutral-800 px-3.5 py-2 text-xs font-mono font-black uppercase flex items-center gap-2 cursor-pointer"
+            >
+              <LogOut size={13} />
+              REVOKE ACCESS
+            </button>
+          </div>
         </div>
       </section>
 

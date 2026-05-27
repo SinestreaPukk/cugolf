@@ -11,16 +11,9 @@ dotenv.config();
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 
-// Initialize Supabase - with validation and production fallback
-const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseKey) {
-  console.error("FATAL ERROR: Supabase credentials missing in environment variables.");
-  console.error("On Render, ensure you have set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY (or their VITE_ equivalents) in the Environment panel.");
-  process.exit(1);
-}
-
+// Initialize Supabase
+const supabaseUrl = process.env.VITE_SUPABASE_URL || "";
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || "";
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Initialize Gemini client conditionally if API key exists

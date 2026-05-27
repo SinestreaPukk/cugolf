@@ -107,17 +107,17 @@ export default function App() {
   // 1. Loading screen matching Meiji Golf high-end magazine designs
   if (loading) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#fcfbf9] text-[#121212] font-sans antialiased">
-        <div className="space-y-4 text-center">
-          <div className="font-display text-4xl font-extrabold tracking-tighter uppercase leading-none">
-            CU <span className="text-[#ec4899] font-normal font-serif italic">GOLF</span>
+      <div className="flex min-h-screen flex-col items-center justify-center bg-white text-neutral-950 font-sans antialiased">
+        <div className="space-y-6 text-center">
+          <div className="font-thai text-6xl md:text-7xl font-bold tracking-tight uppercase leading-none">
+            CU <span className="text-[#da5f8e] italic">GOLF</span>
           </div>
-          <div className="h-0.5 w-16 bg-[#ec4899] mx-auto" />
-          <p className="font-mono text-[9px] tracking-[0.2em] text-[#121212]/50 uppercase">
-            ACCELERATING SPORTS DATABASE SYSTEM
+          <div className="h-0.5 w-24 bg-[#da5f8e] mx-auto" />
+          <p className="font-mono text-[10px] tracking-[0.4em] text-neutral-400 uppercase font-black">
+            SYNCHRONIZING LEGACY ARCHIVES
           </p>
-          <div className="flex items-center justify-center pt-4">
-            <RefreshCw size={20} className="animate-spin text-[#ec4899]" />
+          <div className="flex items-center justify-center pt-8">
+            <RefreshCw size={24} className="animate-spin text-[#da5f8e]" />
           </div>
         </div>
       </div>
@@ -127,11 +127,11 @@ export default function App() {
   // 2. Fatal load error page
   if (errorMsg) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#fcfbf9] p-6 text-[#121212] font-sans text-center">
-        <div className="border border-red-500/20 bg-red-500/5 p-8 max-w-md space-y-4">
-          <AlertCircle size={36} className="mx-auto text-red-600" />
-          <h2 className="font-display text-base font-bold uppercase tracking-tight">DATALINK CONNECTION FAILURE</h2>
-          <p className="text-xs leading-relaxed text-[#121212]/70">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-neutral-50 p-8 text-neutral-950 font-sans text-center">
+        <div className="border-2 border-neutral-950 bg-white p-12 max-w-xl space-y-8 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
+          <AlertCircle size={48} className="mx-auto text-[#da5f8e]" />
+          <h2 className="font-thai text-3xl font-bold uppercase tracking-tight">DATALINK CONNECTION FAILURE</h2>
+          <p className="font-serif text-lg leading-relaxed text-neutral-600 italic">
             {errorMsg}
           </p>
           <button
@@ -139,7 +139,7 @@ export default function App() {
               setLoading(true);
               refreshState();
             }}
-            className="inline-flex items-center gap-2 bg-[#121212] text-white px-5 py-2 text-xs font-mono uppercase font-bold hover:bg-[#ec4899] transition-all cursor-pointer"
+            className="inline-flex items-center gap-4 bg-neutral-950 text-white px-10 py-5 text-[11px] font-mono uppercase font-black tracking-[0.3em] hover:bg-[#da5f8e] transition-all cursor-pointer shadow-lg"
           >
             RETRY DIRECTORY SYNC
           </button>

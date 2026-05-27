@@ -1085,17 +1085,17 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
   // --- RENDERING FOR LOGIN IF NOT LOGGED IN ---
   if (!adminToken) {
     return (
-      <div className="mx-auto max-w-md py-12 px-4 animate-fade-in font-sans">
-        <div className="border-4 border-black bg-white p-6 md:p-8 space-y-6">
-          <div className="text-center space-y-2 border-b-2 border-black pb-4">
-            <div className="mx-auto h-12 w-12 border-2 border-black rounded-full flex items-center justify-center text-white bg-black">
-              <Lock size={20} />
+      <div className="mx-auto max-w-md py-24 px-4 animate-fade-in">
+        <div className="border-2 border-neutral-950 bg-white p-8 md:p-12 space-y-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
+          <div className="text-center space-y-4 border-b-2 border-neutral-950 pb-8">
+            <div className="mx-auto h-16 w-16 border-2 border-neutral-950 flex items-center justify-center text-white bg-neutral-950">
+              <Lock size={28} />
             </div>
-            <h2 className="font-display text-2xl font-black uppercase tracking-tighter text-black leading-none pt-2">
-              CMS ACCESS PORTAL
+            <h2 className="font-thai text-4xl font-bold uppercase tracking-tight text-neutral-950 leading-none pt-4">
+              CMS ACCESS
             </h2>
-            <p className="font-mono text-[9px] text-black/50 tracking-widest uppercase font-black">
-              AUTHORIZATION TO UPDATE STATS & NEWS REQUIRED
+            <p className="font-mono text-[10px] text-neutral-400 tracking-[0.3em] uppercase font-black">
+              AUTHORIZATION REQUIRED
             </p>
           </div>
 
@@ -1143,23 +1143,19 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
 
   // --- MAIN ADMIN MANAGEMENT CMS PORTAL RENDER ---
   return (
-    <div id="admin_dashboard" className="space-y-8 animate-fade-in font-sans px-4 md:px-0 bg-white">
+    <div id="admin_dashboard" className="space-y-12 animate-fade-in px-4 md:px-0 bg-white">
       
       {/* CMS UPPER DASHBOARD PANEL HEADER */}
-      <section className="mx-auto max-w-7xl pt-4 bg-white border-4 border-black p-5 md:p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="space-y-1.5 text-left">
-          <div className="flex items-center gap-2">
-            <span className="inline-block bg-emerald-600 text-white font-mono text-[9px] px-2.5 py-1 tracking-widest uppercase font-black border border-black animate-pulse">
-              AUTHORS REVISION CONTROLLER ACTIVE
+      <section className="mx-auto max-w-7xl pt-10">
+        <div className="bg-white border-2 border-neutral-950 p-8 flex flex-col md:flex-row md:items-center justify-between gap-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,0.05)]">
+          <div className="space-y-2 text-left">
+            <span className="font-mono text-[10px] font-black text-[#da5f8e] tracking-[0.3em] uppercase block mb-1">
+              REGISTRY ACTIVE
             </span>
+            <h1 className="font-thai text-5xl font-bold tracking-tight text-neutral-950 leading-none">
+              ADMIN CMS
+            </h1>
           </div>
-          <h1 className="font-display text-3xl font-black text-black uppercase leading-none mt-1">
-            CU GOLF PORTAL CMS
-          </h1>
-          <p className="font-mono text-[9px] text-black/40 tracking-widest uppercase font-black">
-            SYNCHRONIZED WITH LOCAL SANDBOX REGISTRY ENGINE
-          </p>
-        </div>
 
         <div className="flex items-center gap-4">
           <button

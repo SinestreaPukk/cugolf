@@ -19,70 +19,69 @@ export default function ScoresView({ scores, siteLabels }: ScoresViewProps) {
   };
 
   return (
-    <div id="scores_view" className="space-y-12 animate-fade-in px-4 md:px-0 bg-stone-50/20">
+    <div id="scores_view" className="space-y-16 animate-fade-in px-4 md:px-0 bg-white">
       
       {/* Editorial Header */}
-      <section className="mx-auto max-w-7xl pt-6 text-center md:text-left space-y-4">
-        <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-stone-250/70 pb-4 gap-4">
+      <section className="mx-auto max-w-7xl pt-10 text-center md:text-left">
+        <div className="flex flex-col md:flex-row md:items-end justify-between border-b-2 border-neutral-950 pb-6 gap-6">
           <div className="space-y-2">
-            <span className="inline-block bg-neutral-900 text-stone-100 font-mono text-[8.5px] px-2.5 py-1 tracking-widest uppercase font-bold rounded-xs">
+            <span className="inline-block bg-[#da5f8e] text-white font-mono text-[10px] px-3 py-1 tracking-[0.3em] uppercase font-black">
               {siteLabels?.scoresSubtitle || "OFFICIAL LEADERS RECORD"}
             </span>
-            <h1 className="font-display text-3xl font-extrabold tracking-tight text-neutral-950 uppercase leading-none">
+            <h1 className="font-thai text-5xl md:text-6xl font-bold tracking-tight text-neutral-950 leading-none">
               {siteLabels?.scoresTitle || "TOURNAMENT RESULTS & STATS"}
             </h1>
           </div>
-          <span className="font-mono text-[9.5px] font-bold text-stone-400 tracking-wider uppercase">
+          <span className="font-mono text-[10px] font-black text-neutral-400 tracking-[0.2em] uppercase">
             {siteLabels?.scoresVerifiedLabel || "VARSITY LEAGUE ARCHIVES • AMATA SPRING & ALPINE LOGS VERIFIED"}
           </span>
         </div>
       </section>
 
       {/* Main Stats Summary & Interactive List */}
-      <section className="mx-auto max-w-7xl font-sans">
+      <section className="mx-auto max-w-7xl">
         
         {/* Interactive Match Score list */}
-        <div className="space-y-6">
-          <div className="border border-stone-200 bg-white divide-y divide-stone-150 rounded-lg overflow-hidden shadow-xs">
+        <div className="space-y-8">
+          <div className="border border-neutral-950 bg-white divide-y divide-neutral-950/10 overflow-hidden">
             {scores.map((score) => {
               const isExpanded = expandedId === score.id;
 
               return (
-                <div key={score.id} className="p-6 md:p-8 space-y-6 bg-white hover:bg-stone-50/50 transition-colors duration-300">
+                <div key={score.id} className="p-8 md:p-12 space-y-8 bg-white hover:bg-neutral-50/50 transition-all duration-300 group">
                   
                   {/* Basic Card Overview */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="space-y-2">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-mono text-[9px] text-stone-400 flex items-center gap-1 font-bold uppercase tracking-wider">
-                          <Calendar size={11} className="text-stone-300" />
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+                    <div className="space-y-4">
+                      <div className="flex flex-wrap items-center gap-4">
+                        <span className="font-mono text-[10px] text-neutral-400 flex items-center gap-2 font-black uppercase tracking-[0.2em]">
+                          <Calendar size={14} className="text-[#da5f8e]" />
                           {score.date}
                         </span>
-                        <span className="h-1 w-1 rounded-full bg-stone-300 hidden sm:inline" />
-                        <span className="font-mono text-[8.5px] text-emerald-700 font-bold tracking-wider uppercase bg-emerald-50 px-2 py-0.5 border border-emerald-500/10 rounded-xs">
+                        <span className="font-mono text-[10px] text-white font-black tracking-[0.2em] uppercase bg-neutral-950 px-3 py-1">
                           {siteLabels?.scoresOfficialStatsBadge || "OFFICIAL STATS"}
                         </span>
                       </div>
-                      <h3 className="font-display text-lg font-bold text-neutral-950 uppercase tracking-tight leading-none">
+                      <h3 className="font-thai text-3xl md:text-4xl font-bold text-neutral-950 leading-none group-hover:text-[#da5f8e] transition-colors">
                         {score.tournamentName}
                       </h3>
-                      <p className="text-xs text-stone-600 font-mono font-bold uppercase tracking-wider flex items-center gap-1.5">
-                        <Award size={13} className="text-stone-500" />
+                      <p className="text-sm text-neutral-600 font-serif italic flex items-center gap-3 border-l-2 border-neutral-950/10 pl-4 py-1">
+                        <Award size={16} className="text-[#da5f8e]" />
                         {score.result}
                       </p>
                     </div>
 
                     <button
                       onClick={() => toggleExpand(score.id)}
-                      className="inline-flex items-center gap-1.5 border border-neutral-300 bg-neutral-900 px-4 py-2 font-mono text-[9px] font-bold text-stone-100 uppercase hover:bg-neutral-800 transition-all cursor-pointer self-start sm:self-center tracking-wider rounded-sm shadow-3xs"
+                      className="inline-flex items-center gap-3 border-2 border-neutral-950 bg-white px-6 py-4 font-mono text-[10px] font-black text-neutral-950 uppercase hover:bg-neutral-950 hover:text-white transition-all cursor-pointer tracking-[0.2em] shadow-[4px_4px_0px_0px_#000000] hover:shadow-none hover:translate-x-1 hover:translate-y-1"
                     >
                       {isExpanded ? (
                         <>
-                          <EyeOff size={11} /> {siteLabels?.scoresHideStandingsButton || "HIDE STANDINGS"}
+                          <EyeOff size={14} /> {siteLabels?.scoresHideStandingsButton || "HIDE STANDINGS"}
                         </>
                       ) : (
                         <>
-                          <Eye size={11} /> {siteLabels?.scoresViewStandingsButton || "VIEW STANDINGS"}
+                          <Eye size={14} /> {siteLabels?.scoresViewStandingsButton || "VIEW STANDINGS"}
                         </>
                       )}
                     </button>
@@ -90,32 +89,32 @@ export default function ScoresView({ scores, siteLabels }: ScoresViewProps) {
 
                   {/* Expanded Leaderboard details */}
                   {isExpanded && (
-                    <div className="border border-stone-200 rounded-lg overflow-hidden animate-slide-down bg-white shadow-2xs">
-                      <div className="bg-[#18181b] text-stone-200 px-4 py-2.5 font-mono text-[8.5px] tracking-wider uppercase flex items-center gap-1.5 font-bold border-b border-stone-800">
-                        <ClipboardList size={11} className="text-stone-450" />
+                    <div className="border border-neutral-950 overflow-hidden animate-fade-in bg-white">
+                      <div className="bg-neutral-950 text-white px-6 py-4 font-mono text-[10px] tracking-[0.3em] uppercase flex items-center gap-3 font-black">
+                        <ClipboardList size={14} className="text-[#da5f8e]" />
                         {siteLabels?.scoresDetailedLeaderboardTitle || "DETAILED COMPETITIVE LEADERBOARD"} ({score.playersCount} ATTESTED)
                       </div>
                       
                       <div className="overflow-x-auto">
-                        <table className="w-full text-left font-sans text-xs">
+                        <table className="w-full text-left font-serif">
                           <thead>
-                            <tr className="bg-stone-50 border-b border-stone-200 font-mono text-[8.5px] text-stone-400 uppercase tracking-wider font-semibold">
-                              <th className="px-4 py-3">{siteLabels?.scoresTablePlayerHeader || "PLAYER NAME"}</th>
-                              <th className="px-4 py-3 text-center">{siteLabels?.scoresTableScoreHeader || "STROKE SCORE"}</th>
-                              <th className="px-4 py-3 text-right">{siteLabels?.scoresTablePositionHeader || "POSITION"}</th>
+                            <tr className="bg-neutral-50 border-b border-neutral-950 font-mono text-[10px] text-neutral-400 uppercase tracking-[0.2em] font-black">
+                              <th className="px-6 py-4">{siteLabels?.scoresTablePlayerHeader || "PLAYER NAME"}</th>
+                              <th className="px-6 py-4 text-center">{siteLabels?.scoresTableScoreHeader || "STROKE SCORE"}</th>
+                              <th className="px-6 py-4 text-right">{siteLabels?.scoresTablePositionHeader || "POSITION"}</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-stone-100">
+                          <tbody className="divide-y divide-neutral-950/5">
                             {score.scoresList.map((sl, index) => (
-                              <tr key={index} className="hover:bg-stone-50/50 transition-colors uppercase font-medium text-stone-750">
-                                <td className="px-4 py-3 text-stone-800 flex items-center gap-2 font-bold">
-                                  <Medal size={11} className={index === 0 ? "text-amber-500 shrink-0" : index === 1 ? "text-stone-400 shrink-0" : "text-stone-350 shrink-0"} />
+                              <tr key={index} className="hover:bg-neutral-50 transition-colors uppercase">
+                                <td className="px-6 py-5 text-neutral-950 flex items-center gap-4 font-bold text-lg md:text-xl font-thai">
+                                  <Medal size={16} className={index === 0 ? "text-amber-500 shrink-0" : index === 1 ? "text-neutral-400 shrink-0" : "text-neutral-200 shrink-0"} />
                                   {sl.playerName}
                                 </td>
-                                <td className="px-4 py-3 text-center font-mono font-bold text-neutral-900">
+                                <td className="px-6 py-5 text-center font-mono font-black text-xl text-[#da5f8e]">
                                   {sl.score}
                                 </td>
-                                <td className="px-4 py-3 text-right font-mono font-bold text-neutral-900">
+                                <td className="px-6 py-5 text-right font-mono font-black text-neutral-400 text-sm">
                                   {sl.position}
                                 </td>
                               </tr>
@@ -124,7 +123,7 @@ export default function ScoresView({ scores, siteLabels }: ScoresViewProps) {
                         </table>
                       </div>
 
-                      <div className="bg-stone-50 border-t border-stone-150 p-3 flex justify-between items-center text-[8.5px] font-mono text-stone-400 font-bold uppercase">
+                      <div className="bg-neutral-50 border-t border-neutral-950 p-4 flex flex-col md:flex-row justify-between items-center gap-4 text-[9px] font-mono text-neutral-400 font-black uppercase tracking-[0.2em]">
                         <span>{siteLabels?.scoresAttestationLabel || "CU OFFICIAL GOLF SCORECARD ATTESTATION"}</span>
                         <span>{siteLabels?.scoresVerifiedDirectoryLabel || "COACH VERIFIED DIRECTORY"}</span>
                       </div>

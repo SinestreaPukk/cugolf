@@ -17,7 +17,15 @@ interface HomeViewProps {
 export default function HomeView({ news, scores, roster, welcomeSection, upcomingActivity, setCurrentTab, siteLabels, siteSettings }: HomeViewProps) {
   const [selectedArticle, setSelectedArticle] = useState<NewsItem | null>(null);
 
-  const blogs = news.slice(0, 3);
+  // Sort by rank (descending) and then by date (descending)
+  const sortedNews = [...news].sort((a, b) => {
+    const rankA = a.rank || 0;
+    const rankB = b.rank || 0;
+    if (rankA !== rankB) return rankB - rankA;
+    return new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime();
+  });
+
+  const blogs = sortedNews.slice(0, 3);
   const quickScores = scores.slice(0, 3);
 
   // Simple, ultra-robust Markdown parser for editorial rendering

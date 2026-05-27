@@ -15,6 +15,7 @@ CREATE TABLE news (
   content TEXT,
   "publishDate" DATE,
   "imageUrl" TEXT,
+  rank INTEGER DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

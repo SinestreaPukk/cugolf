@@ -5,6 +5,7 @@ export interface NewsItem {
   content: string;
   publishDate: string;
   imageUrl: string;
+  rank?: number;
 }
 
 export interface Player {

@@ -197,6 +197,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
   const [newsContent, setNewsContent] = useState("");
   const [newsImage, setNewsImage] = useState("");
   const [newsDate, setNewsDate] = useState("");
+  const [newsRank, setNewsRank] = useState<number>(0);
 
   const [editingPlayerId, setEditingPlayerId] = useState<string | null>(null);
   const [playerName, setPlayerName] = useState("");
@@ -546,6 +547,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
         content: newsContent,
         imageUrl: newsImage || "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&q=80&w=1200",
         publishDate: newsDate || new Date().toISOString().split("T")[0],
+        rank: newsRank
       };
 
       if (editingNewsId) {
@@ -563,6 +565,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
       setNewsContent("");
       setNewsImage("");
       setNewsDate("");
+      setNewsRank(0);
       refreshState();
     } catch (err) {
       triggerErrorMsg("Failed to save changes.");
@@ -578,6 +581,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
     setNewsContent(item.content);
     setNewsImage(item.imageUrl);
     setNewsDate(item.publishDate);
+    setNewsRank(item.rank || 0);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -1386,6 +1390,16 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
                   />
                 </div>
 
+                <div className="space-y-1.5">
+                  <label htmlFor="article_rank" className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase">RANK (Higher values show as main)</label>
+                  <input
+                    id="article_rank"
+                    type="number"
+                    value={newsRank}
+                    onChange={(e) => setNewsRank(Number(e.target.value))}
+                    className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none focus:border-[#ec4899] text-[#121212]"
+                  />
+                </div>
                 <div className="space-y-1.5">
                   <label htmlFor="article_excerpt" className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase">EXCERPT (Sub-line brief)</label>
                   <input

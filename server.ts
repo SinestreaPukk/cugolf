@@ -159,18 +159,26 @@ app.post("/api/admin/auth", async (req, res) => {
 
 // BLOGS CRUD
 app.post("/api/news", async (req, res) => {
-  const newItem = {
-    id: `news-${Date.now()}`,
-    title: req.body.title || "Untitled Article",
-    excerpt: req.body.excerpt || "",
-    content: req.body.content || "",
-    publishDate: req.body.publishDate || new Date().toISOString().split("T")[0],
-    imageUrl: req.body.imageUrl || "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&q=80&w=1200",
-    rank: typeof req.body.rank === "number" ? req.body.rank : 0
-  };
-  const { error } = await supabase.from("news").insert(newItem);
-  if (error) return res.status(500).json({ success: false, message: error.message });
-  res.json({ success: true, item: newItem });
+  try {
+    const newItem = {
+      id: `news-${Date.now()}`,
+      title: req.body.title || "Untitled Article",
+      excerpt: req.body.excerpt || "",
+      content: req.body.content || "",
+      publishDate: req.body.publishDate || new Date().toISOString().split("T")[0],
+      imageUrl: req.body.imageUrl || "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&q=80&w=1200",
+      rank: typeof req.body.rank === "number" ? req.body.rank : 0
+    };
+    const { error } = await supabase.from("news").insert(newItem);
+    if (error) {
+       console.error("Supabase News Insert Error:", error);
+       return res.status(500).json({ success: false, message: `Database error: ${error.message}` });
+    }
+    res.json({ success: true, item: newItem });
+  } catch (err: any) {
+    console.error("News creation crash:", err);
+    res.status(500).json({ success: false, message: err.message || "Internal server error during news creation." });
+  }
 });
 
 app.put("/api/news/:id", async (req, res) => {

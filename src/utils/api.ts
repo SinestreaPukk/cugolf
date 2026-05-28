@@ -23,8 +23,9 @@ export async function createNews(item: Partial<NewsItem>): Promise<{ success: bo
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item)
   });
-  if (!res.ok) throw new Error("Failed to create news article");
-  return res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Failed to create news article");
+  return data;
 }
 
 export async function updateNews(id: string, item: Partial<NewsItem>): Promise<{ success: boolean; item: NewsItem }> {
@@ -33,8 +34,9 @@ export async function updateNews(id: string, item: Partial<NewsItem>): Promise<{
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item)
   });
-  if (!res.ok) throw new Error("Failed to update news article");
-  return res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Failed to update news article");
+  return data;
 }
 
 export async function deleteNews(id: string): Promise<{ success: boolean }> {

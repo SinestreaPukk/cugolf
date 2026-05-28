@@ -569,8 +569,8 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
       setNewsDate("");
       setNewsRank(0);
       refreshState();
-    } catch (err) {
-      triggerErrorMsg("Failed to save changes.");
+    } catch (err: any) {
+      triggerErrorMsg(err.message || "Failed to save changes.");
     } finally {
       setIsMutating(false);
     }

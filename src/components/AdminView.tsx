@@ -2700,8 +2700,9 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase block">FEATURED SPONSOR IMAGE URL</label>
                   <ImageUploadWidget
+                    id="homeSpon_img"
+                    label="FEATURED SPONSOR IMAGE URL"
                     value={homeSponImageUrl}
                     onChange={setHomeSponImageUrl}
                     placeholder="Select featured photo..."

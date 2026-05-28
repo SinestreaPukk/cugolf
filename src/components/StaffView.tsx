@@ -8,7 +8,7 @@ interface StaffViewProps {
 
 export default function StaffView({ staff, siteLabels }: StaffViewProps) {
   // Sort staff by order
-  const sortedStaff = [...staff].sort((a, b) => a.order - b.order);
+  const sortedStaff = [...(staff || [])].sort((a, b) => a.order - b.order);
 
   return (
     <div id="staff_view" className="space-y-16 animate-fade-in px-4 md:px-0 bg-stone-50/20">

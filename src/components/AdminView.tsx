@@ -1539,7 +1539,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
               </h2>
 
               <div className="space-y-4 max-h-[600px] overflow-y-auto pr-1">
-                {dbState.news.map((item) => (
+                {(dbState.news || []).map((item) => (
                   <div key={item.id} className="border border-[#121212]/10 bg-stone-50 p-4 space-y-3 flex flex-col justify-between hover:border-[#121212]">
                     <div className="space-y-1.5">
                       <span className="font-mono text-[9px] text-[#121212]/40 block">{item.publishDate}</span>
@@ -1787,11 +1787,11 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
             {/* Player list */}
             <div className="border border-[#121212] bg-white p-6 space-y-4">
               <h2 className="font-display text-sm font-bold uppercase tracking-wider text-[#121212]">
-                ACTIVE PLAYERS REGISTRY ({dbState.roster.length} ATHLETES)
+                ACTIVE PLAYERS REGISTRY ({(dbState.roster?.length || 0)} ATHLETES)
               </h2>
 
               <div className="divide-y divide-[#121212]/10 max-h-[300px] overflow-y-auto pr-1">
-                {dbState.roster.map((player) => (
+                {(dbState.roster || []).map((player) => (
                   <div key={player.id} className="py-3 flex items-center justify-between">
                     <div>
                       <div className="font-display text-xs font-bold uppercase text-[#121212]">{player.name}</div>
@@ -1823,11 +1823,11 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
             {/* Staff list */}
             <div className="border border-[#121212] bg-white p-6 space-y-4">
               <h2 className="font-display text-sm font-bold uppercase tracking-wider text-[#121212]">
-                GOVERNANCE OFFICERS ({dbState.staff.length} BOARD REGS)
+                GOVERNANCE OFFICERS ({(dbState.staff?.length || 0)} BOARD REGS)
               </h2>
 
               <div className="divide-y divide-[#121212]/10 max-h-[300px] overflow-y-auto pr-1">
-                {dbState.staff.map((p) => (
+                {(dbState.staff || []).map((p) => (
                   <div key={p.id} className="py-3 flex items-center justify-between">
                     <div>
                       <div className="font-display text-xs font-bold uppercase text-[#121212]">{p.name}</div>
@@ -2006,7 +2006,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
               </h2>
 
               <div className="divide-y divide-[#121212]/10 max-h-[500px] overflow-y-auto pr-1">
-                {dbState.scores.map((score) => (
+                {(dbState.scores || []).map((score) => (
                   <div key={score.id} className="py-4 space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-[9px] text-[#121212]/40">{score.date}</span>
@@ -2115,11 +2115,11 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
           <div className="lg:col-span-7 space-y-6">
             <div className="border border-[#121212] bg-white p-6 space-y-4">
               <h2 className="font-display text-sm font-bold uppercase tracking-wider text-[#121212]">
-                CURATED PHOTOS CABINET ({dbState.gallery.length} IMAGES ACTIVE)
+                CURATED PHOTOS CABINET ({(dbState.gallery?.length || 0)} IMAGES ACTIVE)
               </h2>
 
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-[500px] overflow-y-auto pr-1">
-                {dbState.gallery.map((img) => (
+                {(dbState.gallery || []).map((img) => (
                   <div key={img.id} className="group relative aspect-square border border-[#121212]/15 bg-stone-100 overflow-hidden">
                     <img
                       src={img.imageUrl}

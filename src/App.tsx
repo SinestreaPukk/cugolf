@@ -101,6 +101,9 @@ function AppContent() {
     );
   }
 
+  // Final check to prevent any accidental null dbState access
+  if (!dbState) return null;
+
   return (
     <div className="flex min-h-screen flex-col bg-stone-50 text-neutral-900">
       <Navbar
@@ -153,26 +156,26 @@ function AppContent() {
           <Routes>
             <Route path="/" element={
               <HomeView
-                news={dbState!.news}
-                scores={dbState!.scores}
-                roster={dbState!.roster}
-                welcomeSection={dbState!.welcomeSection}
-                upcomingActivity={dbState!.upcomingActivity}
-                homeSponsorSection={dbState!.homeSponsorSection}
-                sponsors={dbState!.sponsors}
-                siteLabels={dbState!.siteLabels}
-                siteSettings={dbState!.siteSettings}
+                news={dbState.news || []}
+                scores={dbState.scores || []}
+                roster={dbState.roster || []}
+                welcomeSection={dbState.welcomeSection}
+                upcomingActivity={dbState.upcomingActivity}
+                homeSponsorSection={dbState.homeSponsorSection}
+                sponsors={dbState.sponsors || []}
+                siteLabels={dbState.siteLabels}
+                siteSettings={dbState.siteSettings}
               />
             } />
-            <Route path="/blog" element={<BlogView news={dbState!.news} siteLabels={dbState!.siteLabels} siteSettings={dbState!.siteSettings} />} />
-            <Route path="/activities" element={<BlogView news={dbState!.news} siteLabels={dbState!.siteLabels} siteSettings={dbState!.siteSettings} />} />
-            <Route path="/roster" element={<RosterView roster={dbState!.roster} siteLabels={dbState!.siteLabels} />} />
-            <Route path="/staff" element={<StaffView staff={dbState!.staff} siteLabels={dbState!.siteLabels} />} />
-            <Route path="/scores" element={<ScoresView scores={dbState!.scores} siteLabels={dbState!.siteLabels} />} />
-            <Route path="/sponsors" element={<SponsorsView sponsors={dbState!.sponsors} siteLabels={dbState!.siteLabels} />} />
+            <Route path="/blog" element={<BlogView news={dbState.news || []} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} />} />
+            <Route path="/activities" element={<BlogView news={dbState.news || []} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} />} />
+            <Route path="/roster" element={<RosterView roster={dbState.roster || []} siteLabels={dbState.siteLabels} />} />
+            <Route path="/staff" element={<StaffView staff={dbState.staff || []} siteLabels={dbState.siteLabels} />} />
+            <Route path="/scores" element={<ScoresView scores={dbState.scores || []} siteLabels={dbState.siteLabels} />} />
+            <Route path="/sponsors" element={<SponsorsView sponsors={dbState.sponsors || []} siteLabels={dbState.siteLabels} />} />
             <Route path="/admin" element={
               <AdminView
-                dbState={dbState!}
+                dbState={dbState}
                 refreshState={refreshState}
                 adminToken={adminToken}
                 setAdminToken={syncAdminToken}
@@ -181,13 +184,15 @@ function AppContent() {
             {/* Fallback */}
             <Route path="*" element={
               <HomeView
-                news={dbState!.news}
-                scores={dbState!.scores}
-                roster={dbState!.roster}
-                welcomeSection={dbState!.welcomeSection}
-                upcomingActivity={dbState!.upcomingActivity}
-                siteLabels={dbState!.siteLabels}
-                siteSettings={dbState!.siteSettings}
+                news={dbState.news || []}
+                scores={dbState.scores || []}
+                roster={dbState.roster || []}
+                welcomeSection={dbState.welcomeSection}
+                upcomingActivity={dbState.upcomingActivity}
+                homeSponsorSection={dbState.homeSponsorSection}
+                sponsors={dbState.sponsors || []}
+                siteLabels={dbState.siteLabels}
+                siteSettings={dbState.siteSettings}
               />
             } />
           </Routes>
@@ -206,4 +211,3 @@ export default function App() {
     </Router>
   );
 }
-

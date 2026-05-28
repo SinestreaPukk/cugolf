@@ -44,7 +44,7 @@ export default function ScoresView({ scores, siteLabels }: ScoresViewProps) {
         {/* Interactive Match Score list */}
         <div className="space-y-6">
           <div className="border border-stone-200 bg-white divide-y divide-stone-150 rounded-lg overflow-hidden shadow-xs">
-            {scores.map((score) => {
+            {(scores || []).map((score) => {
               const isExpanded = expandedId === score.id;
 
               return (
@@ -106,7 +106,7 @@ export default function ScoresView({ scores, siteLabels }: ScoresViewProps) {
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-stone-100">
-                            {score.scoresList.map((sl, index) => (
+                            {(score.scoresList || []).map((sl, index) => (
                               <tr key={index} className="hover:bg-stone-50/50 transition-colors uppercase font-medium text-stone-750">
                                 <td className="px-4 py-3 text-stone-800 flex items-center gap-2 font-bold">
                                   <Medal size={11} className={index === 0 ? "text-amber-500 shrink-0" : index === 1 ? "text-stone-400 shrink-0" : "text-stone-350 shrink-0"} />

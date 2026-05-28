@@ -242,7 +242,7 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
       )}
 
       {/* 2. SPONSOR SHOWCASE SECTION */}
-      {(siteSettings?.showHomeSponsors && homeSponsorSection?.showSection) && (
+      {(siteSettings?.showHomeSponsors ?? true) && (homeSponsorSection?.showSection ?? true) && (
         <section className="mx-auto max-w-7xl space-y-12">
           {/* Sponsor Marquee */}
           <div className="border-y border-stone-200 py-8 overflow-hidden bg-stone-50/50">
@@ -275,21 +275,21 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
              <div className="lg:w-1/2 p-10 md:p-16 flex flex-col justify-center space-y-8 order-2 lg:order-1">
                 <div className="space-y-4">
                   <span className="font-mono text-[10px] font-bold text-[#da5f8e] tracking-[0.3em] uppercase">
-                    {homeSponsorSection.subtitle || "CORPORATE PARTNERSHIP"}
+                    {homeSponsorSection?.subtitle || "CORPORATE PARTNERSHIP"}
                   </span>
                   <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tight text-neutral-950 leading-none">
-                    {homeSponsorSection.title || "SUPPORTING EXCELLENCE"}
+                    {homeSponsorSection?.title || "SUPPORTING EXCELLENCE"}
                   </h2>
                   <p className="font-sans text-sm md:text-base text-stone-600 leading-relaxed max-w-lg">
-                    {homeSponsorSection.description || "Our sponsors provide the essential resources and infrastructure that empower our student athletes to compete at the highest collegiate level."}
+                    {homeSponsorSection?.description || "Our sponsors provide the essential resources and infrastructure that empower our student athletes to compete at the highest collegiate level."}
                   </p>
                 </div>
                 <div className="flex items-center gap-6">
                   <Link
-                    to={homeSponsorSection.buttonUrl || "/sponsors"}
+                    to={homeSponsorSection?.buttonUrl || "/sponsors"}
                     className="inline-flex items-center gap-2 bg-neutral-950 text-white px-8 py-4 font-mono text-xs font-black tracking-widest uppercase hover:bg-[#da5f8e] transition-all duration-300 shadow-lg group/btn"
                   >
-                    {homeSponsorSection.buttonText || "LEARN MORE"}
+                    {homeSponsorSection?.buttonText || "LEARN MORE"}
                     <ArrowRight size={14} className="transition-transform group-hover/btn:translate-x-1" />
                   </Link>
                 </div>
@@ -297,7 +297,7 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
              {/* Feature Image */}
              <div className="lg:w-1/2 h-80 lg:h-auto relative overflow-hidden bg-stone-100 order-1 lg:order-2 border-b lg:border-b-0 lg:border-l border-stone-200">
                <img 
-                 src={homeSponsorSection.imageUrl || "https://images.unsplash.com/photo-1593111774240-d529f52ee4de?auto=format&fit=crop&q=80&w=1200"} 
+                 src={homeSponsorSection?.imageUrl || "https://images.unsplash.com/photo-1593111774240-d529f52ee4de?auto=format&fit=crop&q=80&w=1200"} 
                  alt="Sponsor partnership" 
                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                />

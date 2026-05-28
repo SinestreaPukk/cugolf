@@ -291,6 +291,62 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
         </section>
       )}
 
+      {/* 4. UPCOMING ACTIVITY SECTION */}
+      {upcomingActivity?.showSection && (
+        <section className="mx-auto max-w-7xl animate-fade-in">
+          <div className="flex flex-col md:flex-row bg-white border border-stone-200 rounded-lg overflow-hidden shadow-sm">
+            {/* Image Side */}
+            <div className="md:w-1/2 h-64 md:h-auto relative overflow-hidden bg-stone-100">
+              <img 
+                src={upcomingActivity.imageUrl || "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&q=80&w=1200"} 
+                alt="Upcoming Activity" 
+                className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+              />
+              <div className="absolute top-4 left-4 bg-neutral-950 text-white font-mono text-[9px] font-bold px-3 py-1.5 uppercase tracking-widest rounded-xs">
+                Next Event
+              </div>
+            </div>
+
+            {/* Content Side */}
+            <div className="md:w-1/2 p-8 md:p-12 flex flex-col justify-center space-y-6">
+              <div className="space-y-4">
+                <div className="flex flex-wrap gap-4 text-stone-400 font-mono text-[10px] font-bold uppercase tracking-wider">
+                  <div className="flex items-center gap-1.5">
+                    <Calendar size={12} className="text-[#da5f8e]" />
+                    <span>{upcomingActivity.date || "TBD"}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <MapPin size={12} className="text-[#da5f8e]" />
+                    <span>{upcomingActivity.location || "TBD"}</span>
+                  </div>
+                </div>
+
+                <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-neutral-950 uppercase leading-tight">
+                  {upcomingActivity.title || "UPCOMING ACTIVITY"}
+                </h2>
+                
+                <p className="font-sans text-sm text-stone-600 leading-relaxed">
+                  {upcomingActivity.description || "Stay tuned for our next competitive or social engagement. Updates are published here regularly."}
+                </p>
+              </div>
+
+              {upcomingActivity.registrationUrl && (
+                <div>
+                  <a
+                    href={upcomingActivity.registrationUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 border-2 border-neutral-950 text-neutral-950 px-6 py-3 font-mono text-xs font-black tracking-widest uppercase hover:bg-neutral-950 hover:text-white transition-all duration-300 rounded-xs"
+                  >
+                    SECURE YOUR SPOT <ArrowUpRight size={14} />
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* 5. MEMBERSHIP CTA */}
       <section className="mx-auto max-w-7xl bg-[#121212] p-8 md:p-16 flex flex-col md:flex-row items-center justify-between gap-10 overflow-hidden relative shadow-2xl">
         {/* Decorative pattern */}

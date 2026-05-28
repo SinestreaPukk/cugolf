@@ -108,6 +108,20 @@ app.get("/api/db", async (req, res) => {
       });
     }
 
+    // Default for homeSponsorSection if not set
+    if (!db.homeSponsorSection) {
+      db.homeSponsorSection = {
+        title: "SUPPORTING EXCELLENCE",
+        subtitle: "CORPORATE PARTNERSHIP",
+        description: "Our sponsors provide the essential resources and infrastructure that empower our student athletes to compete at the highest collegiate level.",
+        marqueeText: "PLATINUM PARTNERS • EQUIPMENT PROVIDERS • FACILITY AFFILIATES • OFFICIAL CLUB SPONSORS",
+        imageUrl: "https://images.unsplash.com/photo-1593111774240-d529f52ee4de?auto=format&fit=crop&q=80&w=1200",
+        buttonText: "LEARN MORE",
+        buttonUrl: "/sponsors",
+        showSection: true
+      };
+    }
+
     res.json(db);
   } catch (err) {
     console.error("Error fetching from Supabase:", err);
@@ -356,6 +370,16 @@ app.put("/api/site-settings", async (req, res) => {
 app.put("/api/site-labels", async (req, res) => {
   const { error } = await supabase.from("site_config").upsert({
     key: "site_labels",
+    data: req.body
+  });
+  if (error) return res.status(500).json({ success: false, message: error.message });
+  res.json({ success: true });
+});
+
+// HOME SPONSOR SECTION UPDATE
+app.put("/api/home-sponsor-section", async (req, res) => {
+  const { error } = await supabase.from("site_config").upsert({
+    key: "home_sponsor_section",
     data: req.body
   });
   if (error) return res.status(500).json({ success: false, message: error.message });

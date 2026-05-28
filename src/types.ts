@@ -85,6 +85,18 @@ export interface SiteSettings {
   showNavbarStaff: boolean;
   showNavbarScores: boolean;
   showNavbarSponsors: boolean;
+  showHomeSponsors: boolean;
+}
+
+export interface HomeSponsorSection {
+  title: string;
+  subtitle: string;
+  description: string;
+  marqueeText: string;
+  imageUrl: string;
+  buttonText: string;
+  buttonUrl: string;
+  showSection: boolean;
 }
 
 export interface SiteLabels {
@@ -211,6 +223,7 @@ export interface DatabaseState {
   gallery: GalleryImage[];
   welcomeSection: WelcomeSection;
   upcomingActivity: UpcomingActivity;
+  homeSponsorSection: HomeSponsorSection;
   sponsors: Sponsor[];
   siteSettings: SiteSettings;
   siteLabels: SiteLabels;

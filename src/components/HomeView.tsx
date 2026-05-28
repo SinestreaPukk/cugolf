@@ -1,20 +1,22 @@
-import { NewsItem, TournamentScore, Player, WelcomeSection, UpcomingActivity, SiteLabels, SiteSettings } from "../types";
+import { NewsItem, TournamentScore, Player, WelcomeSection, UpcomingActivity, SiteLabels, SiteSettings, HomeSponsorSection, Sponsor } from "../types";
 import { ArrowRight, Calendar, User, ChevronRight, BookOpen, Clock, Trophy, Target, MapPin, ArrowUpRight } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import WelcomeSectionView from "./WelcomeSectionView";
-
 interface HomeViewProps {
   news: NewsItem[];
   scores: TournamentScore[];
   roster: Player[];
   welcomeSection: WelcomeSection;
   upcomingActivity: UpcomingActivity;
+  homeSponsorSection?: HomeSponsorSection;
+  sponsors: Sponsor[];
   siteLabels?: SiteLabels;
   siteSettings?: SiteSettings;
 }
 
-export default function HomeView({ news, scores, roster, welcomeSection, upcomingActivity, siteLabels, siteSettings }: HomeViewProps) {
+export default function HomeView({ news, scores, roster, welcomeSection, upcomingActivity, homeSponsorSection, sponsors, siteLabels, siteSettings }: HomeViewProps) {
+
   const [selectedArticle, setSelectedArticle] = useState<NewsItem | null>(null);
 
   // Sort by rank (descending) and then by date (descending)
@@ -235,6 +237,71 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
                 </div>
               )}
             </div>
+          </div>
+        </section>
+      )}
+
+      {/* 2. SPONSOR SHOWCASE SECTION */}
+      {(siteSettings?.showHomeSponsors && homeSponsorSection?.showSection) && (
+        <section className="mx-auto max-w-7xl space-y-12">
+          {/* Sponsor Marquee */}
+          <div className="border-y border-stone-200 py-8 overflow-hidden bg-stone-50/50">
+            <div className="flex animate-marquee whitespace-nowrap gap-12 items-center">
+              {homeSponsorSection?.marqueeText && (
+                <span className="font-mono text-xs font-black text-[#da5f8e] tracking-widest uppercase px-8 border-r border-stone-200">
+                  {homeSponsorSection.marqueeText}
+                </span>
+              )}
+              {[...sponsors, ...sponsors].map((sponsor, idx) => (
+                <div key={`${sponsor.id}-${idx}`} className="flex items-center gap-4 shrink-0 px-4">
+                  {sponsor.imageUrl ? (
+                    <img src={sponsor.imageUrl} alt={sponsor.name} className="h-12 md:h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100" />
+                  ) : (
+                    <span className="font-display text-xl font-black text-stone-300 uppercase">{sponsor.name}</span>
+                  )}
+                </div>
+              ))}
+              {homeSponsorSection?.marqueeText && (
+                <span className="font-mono text-xs font-black text-[#da5f8e] tracking-widest uppercase px-8 border-l border-stone-200">
+                  {homeSponsorSection.marqueeText}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Featured Sponsor Layout */}
+          <div className="flex flex-col lg:flex-row bg-white border border-stone-200 overflow-hidden shadow-xs group">
+             {/* Text Content */}
+             <div className="lg:w-1/2 p-10 md:p-16 flex flex-col justify-center space-y-8 order-2 lg:order-1">
+                <div className="space-y-4">
+                  <span className="font-mono text-[10px] font-bold text-[#da5f8e] tracking-[0.3em] uppercase">
+                    {homeSponsorSection.subtitle || "CORPORATE PARTNERSHIP"}
+                  </span>
+                  <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tight text-neutral-950 leading-none">
+                    {homeSponsorSection.title || "SUPPORTING EXCELLENCE"}
+                  </h2>
+                  <p className="font-sans text-sm md:text-base text-stone-600 leading-relaxed max-w-lg">
+                    {homeSponsorSection.description || "Our sponsors provide the essential resources and infrastructure that empower our student athletes to compete at the highest collegiate level."}
+                  </p>
+                </div>
+                <div className="flex items-center gap-6">
+                  <Link
+                    to={homeSponsorSection.buttonUrl || "/sponsors"}
+                    className="inline-flex items-center gap-2 bg-neutral-950 text-white px-8 py-4 font-mono text-xs font-black tracking-widest uppercase hover:bg-[#da5f8e] transition-all duration-300 shadow-lg group/btn"
+                  >
+                    {homeSponsorSection.buttonText || "LEARN MORE"}
+                    <ArrowRight size={14} className="transition-transform group-hover/btn:translate-x-1" />
+                  </Link>
+                </div>
+             </div>
+             {/* Feature Image */}
+             <div className="lg:w-1/2 h-80 lg:h-auto relative overflow-hidden bg-stone-100 order-1 lg:order-2 border-b lg:border-b-0 lg:border-l border-stone-200">
+               <img 
+                 src={homeSponsorSection.imageUrl || "https://images.unsplash.com/photo-1593111774240-d529f52ee4de?auto=format&fit=crop&q=80&w=1200"} 
+                 alt="Sponsor partnership" 
+                 className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+               />
+             </div>
           </div>
         </section>
       )}

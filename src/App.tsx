@@ -158,6 +158,8 @@ function AppContent() {
                 roster={dbState!.roster}
                 welcomeSection={dbState!.welcomeSection}
                 upcomingActivity={dbState!.upcomingActivity}
+                homeSponsorSection={dbState!.homeSponsorSection}
+                sponsors={dbState!.sponsors}
                 siteLabels={dbState!.siteLabels}
                 siteSettings={dbState!.siteSettings}
               />

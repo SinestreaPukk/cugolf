@@ -183,7 +183,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   // Active sub-section state
-  const [activeSubTab, setActiveSubTab] = useState<"news" | "roster" | "scores" | "gallery" | "welcome" | "sponsors" | "siteSettings" | "siteLabels">("news");
+  const [activeSubTab, setActiveSubTab] = useState<"news" | "roster" | "scores" | "gallery" | "welcome" | "upcoming" | "sponsors" | "siteSettings" | "siteLabels" | "homeSponsors">("news");
 
   // Notifications
   const [successMsg, setSuccessMsg] = useState("");
@@ -270,6 +270,17 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
   const [setsShowNavbarStaff, setSetsShowNavbarStaff] = useState(dbState.siteSettings?.showNavbarStaff ?? true);
   const [setsShowNavbarScores, setSetsShowNavbarScores] = useState(dbState.siteSettings?.showNavbarScores ?? true);
   const [setsShowNavbarSponsors, setSetsShowNavbarSponsors] = useState(dbState.siteSettings?.showNavbarSponsors ?? true);
+  const [setsShowHomeSponsors, setSetsShowHomeSponsors] = useState(dbState.siteSettings?.showHomeSponsors ?? true);
+
+  // Home Sponsor Section states
+  const [homeSponTitle, setHomeSponTitle] = useState(dbState.homeSponsorSection?.title || "SUPPORTING EXCELLENCE");
+  const [homeSponSubtitle, setHomeSponSubtitle] = useState(dbState.homeSponsorSection?.subtitle || "CORPORATE PARTNERSHIP");
+  const [homeSponDescription, setHomeSponDescription] = useState(dbState.homeSponsorSection?.description || "Our sponsors provide the essential resources and infrastructure that empower our student athletes to compete at the highest collegiate level.");
+  const [homeSponMarqueeText, setHomeSponMarqueeText] = useState(dbState.homeSponsorSection?.marqueeText || "");
+  const [homeSponImageUrl, setHomeSponImageUrl] = useState(dbState.homeSponsorSection?.imageUrl || "");
+  const [homeSponButtonText, setHomeSponButtonText] = useState(dbState.homeSponsorSection?.buttonText || "LEARN MORE");
+  const [homeSponButtonUrl, setHomeSponButtonUrl] = useState(dbState.homeSponsorSection?.buttonUrl || "/sponsors");
+  const [homeSponShowSection, setHomeSponShowSection] = useState(dbState.homeSponsorSection?.showSection ?? true);
 
   // Site Labels states
   const [labelNavHome, setLabelNavHome] = useState(dbState.siteLabels.navHome || "HOME");
@@ -393,6 +404,17 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
       setSetsShowNavbarStaff(dbState.siteSettings.showNavbarStaff ?? true);
       setSetsShowNavbarScores(dbState.siteSettings.showNavbarScores ?? true);
       setSetsShowNavbarSponsors(dbState.siteSettings.showNavbarSponsors ?? true);
+      setSetsShowHomeSponsors(dbState.siteSettings.showHomeSponsors ?? true);
+    }
+    if (dbState?.homeSponsorSection) {
+      setHomeSponTitle(dbState.homeSponsorSection.title || "");
+      setHomeSponSubtitle(dbState.homeSponsorSection.subtitle || "");
+      setHomeSponDescription(dbState.homeSponsorSection.description || "");
+      setHomeSponMarqueeText(dbState.homeSponsorSection.marqueeText || "");
+      setHomeSponImageUrl(dbState.homeSponsorSection.imageUrl || "");
+      setHomeSponButtonText(dbState.homeSponsorSection.buttonText || "");
+      setHomeSponButtonUrl(dbState.homeSponsorSection.buttonUrl || "");
+      setHomeSponShowSection(dbState.homeSponsorSection.showSection ?? true);
     }
     if (dbState?.upcomingActivity) {
       setUpcomingTitle(dbState.upcomingActivity.title || "");
@@ -1055,6 +1077,31 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
   };
 
   // -- SITE SETTINGS HANDLER --
+  const handleUpdateHomeSponsorSection = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsMutating(true);
+    try {
+      const res = await updateHomeSponsorSection({
+        title: homeSponTitle,
+        subtitle: homeSponSubtitle,
+        description: homeSponDescription,
+        marqueeText: homeSponMarqueeText,
+        imageUrl: homeSponImageUrl,
+        buttonText: homeSponButtonText,
+        buttonUrl: homeSponButtonUrl,
+        showSection: homeSponShowSection
+      });
+      if (res.success) {
+        triggerSuccessMsg("HOME SPONSOR SHOWCASE UPDATED.");
+        refreshState();
+      }
+    } catch (err: any) {
+      triggerErrorMsg(err.message || "Failed to update home sponsor section.");
+    } finally {
+      setIsMutating(false);
+    }
+  };
+
   const handleUpdateSiteSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsMutating(true);
@@ -1068,13 +1115,16 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
         showMarquee: setsShowMarquee,
         showHomeBlog: setsShowHomeBlog,
         showHomeWelcome: setsShowHomeWelcome,
-        showHomeScores: setsShowHomeScores,        showFooterMission: setsShowFooterMission,
+        showHomeScores: setsShowHomeScores,
+        showFooterMission: setsShowFooterMission,
         showFooterLegacy: setsShowFooterLegacy,
         showNavbarRoster: setsShowNavbarRoster,
         showNavbarStaff: setsShowNavbarStaff,
         showNavbarScores: setsShowNavbarScores,
-        showNavbarSponsors: setsShowNavbarSponsors
+        showNavbarSponsors: setsShowNavbarSponsors,
+        showHomeSponsors: setsShowHomeSponsors
       });
+
       if (resVal.success) {
         triggerSuccessMsg("GENERAL SETTINGS, MOVING MARQUEE TEXT & FOOTER CORRECTIONS SET LIVE.");
         refreshState();
@@ -1322,6 +1372,21 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
           >
             <span className="flex items-center gap-2 uppercase">
               <Award size={14} /> SPONSORS CMS
+            </span>
+          </button>
+
+          <button
+            onClick={() => {
+              setActiveSubTab("homeSponsors");
+            }}
+            className={`px-5 py-3 font-mono text-xs font-black tracking-widest border-t-2 border-x-2 cursor-pointer transition-all ${
+              activeSubTab === "homeSponsors"
+                ? "border-black bg-black text-white"
+                : "border-transparent text-black/50 hover:text-black hover:bg-neutral-100"
+            }`}
+          >
+            <span className="flex items-center gap-2 uppercase">
+              <Award size={14} /> HOME SPONSORS CMS
             </span>
           </button>
 
@@ -2538,6 +2603,173 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
         </section>
       )}
 
+      {/* --- SUB-TAB CORE 8B: HOME SPONSORS CMS --- */}
+      {activeSubTab === "homeSponsors" && (
+        <section className="mx-auto max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 font-sans">
+          {/* Form */}
+          <div className="lg:col-span-6 space-y-6">
+            <form onSubmit={handleUpdateHomeSponsorSection} className="border border-[#121212] bg-white p-6 space-y-5">
+              <div>
+                <h2 className="font-display text-sm font-bold uppercase tracking-wider text-[#121212] mb-1">
+                  EDIT HOME SPONSOR SHOWCASE
+                </h2>
+                <p className="text-[10px] text-gray-500 font-mono uppercase">
+                  Configure the featured sponsor section on the main landing page.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 bg-stone-50 border border-stone-200 p-3 rounded-xs mb-4">
+                  <input
+                    id="toggle_home_sponsors"
+                    type="checkbox"
+                    checked={homeSponShowSection}
+                    onChange={(e) => setHomeSponShowSection(e.target.checked)}
+                    className="accent-black h-4 w-4"
+                  />
+                  <label htmlFor="toggle_home_sponsors" className="font-mono text-[9px] font-bold text-stone-600 uppercase cursor-pointer">
+                    ENABLE & SHOW SPONSOR SHOWCASE ON HOME PAGE
+                  </label>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase block">MAIN TITLE</label>
+                  <input
+                    type="text"
+                    value={homeSponTitle}
+                    onChange={(e) => setHomeSponTitle(e.target.value)}
+                    placeholder="SUPPORTING EXCELLENCE"
+                    className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:ring-1 focus:ring-black focus:outline-none font-bold"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase block">SUBTITLE / KICKER</label>
+                  <input
+                    type="text"
+                    value={homeSponSubtitle}
+                    onChange={(e) => setHomeSponSubtitle(e.target.value)}
+                    placeholder="CORPORATE PARTNERSHIP"
+                    className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:ring-1 focus:ring-black focus:outline-none"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase block">DESCRIPTION TEXT</label>
+                  <textarea
+                    rows={4}
+                    value={homeSponDescription}
+                    onChange={(e) => setHomeSponDescription(e.target.value)}
+                    placeholder="Our sponsors provide the essential resources..."
+                    className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:ring-1 focus:ring-black focus:outline-none leading-relaxed"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase block">SECTION MARQUEE TEXT (Optional)</label>
+                  <input
+                    type="text"
+                    value={homeSponMarqueeText}
+                    onChange={(e) => setHomeSponMarqueeText(e.target.value)}
+                    placeholder="e.g. PLATINUM PARTNERS • EQUIPMENT PROVIDERS"
+                    className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:ring-1 focus:ring-black focus:outline-none font-bold"
+                  />
+                  <p className="text-[8px] text-stone-400 font-mono uppercase">This text will scroll alongside the sponsor logos in this section.</p>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase block">BUTTON TEXT</label>
+                  <input
+                    type="text"
+                    value={homeSponButtonText}
+                    onChange={(e) => setHomeSponButtonText(e.target.value)}
+                    placeholder="LEARN MORE"
+                    className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:ring-1 focus:ring-black focus:outline-none"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase block">BUTTON DESTINATION URL (Or relative path like /sponsors)</label>
+                  <input
+                    type="text"
+                    value={homeSponButtonUrl}
+                    onChange={(e) => setHomeSponButtonUrl(e.target.value)}
+                    placeholder="/sponsors"
+                    className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:ring-1 focus:ring-black focus:outline-none"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase block">FEATURED SPONSOR IMAGE URL</label>
+                  <ImageUploadWidget
+                    value={homeSponImageUrl}
+                    onChange={setHomeSponImageUrl}
+                    placeholder="Select featured photo..."
+                  />
+                </div>
+              </div>
+
+              <div className="border-t border-[#121212]/10 pt-6 mt-6">
+                <button
+                  type="submit"
+                  disabled={isMutating}
+                  className="bg-[#121212] text-white hover:bg-[#ec4899] px-8 py-3 font-mono text-xs font-black tracking-widest uppercase flex items-center gap-2 cursor-pointer transition-all duration-350 disabled:opacity-50"
+                >
+                  <Save size={14} />
+                  {isMutating ? "SAVING CHANGES..." : "UPDATE SPONSOR SHOWCASE"}
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* Preview Panel */}
+          <div className="lg:col-span-6 space-y-4">
+            <span className="font-mono text-[10px] font-bold tracking-widest text-black/55 uppercase flex items-center gap-1.5">
+              <Eye size={12} className="text-[#a855f7]" /> CONTENT PREVIEW MAP
+            </span>
+            <div className="border-2 border-dashed border-black/30 p-4 bg-stone-50 pointer-events-none opacity-80">
+              <div className="flex flex-col bg-white border border-stone-200 overflow-hidden shadow-xs">
+                {/* Marquee Preview */}
+                <div className="border-b border-stone-100 bg-stone-50/50 py-3 overflow-hidden">
+                  <div className="flex whitespace-nowrap gap-6 items-center">
+                    {homeSponMarqueeText && (
+                      <span className="font-mono text-[8px] font-black text-[#da5f8e] uppercase px-4 border-r border-stone-200 shrink-0">
+                        {homeSponMarqueeText}
+                      </span>
+                    )}
+                    <div className="flex gap-4 shrink-0">
+                      <div className="h-6 w-12 bg-stone-200 rounded-xs"></div>
+                      <div className="h-6 w-10 bg-stone-200 rounded-xs"></div>
+                      <div className="h-6 w-14 bg-stone-200 rounded-xs"></div>
+                    </div>
+                  </div>
+                </div>
+
+                {homeSponImageUrl && (
+                  <div className="h-40 relative overflow-hidden bg-stone-100 border-b border-stone-200">
+                    <img src={homeSponImageUrl} alt="Preview" className="w-full h-full object-cover" />
+                  </div>
+                )}
+                <div className="p-6 space-y-4">
+                  <span className="font-mono text-[10px] font-bold text-[#da5f8e] tracking-[0.3em] uppercase">
+                    {homeSponSubtitle || "CORPORATE PARTNERSHIP"}
+                  </span>
+                  <h2 className="font-thai text-3xl font-bold tracking-tight text-neutral-950 leading-none">
+                    {homeSponTitle || "SUPPORTING EXCELLENCE"}
+                  </h2>
+                  <p className="font-sans text-xs text-stone-600 leading-relaxed">
+                    {homeSponDescription}
+                  </p>
+                  <div className="inline-flex items-center gap-2 bg-neutral-950 text-white px-4 py-2 font-mono text-[10px] font-black tracking-widest uppercase">
+                    {homeSponButtonText || "LEARN MORE"} <ArrowRight size={10} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* --- SUB-TAB CORE 9: SITE LABELS CMS --- */}
       {activeSubTab === "siteLabels" && (
         <section className="mx-auto max-w-7xl font-sans space-y-8">
@@ -3076,6 +3308,11 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
                       <span className="font-mono text-[9px] font-bold text-stone-600 uppercase">Show Home Scores</span>
                       <input type="checkbox" checked={setsShowHomeScores} onChange={(e) => setSetsShowHomeScores(e.target.checked)} className="accent-black" />
                     </div>
+                    <div className="flex items-center justify-between p-3 bg-stone-50 border border-stone-200 rounded-sm">
+                      <span className="font-mono text-[9px] font-bold text-stone-600 uppercase">Show Home Sponsors</span>
+                      <input type="checkbox" checked={setsShowHomeSponsors} onChange={(e) => setSetsShowHomeSponsors(e.target.checked)} className="accent-black" />
+                    </div>
+
                     <div className="flex items-center justify-between p-3 bg-stone-50 border border-stone-200 rounded-sm">
                       <span className="font-mono text-[9px] font-bold text-stone-600 uppercase">Show Footer Mission</span>
                       <input type="checkbox" checked={setsShowFooterMission} onChange={(e) => setSetsShowFooterMission(e.target.checked)} className="accent-black" />

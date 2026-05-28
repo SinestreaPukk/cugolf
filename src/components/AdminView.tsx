@@ -272,8 +272,10 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
   const [setsShowNavbarSponsors, setSetsShowNavbarSponsors] = useState(dbState.siteSettings?.showNavbarSponsors ?? true);
 
   // Site Labels states
-  const [labelNavHome, setLabelNavHome] = useState(dbState.siteLabels?.navHome || "HOME");
-  const [labelNavRoster, setLabelNavRoster] = useState(dbState.siteLabels?.navRoster || "TEAM ROSTER");
+  const [labelNavHome, setLabelNavHome] = useState(dbState.siteLabels.navHome || "HOME");
+  const [labelNavBlog, setLabelNavBlog] = useState(dbState.siteLabels.navBlog || "ACTIVITIES");
+  const [labelNavRoster, setLabelNavRoster] = useState(dbState.siteLabels.navRoster || "TEAM ROSTER");
+
   const [labelNavStaff, setLabelNavStaff] = useState(dbState.siteLabels?.navStaff || "STAFF & BOARD");
   const [labelNavScores, setLabelNavScores] = useState(dbState.siteLabels?.navScores || "SCORES & STATS");
   const [labelNavSponsors, setLabelNavSponsors] = useState(dbState.siteLabels?.navSponsors || "PARTNERS");
@@ -963,6 +965,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
     try {
       const resVal = await updateSiteLabels({
         navHome: labelNavHome,
+        navBlog: labelNavBlog,
         navRoster: labelNavRoster,
         navStaff: labelNavStaff,
         navScores: labelNavScores,
@@ -2558,6 +2561,10 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
                   <div className="space-y-1.5">
                     <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase">NAV HOME</label>
                     <input type="text" value={labelNavHome} onChange={(e) => setLabelNavHome(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:ring-1 focus:ring-black outline-none font-bold" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase">NAV ACTIVITIES (BLOG)</label>
+                    <input type="text" value={labelNavBlog} onChange={(e) => setLabelNavBlog(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:ring-1 focus:ring-black outline-none font-bold" />
                   </div>
                   <div className="space-y-1.5">
                     <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase">NAV TEAM ROSTER</label>

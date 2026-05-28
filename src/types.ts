@@ -90,6 +90,7 @@ export interface SiteSettings {
 export interface SiteLabels {
   // Navbar Labels
   navHome: string;
+  navBlog: string;
   navRoster: string;
   navStaff: string;
   navScores: string;

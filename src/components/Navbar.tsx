@@ -30,6 +30,7 @@ export default function Navbar({ currentTab, setCurrentTab, isAdminLoggedIn, sit
 
   const navLinks = [
     { id: "home", label: siteLabels?.navHome || "HOME", show: true },
+    { id: "blog", label: siteLabels?.navBlog || "ACTIVITIES", show: true },
     { id: "roster", label: siteLabels?.navRoster || "TEAM ROSTER", show: siteSettings?.showNavbarRoster ?? true },
     { id: "staff", label: siteLabels?.navStaff || "STAFF & BOARD", show: siteSettings?.showNavbarStaff ?? true },
     { id: "scores", label: siteLabels?.navScores || "SCORES & STATS", show: siteSettings?.showNavbarScores ?? true },

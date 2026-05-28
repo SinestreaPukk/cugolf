@@ -8,6 +8,7 @@ import RosterView from "./components/RosterView";
 import StaffView from "./components/StaffView";
 import ScoresView from "./components/ScoresView";
 import SponsorsView from "./components/SponsorsView";
+import BlogView from "./components/BlogView";
 import AdminView from "./components/AdminView";
 import { ShieldCheck, RefreshCw, AlertCircle } from "lucide-react";
 
@@ -71,6 +72,8 @@ export default function App() {
             siteSettings={dbState.siteSettings}
           />
         );
+      case "blog":
+        return <BlogView news={dbState.news} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} />;
       case "roster":
         return <RosterView roster={dbState.roster} siteLabels={dbState.siteLabels} />;
       case "staff":

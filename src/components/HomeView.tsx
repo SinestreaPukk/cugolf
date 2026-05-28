@@ -87,9 +87,12 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
               <BookOpen size={20} className="text-[#da5f8e]" />
               {siteLabels?.homeBlogTitle || "ACTIVITIES BLOG & STORIES"}
             </h2>
-            <span className="font-mono text-[9px] md:text-[10px] font-bold text-stone-400 tracking-widest">
-              {siteLabels?.homeBlogSubtitle || "C.U.G.C. LATEST LOGS"}
-            </span>
+            <button
+              onClick={() => setCurrentTab("blog")}
+              className="font-mono text-[9px] md:text-[10px] font-bold text-[#da5f8e] hover:text-[#c24273] tracking-widest uppercase cursor-pointer hover:underline underline-offset-4"
+            >
+              VIEW ALL STORIES
+            </button>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

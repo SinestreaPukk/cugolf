@@ -24,11 +24,12 @@ import {
   deleteSponsor,
   updateSiteSettings,
   updateSiteLabels,
+  updateHomeSponsorSection,
   uploadPhoto
 } from "../utils/api";
 import {
   Plus, Trash2, Edit, Save, FileText, Sparkles, LogOut, Users,
-  Trophy, Image, Sparkle, Lock, Eye, AlertCircle, RefreshCw, X, Check, HelpCircle, Heart, Settings, Calendar, Award, Type, ArrowUpRight
+  Trophy, Image, Sparkle, Lock, Eye, AlertCircle, RefreshCw, X, Check, HelpCircle, Heart, Settings, Calendar, Award, Type, ArrowUpRight, ArrowRight
 } from "lucide-react";
 
 interface ImageUploadWidgetProps {

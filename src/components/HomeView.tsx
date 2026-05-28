@@ -291,40 +291,6 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
         </section>
       )}
 
-      {/* 3. ROSTER MINI GRID PREVIEW */}
-      <section className="mx-auto max-w-7xl pt-4 md:pt-6 font-sans">
-        <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-stone-200 pb-4 mb-8 gap-4">
-          <div className="space-y-1">
-            <span className="font-mono text-[10px] font-bold text-[#da5f8e] uppercase tracking-[0.2em]">SQUAD REGISTRY</span>
-            <h2 className="font-display text-xl md:text-2xl font-bold tracking-tight text-neutral-950 uppercase flex items-center gap-2.5">
-              <Target size={20} className="text-neutral-950" />
-              {siteLabels?.rosterTitle || "THE VARSITY SQUAD"}
-            </h2>
-          </div>
-          <Link to="/roster" className="font-mono text-[10px] font-black text-neutral-950 hover:text-[#da5f8e] transition-colors flex items-center gap-1 uppercase tracking-widest">
-            VIEW FULL TEAM <ArrowUpRight size={14} />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
-          {(roster || []).slice(0, 6).map((player) => (
-            <Link key={player.id} to="/roster" className="group space-y-3">
-              <div className="aspect-[4/5] bg-stone-100 overflow-hidden border border-stone-200 group-hover:border-neutral-950 transition-all shadow-2xs">
-                <img 
-                  src={player.imageUrl} 
-                  alt={player.name} 
-                  className="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:scale-105" 
-                />
-              </div>
-              <div className="space-y-0.5">
-                <p className="font-display text-[11px] font-bold text-neutral-950 uppercase leading-tight truncate">{player.name}</p>
-                <p className="font-mono text-[9px] text-stone-400 font-bold uppercase tracking-wider">{player.year} class</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
       {/* 5. MEMBERSHIP CTA */}
       <section className="mx-auto max-w-7xl bg-[#121212] p-8 md:p-16 flex flex-col md:flex-row items-center justify-between gap-10 overflow-hidden relative shadow-2xl">
         {/* Decorative pattern */}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { DatabaseState } from "./types";
 import { getDatabaseState } from "./utils/api";
 import Navbar from "./components/Navbar";
@@ -12,8 +13,9 @@ import BlogView from "./components/BlogView";
 import AdminView from "./components/AdminView";
 import { ShieldCheck, RefreshCw, AlertCircle } from "lucide-react";
 
-export default function App() {
-  const [currentTab, setCurrentTab] = useState<string>("home");
+function AppContent() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [dbState, setDbState] = useState<DatabaseState | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [errorMsg, setErrorMsg] = useState<string>("");
@@ -50,64 +52,12 @@ export default function App() {
     refreshState();
   }, []);
 
-  // Back to top scroll effect on page change
+  // Back to top scroll effect on route change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [currentTab]);
+  }, [location.pathname]);
 
-  const renderActiveTab = () => {
-    if (!dbState) return null;
-
-    switch (currentTab) {
-      case "home":
-        return (
-          <HomeView
-            news={dbState.news}
-            scores={dbState.scores}
-            roster={dbState.roster}
-            welcomeSection={dbState.welcomeSection}
-            upcomingActivity={dbState.upcomingActivity}
-            setCurrentTab={setCurrentTab}
-            siteLabels={dbState.siteLabels}
-            siteSettings={dbState.siteSettings}
-          />
-        );
-      case "blog":
-        return <BlogView news={dbState.news} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} />;
-      case "roster":
-        return <RosterView roster={dbState.roster} siteLabels={dbState.siteLabels} />;
-      case "staff":
-        return <StaffView staff={dbState.staff} siteLabels={dbState.siteLabels} />;
-      case "scores":
-        return <ScoresView scores={dbState.scores} siteLabels={dbState.siteLabels} />;
-      case "sponsors":
-        return <SponsorsView sponsors={dbState.sponsors} siteLabels={dbState.siteLabels} />;
-      case "admin":
-        return (
-          <AdminView
-            dbState={dbState}
-            refreshState={refreshState}
-            adminToken={adminToken}
-            setAdminToken={syncAdminToken}
-          />
-        );
-      default:
-        return (
-          <HomeView
-            news={dbState.news}
-            scores={dbState.scores}
-            roster={dbState.roster}
-            welcomeSection={dbState.welcomeSection}
-            upcomingActivity={dbState.upcomingActivity}
-            setCurrentTab={setCurrentTab}
-            siteLabels={dbState.siteLabels}
-            siteSettings={dbState.siteSettings}
-          />
-        );
-    }
-  };
-
-  // 1. Loading screen matching Meiji Golf high-end magazine designs
+  // Loading screen
   if (loading) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-[#fcfbf9] text-[#121212] font-sans antialiased">
@@ -127,7 +77,7 @@ export default function App() {
     );
   }
 
-  // 2. Fatal load error page
+  // Fatal load error page
   if (errorMsg) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-[#fcfbf9] p-6 text-[#121212] font-sans text-center">
@@ -153,29 +103,20 @@ export default function App() {
 
   return (
     <div className="flex min-h-screen flex-col bg-stone-50 text-neutral-900">
-      {/* Dynamic Navigation elements */}
       <Navbar
-        currentTab={currentTab}
-        setCurrentTab={setCurrentTab}
+        currentTab={location.pathname.substring(1) || "home"}
         isAdminLoggedIn={!!adminToken}
         siteLabels={dbState?.siteLabels}
         siteSettings={dbState?.siteSettings}
       />
 
-      {/* Moving Marquee Banner (Right to Left) */}
       {(dbState?.siteSettings?.showMarquee ?? true) && (
         <div className="w-full bg-transparent text-neutral-900 py-1 overflow-hidden border-b border-stone-200 select-none relative z-30 flex items-center h-11 md:h-14">
           <div className="w-full overflow-hidden whitespace-nowrap flex items-center">
             <div className="animate-marquee inline-flex shrink-0 font-sans text-2xl md:text-3xl uppercase font-black tracking-tighter gap-6 leading-none">
               {Array(10).fill(null).map((_, index) => {
                 const text = dbState?.siteSettings?.marqueeText || "Chulalongkorn University Golf Club • Drive to Excellence";
-                // Split by bullet, dash, or divider if present, otherwise treat as one
-                const parts = text.includes("•") 
-                  ? text.split("•") 
-                  : text.includes("-") 
-                    ? text.split("-") 
-                    : [text];
-                
+                const parts = text.includes("•") ? text.split("•") : text.includes("-") ? text.split("-") : [text];
                 return (
                   <span key={index} className="inline-flex items-center gap-6">
                     {parts.map((part, pIdx) => (
@@ -192,11 +133,8 @@ export default function App() {
         </div>
       )}
 
-      {/* Main Container screen content wrapper */}
       <main className="flex-grow py-8 md:py-12 bg-white">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
-          
-          {/* Stark Admin strip banner if logged in */}
           {adminToken && (
             <div className="mb-8 border-2 border-black text-black bg-neutral-100 p-4 flex items-center justify-between font-mono text-[10px] uppercase font-bold tracking-wider">
               <div className="flex items-center gap-2">
@@ -204,7 +142,7 @@ export default function App() {
                 <span>CHULALONGKORN GOLF SQUAD CMS ACTIVE</span>
               </div>
               <button
-                onClick={() => setCurrentTab("admin")}
+                onClick={() => navigate("/admin")}
                 className="hover:underline text-[10px] font-black tracking-widest uppercase cursor-pointer decoration-2 underline-offset-4"
               >
                 GOTO CONTROL ROOT
@@ -212,13 +150,58 @@ export default function App() {
             </div>
           )}
 
-          {renderActiveTab()}
+          <Routes>
+            <Route path="/" element={
+              <HomeView
+                news={dbState!.news}
+                scores={dbState!.scores}
+                roster={dbState!.roster}
+                welcomeSection={dbState!.welcomeSection}
+                upcomingActivity={dbState!.upcomingActivity}
+                siteLabels={dbState!.siteLabels}
+                siteSettings={dbState!.siteSettings}
+              />
+            } />
+            <Route path="/blog" element={<BlogView news={dbState!.news} siteLabels={dbState!.siteLabels} siteSettings={dbState!.siteSettings} />} />
+            <Route path="/activities" element={<BlogView news={dbState!.news} siteLabels={dbState!.siteLabels} siteSettings={dbState!.siteSettings} />} />
+            <Route path="/roster" element={<RosterView roster={dbState!.roster} siteLabels={dbState!.siteLabels} />} />
+            <Route path="/staff" element={<StaffView staff={dbState!.staff} siteLabels={dbState!.siteLabels} />} />
+            <Route path="/scores" element={<ScoresView scores={dbState!.scores} siteLabels={dbState!.siteLabels} />} />
+            <Route path="/sponsors" element={<SponsorsView sponsors={dbState!.sponsors} siteLabels={dbState!.siteLabels} />} />
+            <Route path="/admin" element={
+              <AdminView
+                dbState={dbState!}
+                refreshState={refreshState}
+                adminToken={adminToken}
+                setAdminToken={syncAdminToken}
+              />
+            } />
+            {/* Fallback */}
+            <Route path="*" element={
+              <HomeView
+                news={dbState!.news}
+                scores={dbState!.scores}
+                roster={dbState!.roster}
+                welcomeSection={dbState!.welcomeSection}
+                upcomingActivity={dbState!.upcomingActivity}
+                siteLabels={dbState!.siteLabels}
+                siteSettings={dbState!.siteSettings}
+              />
+            } />
+          </Routes>
         </div>
       </main>
 
-      {/* Luxury magazine Footer layout */}
-      <Footer setCurrentTab={setCurrentTab} siteSettings={dbState?.siteSettings} siteLabels={dbState?.siteLabels} />
+      <Footer siteSettings={dbState?.siteSettings} siteLabels={dbState?.siteLabels} />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
   );
 }
 

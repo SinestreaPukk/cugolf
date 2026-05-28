@@ -1,5 +1,6 @@
 import { ArrowRight, Menu, X, Instagram } from "lucide-react";
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import Logo from "./Logo";
 import { SiteLabels, SiteSettings } from "../types";
 
@@ -19,33 +20,37 @@ const TikTokIcon = ({ size = 24, className = "" }: { size?: number, className?: 
 
 interface NavbarProps {
   currentTab: string;
-  setCurrentTab: (tab: string) => void;
   isAdminLoggedIn: boolean;
   siteLabels?: SiteLabels;
   siteSettings?: SiteSettings;
 }
 
-export default function Navbar({ currentTab, setCurrentTab, isAdminLoggedIn, siteLabels, siteSettings }: NavbarProps) {
+export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSettings }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
   const navLinks = [
-    { id: "home", label: siteLabels?.navHome || "HOME", show: true },
-    { id: "blog", label: siteLabels?.navBlog || "ACTIVITIES", show: true },
-    { id: "roster", label: siteLabels?.navRoster || "TEAM ROSTER", show: siteSettings?.showNavbarRoster ?? true },
-    { id: "staff", label: siteLabels?.navStaff || "STAFF & BOARD", show: siteSettings?.showNavbarStaff ?? true },
-    { id: "scores", label: siteLabels?.navScores || "SCORES & STATS", show: siteSettings?.showNavbarScores ?? true },
-    { id: "sponsors", label: siteLabels?.navSponsors || "PARTNERS", show: siteSettings?.showNavbarSponsors ?? true },
+    { id: "home", label: siteLabels?.navHome || "HOME", path: "/", show: true },
+    { id: "blog", label: siteLabels?.navBlog || "ACTIVITIES", path: "/activities", show: true },
+    { id: "roster", label: siteLabels?.navRoster || "TEAM ROSTER", path: "/roster", show: siteSettings?.showNavbarRoster ?? true },
+    { id: "staff", label: siteLabels?.navStaff || "STAFF & BOARD", path: "/staff", show: siteSettings?.showNavbarStaff ?? true },
+    { id: "scores", label: siteLabels?.navScores || "SCORES & STATS", path: "/scores", show: siteSettings?.showNavbarScores ?? true },
+    { id: "sponsors", label: siteLabels?.navSponsors || "PARTNERS", path: "/sponsors", show: siteSettings?.showNavbarSponsors ?? true },
   ].filter(link => link.show);
+
+  const isActive = (path: string) => {
+    if (path === "/" && location.pathname === "/") return true;
+    if (path !== "/" && location.pathname.startsWith(path)) return true;
+    return false;
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-stone-200 bg-white/90 backdrop-blur-md transition-all duration-350">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:py-5">
         {/* Logo / Brand Name in impact editorial typography */}
-        <button
-          onClick={() => {
-            setCurrentTab("home");
-            setIsOpen(false);
-          }}
+        <Link
+          to="/"
+          onClick={() => setIsOpen(false)}
           className="group flex items-center gap-3 text-left cursor-pointer transition-all hover:opacity-90"
         >
           <Logo showText={false} size="md" />
@@ -57,24 +62,25 @@ export default function Navbar({ currentTab, setCurrentTab, isAdminLoggedIn, sit
               {siteLabels?.navBrandSubtitle || "[Official] Chulalongkorn University Golf Club"}
             </span>
           </div>
-        </button>
+        </Link>
 
         {/* Desktop Navigation Links */}
         <nav className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
-            <button
+            <Link
               key={link.id}
-              onClick={() => setCurrentTab(link.id)}
+              to={link.path}
               className={`relative py-1 font-sans text-[11px] font-bold tracking-widest uppercase transition-all duration-200 cursor-pointer ${
-                currentTab === link.id
+                isActive(link.path)
                   ? "text-neutral-950 border-b border-neutral-900"
-                  : "text-neutral-400 hover:text-neutral-900 hover:opacity-100"
+                  : "text-stone-400 hover:text-neutral-900 hover:opacity-100"
               }`}
             >
               {link.label}
-            </button>
+            </Link>
           ))}
         </nav>
+
 
         {/* Action button - Admin portal trigger */}
         <div className="hidden items-center gap-4 md:flex">
@@ -113,18 +119,16 @@ export default function Navbar({ currentTab, setCurrentTab, isAdminLoggedIn, sit
         <div className="fixed inset-x-0 top-[76px] border-b border-stone-200 bg-white/95 backdrop-blur-md px-6 py-8 md:hidden shadow-md animate-fade-in z-50">
           <div className="flex flex-col gap-5">
             {navLinks.map((link) => (
-              <button
+              <Link
                 key={link.id}
-                onClick={() => {
-                  setCurrentTab(link.id);
-                  setIsOpen(false);
-                }}
+                to={link.path}
+                onClick={() => setIsOpen(false)}
                 className={`text-left font-display text-base font-bold tracking-tight py-1.5 uppercase transition-all ${
-                  currentTab === link.id ? "text-neutral-950 pl-3 border-l-2 border-neutral-950" : "text-neutral-400"
+                  isActive(link.path) ? "text-neutral-950 pl-3 border-l-2 border-neutral-950" : "text-stone-400"
                 }`}
               >
                 {link.label}
-              </button>
+              </Link>
             ))}
 
             <hr className="border-stone-150" />

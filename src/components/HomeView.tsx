@@ -1,6 +1,7 @@
 import { NewsItem, TournamentScore, Player, WelcomeSection, UpcomingActivity, SiteLabels, SiteSettings } from "../types";
 import { ArrowRight, Calendar, User, ChevronRight, BookOpen, Clock, Trophy, Target, MapPin, ArrowUpRight } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import WelcomeSectionView from "./WelcomeSectionView";
 
 interface HomeViewProps {
@@ -9,12 +10,11 @@ interface HomeViewProps {
   roster: Player[];
   welcomeSection: WelcomeSection;
   upcomingActivity: UpcomingActivity;
-  setCurrentTab: (tab: string) => void;
   siteLabels?: SiteLabels;
   siteSettings?: SiteSettings;
 }
 
-export default function HomeView({ news, scores, roster, welcomeSection, upcomingActivity, setCurrentTab, siteLabels, siteSettings }: HomeViewProps) {
+export default function HomeView({ news, scores, roster, welcomeSection, upcomingActivity, siteLabels, siteSettings }: HomeViewProps) {
   const [selectedArticle, setSelectedArticle] = useState<NewsItem | null>(null);
 
   // Sort by rank (descending) and then by date (descending)
@@ -76,7 +76,7 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
       
       {/* Dynamic Legacy welcome slider and photo layout */}
       {(siteSettings?.showHomeWelcome ?? true) && (
-        <WelcomeSectionView welcomeSection={welcomeSection} setCurrentTab={setCurrentTab} siteLabels={siteLabels} />
+        <WelcomeSectionView welcomeSection={welcomeSection} siteLabels={siteLabels} />
       )}
       
       {/* 1. ACTIVITIES BLOG & STORIES - Showing exactly 3 blogs */}
@@ -87,12 +87,12 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
               <BookOpen size={20} className="text-[#da5f8e]" />
               {siteLabels?.homeBlogTitle || "ACTIVITIES BLOG & STORIES"}
             </h2>
-            <button
-              onClick={() => setCurrentTab("blog")}
+            <Link
+              to="/activities"
               className="font-mono text-[9px] md:text-[10px] font-bold text-[#da5f8e] hover:text-[#c24273] tracking-widest uppercase cursor-pointer hover:underline underline-offset-4"
             >
               VIEW ALL STORIES
-            </button>
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -196,12 +196,12 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
                       <Trophy size={14} className="text-[#da5f8e]" />
                       {siteLabels?.homeLiveStandingsTitle || "LIVE STANDINGS"}
                     </span>
-                    <button
-                      onClick={() => setCurrentTab("scores")}
+                    <Link
+                      to="/scores"
                       className="font-mono text-[8.5px] text-[#da5f8e] hover:text-[#c24273] font-bold transition-colors uppercase tracking-wider"
                     >
-                      {siteLabels?.homeFullLeaderboardButton || "FULL LEADERBOARD"}
-                    </button>
+                      FULL LEADERBOARD
+                    </Link>
                   </div>
 
                   {quickScores[0] ? (

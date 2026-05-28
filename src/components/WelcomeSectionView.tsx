@@ -1,14 +1,15 @@
+import { useNavigate } from "react-router-dom";
 import { WelcomeSection, SiteLabels } from "../types";
 import golfersSilhouette from "../assets/images/golfers_silhouette.png";
 import defaultBanner from "../assets/images/regenerated_image_1779791459213.jpg";
 
 interface WelcomeSectionViewProps {
   welcomeSection: WelcomeSection;
-  setCurrentTab: (tab: string) => void;
   siteLabels?: SiteLabels;
 }
 
-export default function WelcomeSectionView({ welcomeSection, setCurrentTab, siteLabels }: WelcomeSectionViewProps) {
+export default function WelcomeSectionView({ welcomeSection, siteLabels }: WelcomeSectionViewProps) {
+  const navigate = useNavigate();
   if (!welcomeSection) return null;
 
   return (
@@ -64,7 +65,7 @@ export default function WelcomeSectionView({ welcomeSection, setCurrentTab, site
 
         {/* Right Col (2/6 wide): 3-Golfers Premium Artwork Block */}
         <div 
-          onClick={() => setCurrentTab("roster")}
+          onClick={() => navigate("/roster")}
           className="md:col-span-2 bg-white flex items-center justify-center p-3.5 min-h-[210px] md:min-h-[250px] relative overflow-hidden cursor-pointer group transition-all duration-300 hover:brightness-95"
           title="Click to view our Varsity Squad Roster"
         >

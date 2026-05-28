@@ -1,14 +1,14 @@
 import { Mail, Phone, MapPin, Globe, ExternalLink } from "lucide-react";
+import { Link } from "react-router-dom";
 import { SiteSettings, SiteLabels } from "../types";
 import Logo from "./Logo";
 
 interface FooterProps {
-  setCurrentTab: (tab: string) => void;
   siteSettings?: SiteSettings;
   siteLabels?: SiteLabels;
 }
 
-export default function Footer({ setCurrentTab, siteSettings, siteLabels }: FooterProps) {
+export default function Footer({ siteSettings, siteLabels }: FooterProps) {
   return (
     <footer className="border-t border-stone-200 bg-white text-stone-900 mt-24">
       {/* Prime Editorial Banner */}
@@ -36,26 +36,33 @@ export default function Footer({ setCurrentTab, siteSettings, siteLabels }: Foot
         <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
           
           <div className="flex flex-col gap-4">
-            <Logo showText={true} size="lg" className="self-start" />
+            <Link to="/">
+              <Logo showText={true} size="lg" className="self-start" />
+            </Link>
           </div>
 
           <div>
             <h5 className="font-mono text-[10px] font-bold tracking-widest text-stone-400 uppercase mb-4">{siteLabels?.footerDirectoryTitle || "DIRECTORY"}</h5>
             <ul className="flex flex-col gap-2.5 font-sans text-xs font-bold uppercase">
               <li>
-                <button onClick={() => setCurrentTab("home")} className="text-stone-700 hover:text-neutral-950 hover:underline transition-all cursor-pointer">
-                  {siteLabels?.footerDirectoryNewsRoom || "NEWS ROOM"}
-                </button>
+                <Link to="/" className="text-stone-700 hover:text-neutral-950 hover:underline transition-all cursor-pointer">
+                  {siteLabels?.footerDirectoryNewsRoom || "HOME"}
+                </Link>
               </li>
               <li>
-                <button onClick={() => setCurrentTab("roster")} className="text-stone-700 hover:text-neutral-950 hover:underline transition-all cursor-pointer">
+                <Link to="/activities" className="text-stone-700 hover:text-neutral-950 hover:underline transition-all cursor-pointer">
+                  ACTIVITIES
+                </Link>
+              </li>
+              <li>
+                <Link to="/roster" className="text-stone-700 hover:text-neutral-950 hover:underline transition-all cursor-pointer">
                   {siteLabels?.footerDirectoryRoster || "VARSITY ROSTER"}
-                </button>
+                </Link>
               </li>
               <li>
-                <button onClick={() => setCurrentTab("scores")} className="text-stone-700 hover:text-neutral-950 hover:underline transition-all cursor-pointer">
+                <Link to="/scores" className="text-stone-700 hover:text-neutral-950 hover:underline transition-all cursor-pointer">
                   {siteLabels?.footerDirectoryScores || "MATCH STATS"}
-                </button>
+                </Link>
               </li>
             </ul>
           </div>
@@ -111,9 +118,9 @@ export default function Footer({ setCurrentTab, siteSettings, siteLabels }: Foot
             {(siteLabels?.footerRightsReserved || "© {year} CHULALONGKORN UNIVERSITY GOLF CLUB. ALL RIGHTS RESERVED.").replace("{year}", new Date().getFullYear().toString())}
           </p>
           <div className="flex items-center gap-6 font-mono text-[9px] text-stone-400 font-bold uppercase">
-            <button onClick={() => setCurrentTab("admin")} className="hover:underline hover:text-neutral-950 font-bold cursor-pointer">
+            <Link to="/admin" className="hover:underline hover:text-neutral-950 font-bold cursor-pointer">
               {siteLabels?.footerCmsLogin || "CMS LOG-IN"}
-            </button>
+            </Link>
             <span>•</span>
             <span>{siteLabels?.footerPrivacyDisclosure || "PRIVACY DISCLOSURE"}</span>
             <span>•</span>

@@ -229,6 +229,30 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
       {/* 2. SPONSOR SHOWCASE SECTION */}
       {(siteSettings?.showHomeSponsors ?? true) && (homeSponsorSection?.showSection ?? true) && (
         <section className="mx-auto max-w-7xl space-y-12">
+          {/* Sponsor Marquee */}
+          <div className="border-y border-stone-200 py-8 overflow-hidden bg-stone-50/50">
+            <div className="flex animate-marquee whitespace-nowrap gap-12 items-center">
+              {Array(6).fill(null).map((_, groupIdx) => (
+                <div key={groupIdx} className="flex items-center gap-12 shrink-0">
+                  {homeSponsorSection?.marqueeText && (
+                    <span className="font-mono text-xs font-black text-[#da5f8e] tracking-widest uppercase px-8 border-x border-stone-200">
+                      {homeSponsorSection.marqueeText}
+                    </span>
+                  )}
+                  {(sponsors || []).map((sponsor, idx) => (
+                    <div key={`${sponsor.id}-${groupIdx}-${idx}`} className="flex items-center gap-4 shrink-0 px-4">
+                      {sponsor.imageUrl ? (
+                        <img src={sponsor.imageUrl} alt={sponsor.name} className="h-12 md:h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100" />
+                      ) : (
+                        <span className="font-display text-xl font-black text-stone-300 uppercase">{sponsor.name}</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Featured Sponsor Layout */}
           <div className="flex flex-col lg:flex-row bg-white border border-stone-200 overflow-hidden shadow-xs group">
              {/* Text Side */}
@@ -262,30 +286,6 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                />
              </div>
-          </div>
-
-          {/* Sponsor Marquee */}
-          <div className="border-y border-stone-200 py-8 overflow-hidden bg-stone-50/50">
-            <div className="flex animate-marquee whitespace-nowrap gap-12 items-center">
-              {Array(6).fill(null).map((_, groupIdx) => (
-                <div key={groupIdx} className="flex items-center gap-12 shrink-0">
-                  {homeSponsorSection?.marqueeText && (
-                    <span className="font-mono text-xs font-black text-[#da5f8e] tracking-widest uppercase px-8 border-x border-stone-200">
-                      {homeSponsorSection.marqueeText}
-                    </span>
-                  )}
-                  {(sponsors || []).map((sponsor, idx) => (
-                    <div key={`${sponsor.id}-${groupIdx}-${idx}`} className="flex items-center gap-4 shrink-0 px-4">
-                      {sponsor.imageUrl ? (
-                        <img src={sponsor.imageUrl} alt={sponsor.name} className="h-12 md:h-16 w-auto object-contain grayscale hover:grayscale-0 transition-all opacity-60 hover:opacity-100" />
-                      ) : (
-                        <span className="font-display text-xl font-black text-stone-300 uppercase">{sponsor.name}</span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
           </div>
         </section>
       )}

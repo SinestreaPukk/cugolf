@@ -122,6 +122,29 @@ app.get("/api/db", async (req, res) => {
       };
     }
 
+    if (!db.welcomeSection) {
+      db.welcomeSection = {
+        imageUrl: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&q=80&w=1200",
+        titleThai: "จุฬาลงกรณ์มหาวิทยาลัยกอล์ฟคลับ",
+        titleEnglish: "CHULALONGKORN UNIVERSITY GOLF CLUB",
+        legacyQuote: "Since the early chapters of Thailand university golf sports, wearing Chulalongkorn's pale-pink athletic blazer represents high sporting distinction.",
+        legacyQuoteAuthor: "Varsity Athletic Charter",
+        description: "Through rigorous practice and biomechanical assessment, the Chulalongkorn University Golf Club promotes elite varsity performance."
+      };
+    }
+
+    if (!db.upcomingActivity) {
+      db.upcomingActivity = {
+        title: "VARSITY TRAINING CAMP 2026",
+        description: "Annual intensive training program for elite squad members.",
+        imageUrl: "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&q=80&w=1200",
+        date: "2026-07-12",
+        location: "Alpine Golf Club",
+        registrationUrl: "",
+        showSection: true
+      };
+    }
+
     if (!db.siteSettings) {
       db.siteSettings = {
         marqueeText: "Chulalongkorn University Golf Club • Drive to Excellence",

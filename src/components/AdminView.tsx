@@ -328,13 +328,13 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
   const [labelScoresVerifiedLabel, setLabelScoresVerifiedLabel] = useState(dbState.siteLabels?.scoresVerifiedLabel || "");
   const [labelScoresRecapTitle, setLabelScoresRecapTitle] = useState(dbState.siteLabels?.scoresRecapTitle || "");
   const [labelScoresRecapSubtitle, setLabelScoresRecapSubtitle] = useState(dbState.siteLabels?.scoresRecapSubtitle || "");
-  const [labelScoresOfficialStatsBadge, setLabelScoresOfficialStatsBadge] = useState(dbState.siteLabels?.scoresOfficialStatsBadge || "OFFICIAL STATS");
+  const [labelScoresOfficialStatsBadge, setLabelScoresOfficialStatsBadge] = useState(dbState.siteLabels?.scoresOfficialStatsBadge || "UNOFFICIAL STATS");
   const [labelScoresViewStandingsButton, setLabelScoresViewStandingsButton] = useState(dbState.siteLabels?.scoresViewStandingsButton || "VIEW STANDINGS");
   const [labelScoresHideStandingsButton, setLabelScoresHideStandingsButton] = useState(dbState.siteLabels?.scoresHideStandingsButton || "HIDE STANDINGS");
   const [labelScoresTablePlayerHeader, setLabelScoresTablePlayerHeader] = useState(dbState.siteLabels?.scoresTablePlayerHeader || "PLAYER NAME");
   const [labelScoresTableScoreHeader, setLabelScoresTableScoreHeader] = useState(dbState.siteLabels?.scoresTableScoreHeader || "STROKE SCORE");
   const [labelScoresTablePositionHeader, setLabelScoresTablePositionHeader] = useState(dbState.siteLabels?.scoresTablePositionHeader || "POSITION");
-  const [labelScoresAttestationLabel, setLabelScoresAttestationLabel] = useState(dbState.siteLabels?.scoresAttestationLabel || "CU OFFICIAL GOLF SCORECARD ATTESTATION");
+  const [labelScoresAttestationLabel, setLabelScoresAttestationLabel] = useState(dbState.siteLabels?.scoresAttestationLabel || "CU UNOFFICIAL GOLF SCORECARD ATTESTATION");
   const [labelScoresVerifiedDirectoryLabel, setLabelScoresVerifiedDirectoryLabel] = useState(dbState.siteLabels?.scoresVerifiedDirectoryLabel || "COACH VERIFIED DIRECTORY");
   const [labelScoresDetailedLeaderboardTitle, setLabelScoresDetailedLeaderboardTitle] = useState(dbState.siteLabels?.scoresDetailedLeaderboardTitle || "DETAILED COMPETITIVE LEADERBOARD");
 
@@ -458,13 +458,13 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
       setLabelScoresVerifiedLabel(dbState.siteLabels.scoresVerifiedLabel || "");
       setLabelScoresRecapTitle(dbState.siteLabels.scoresRecapTitle || "");
       setLabelScoresRecapSubtitle(dbState.siteLabels.scoresRecapSubtitle || "");
-      setLabelScoresOfficialStatsBadge(dbState.siteLabels.scoresOfficialStatsBadge || "OFFICIAL STATS");
+      setLabelScoresOfficialStatsBadge(dbState.siteLabels.scoresOfficialStatsBadge || "UNOFFICIAL STATS");
       setLabelScoresViewStandingsButton(dbState.siteLabels.scoresViewStandingsButton || "VIEW STANDINGS");
       setLabelScoresHideStandingsButton(dbState.siteLabels.scoresHideStandingsButton || "HIDE STANDINGS");
       setLabelScoresTablePlayerHeader(dbState.siteLabels.scoresTablePlayerHeader || "PLAYER NAME");
       setLabelScoresTableScoreHeader(dbState.siteLabels.scoresTableScoreHeader || "STROKE SCORE");
       setLabelScoresTablePositionHeader(dbState.siteLabels.scoresTablePositionHeader || "POSITION");
-      setLabelScoresAttestationLabel(dbState.siteLabels.scoresAttestationLabel || "CU OFFICIAL GOLF SCORECARD ATTESTATION");
+      setLabelScoresAttestationLabel(dbState.siteLabels.scoresAttestationLabel || "CU UNOFFICIAL GOLF SCORECARD ATTESTATION");
       setLabelScoresVerifiedDirectoryLabel(dbState.siteLabels.scoresVerifiedDirectoryLabel || "COACH VERIFIED DIRECTORY");
       setLabelScoresDetailedLeaderboardTitle(dbState.siteLabels.scoresDetailedLeaderboardTitle || "DETAILED COMPETITIVE LEADERBOARD");
 
@@ -1641,7 +1641,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label htmlFor="staff_role" className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase">OFFICIAL ROLE</label>
+                    <label htmlFor="staff_role" className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase">STAFF ROLE</label>
                     <input
                       id="staff_role"
                       type="text"

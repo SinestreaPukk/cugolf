@@ -26,7 +26,7 @@ export default function ScoresView({ scores, siteLabels }: ScoresViewProps) {
         <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-stone-250/70 pb-4 gap-4">
           <div className="space-y-2">
             <span className="inline-block bg-neutral-900 text-stone-100 font-mono text-[8.5px] px-2.5 py-1 tracking-widest uppercase font-bold rounded-xs">
-              {siteLabels?.scoresSubtitle || "OFFICIAL LEADERS RECORD"}
+              {siteLabels?.scoresSubtitle || "UNOFFICIAL LEADERS RECORD"}
             </span>
             <h1 className="font-display text-3xl font-extrabold tracking-tight text-neutral-950 uppercase leading-none">
               {siteLabels?.scoresTitle || "TOURNAMENT RESULTS & STATS"}
@@ -60,7 +60,7 @@ export default function ScoresView({ scores, siteLabels }: ScoresViewProps) {
                         </span>
                         <span className="h-1 w-1 rounded-full bg-stone-300 hidden sm:inline" />
                         <span className="font-mono text-[8.5px] text-emerald-700 font-bold tracking-wider uppercase bg-emerald-50 px-2 py-0.5 border border-emerald-500/10 rounded-xs">
-                          {siteLabels?.scoresOfficialStatsBadge || "OFFICIAL STATS"}
+                          {siteLabels?.scoresOfficialStatsBadge || "UNOFFICIAL STATS"}
                         </span>
                       </div>
                       <h3 className="font-display text-lg font-bold text-neutral-950 uppercase tracking-tight leading-none">
@@ -125,7 +125,7 @@ export default function ScoresView({ scores, siteLabels }: ScoresViewProps) {
                       </div>
 
                       <div className="bg-stone-50 border-t border-stone-150 p-3 flex justify-between items-center text-[8.5px] font-mono text-stone-400 font-bold uppercase">
-                        <span>{siteLabels?.scoresAttestationLabel || "CU OFFICIAL GOLF SCORECARD ATTESTATION"}</span>
+                        <span>{siteLabels?.scoresAttestationLabel || "CU UNOFFICIAL GOLF SCORECARD ATTESTATION"}</span>
                         <span>{siteLabels?.scoresVerifiedDirectoryLabel || "COACH VERIFIED DIRECTORY"}</span>
                       </div>
 

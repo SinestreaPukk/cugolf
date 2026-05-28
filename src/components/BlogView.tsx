@@ -77,7 +77,7 @@ export default function BlogView({ news, siteLabels, siteSettings }: BlogViewPro
             </h1>
           </div>
           <span className="font-mono text-[10px] font-black text-neutral-400 tracking-[0.2em] uppercase">
-            CHRONICLES OF THE PINK ELEPHANTS
+            &nbsp;
           </span>
         </div>
       </section>
@@ -152,7 +152,7 @@ export default function BlogView({ news, siteLabels, siteSettings }: BlogViewPro
             <div className="border-b border-stone-150 p-4 md:p-5 flex items-center justify-between bg-white">
               <div className="flex items-center gap-3">
                 <span className="font-mono text-[9px] bg-neutral-900 text-stone-100 font-bold px-2.5 py-1 tracking-widest uppercase rounded-xs">
-                  {siteLabels?.homeModalOfficialBadge || "OFFICIAL EDITORIAL"}
+                  {siteLabels?.homeModalOfficialBadge || "UNOFFICIAL EDITORIAL"}
                 </span>
                 <span className="font-mono text-[9.5px] font-bold text-stone-400">{selectedArticle.publishDate}</span>
               </div>

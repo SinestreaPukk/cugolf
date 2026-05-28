@@ -17,14 +17,14 @@ export default function SponsorsView({ sponsors, siteLabels }: SponsorsViewProps
         <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-stone-250/70 pb-4 gap-4">
           <div className="space-y-2">
             <span className="inline-block bg-neutral-900 text-stone-100 font-mono text-[8.5px] px-2.5 py-1 tracking-widest uppercase font-bold rounded-xs">
-              {siteLabels?.sponsorsSubtitle || "CORPORATE FELLOWSHIP"}
+              &nbsp;
             </span>
             <h1 className="font-display text-3xl font-extrabold tracking-tight text-neutral-950 uppercase leading-none">
               {siteLabels?.sponsorsTitle || "OUR SPONSORS & PARTNERS"}
             </h1>
           </div>
           <span className="font-mono text-[9.5px] font-bold text-stone-400 tracking-wider uppercase">
-            {siteLabels?.sponsorsVerifiedLabel || "CORPORATE ALIGNMENT • ENABLING ATHLETIC MILESTONES"}
+            &nbsp;
           </span>
         </div>
       </section>

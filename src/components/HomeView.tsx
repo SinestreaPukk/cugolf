@@ -212,7 +212,7 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
                           {quickScores[0].tournamentName}
                         </h5>
                         <div className="text-[8.5px] font-mono font-bold text-emerald-800 bg-emerald-50 py-0.5 px-2 border border-emerald-150 inline-block uppercase tracking-wider rounded-xs mt-1">
-                          OFFICIAL STATS
+                          UNOFFICIAL STATS
                         </div>
                       </div>
                       <div className="space-y-1.5 pt-2 border-t border-stone-200/50">
@@ -339,7 +339,7 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
             <div className="border-b border-stone-150 p-4 md:p-5 flex items-center justify-between bg-white">
               <div className="flex items-center gap-3">
                 <span className="font-mono text-[9px] bg-neutral-900 text-stone-100 font-bold px-2.5 py-1 tracking-widest uppercase rounded-xs">
-                  {siteLabels?.homeModalOfficialBadge || "OFFICIAL EDITORIAL"}
+                  {siteLabels?.homeModalOfficialBadge || "UNOFFICIAL EDITORIAL"}
                 </span>
                 <span className="font-mono text-[9.5px] font-bold text-stone-400">{selectedArticle.publishDate}</span>
               </div>

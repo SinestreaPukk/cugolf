@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import golfersSilhouette from "../assets/images/golfers_silhouette.png";
+import MarkdownRenderer from "./MarkdownRenderer";
 import { DatabaseState, NewsItem, Player, Staff, TournamentScore, GalleryImage, PlayerScore, WelcomeSection, Sponsor, SiteSettings } from "../types";
 import {
   loginAdmin,
@@ -1491,16 +1492,69 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
                 />
 
                 <div className="space-y-1.5">
-                  <label htmlFor="article_content" className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase block">CONTENT (Valid Markdown prose)</label>
+                  <div className="flex items-center justify-between">
+                    <label htmlFor="article_content" className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase block">CONTENT (Valid Markdown prose)</label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="file"
+                        id="embedded_image_upload"
+                        className="hidden"
+                        accept="image/*"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          
+                          setIsMutating(true);
+                          try {
+                            const reader = new FileReader();
+                            reader.onloadend = async () => {
+                              const base64Data = reader.result as string;
+                              const res = await uploadPhoto(file.name, base64Data);
+                              if (res.success && res.url) {
+                                const markdownImg = `\n![${file.name}](${res.url})\n`;
+                                setNewsContent(prev => prev + markdownImg);
+                                triggerSuccessMsg("Image uploaded and inserted into content.");
+                              } else {
+                                triggerErrorMsg("Failed to upload image.");
+                              }
+                              setIsMutating(false);
+                            };
+                            reader.readAsDataURL(file);
+                          } catch (err) {
+                            triggerErrorMsg("Error uploading image.");
+                            setIsMutating(false);
+                          }
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => document.getElementById("embedded_image_upload")?.click()}
+                        className="flex items-center gap-1.5 text-[9px] font-mono font-bold text-[#da5f8e] hover:underline uppercase bg-stone-50 px-2 py-1 border border-stone-200"
+                      >
+                        <Image size={10} /> INSERT EMBEDDED PHOTO
+                      </button>
+                    </div>
+                  </div>
                   <textarea
                     id="article_content"
-                    rows={8}
+                    rows={12}
                     value={newsContent}
                     onChange={(e) => setNewsContent(e.target.value)}
-                    placeholder="Use ### Header for sections and - for bullet columns."
+                    placeholder="Use ### Header for sections and - for bullet columns. You can now also insert photos between texts."
                     className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2.5 text-xs focus:outline-none focus:border-[#ec4899] text-[#121212] font-mono leading-relaxed"
                   />
                 </div>
+
+                {newsContent && (
+                  <div className="space-y-2 mt-4">
+                    <label className="font-mono text-[9px] font-bold text-[#da5f8e] uppercase flex items-center gap-1.5">
+                      <Eye size={10} /> STORY CONTENT LIVE PREVIEW
+                    </label>
+                    <div className="border border-dashed border-[#da5f8e]/30 p-4 bg-stone-50/50 rounded-sm max-h-[400px] overflow-y-auto prose prose-sm prose-stone">
+                      <MarkdownRenderer text={newsContent} />
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Action */}

@@ -10,6 +10,7 @@ import StaffView from "./components/StaffView";
 import ScoresView from "./components/ScoresView";
 import SponsorsView from "./components/SponsorsView";
 import BlogView from "./components/BlogView";
+import ActivityDetailView from "./components/ActivityDetailView";
 import AdminView from "./components/AdminView";
 import { ShieldCheck, RefreshCw, AlertCircle } from "lucide-react";
 
@@ -169,6 +170,7 @@ function AppContent() {
             } />
             <Route path="/blog" element={<BlogView news={dbState.news || []} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} />} />
             <Route path="/activities" element={<BlogView news={dbState.news || []} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} />} />
+            <Route path="/activities/:id" element={<ActivityDetailView news={dbState.news || []} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} />} />
             <Route path="/roster" element={<RosterView roster={dbState.roster || []} siteLabels={dbState.siteLabels} />} />
             <Route path="/staff" element={<StaffView staff={dbState.staff || []} siteLabels={dbState.siteLabels} />} />
             <Route path="/scores" element={<ScoresView scores={dbState.scores || []} siteLabels={dbState.siteLabels} />} />

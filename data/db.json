@@ -356,6 +356,11 @@
     "trainingDescription": "Our squad trains at the finest facilities in Thailand, including Amata Spring Country Club and Alpine Golf Club. We utilize state-of-the-art launch monitors and video analysis to refine every aspect of our game, from short-game precision to driving distance.",
     "legacyDescription": "Founded in the early 20th century, the Chulalongkorn University Golf Club has been the pioneer of collegiate golf in Thailand. From the traditional wooden clubs of the 1930s to the titanium drivers of today, our commitment to excellence remains unchanged. We are proud to represent the Pink spirit on every green we touch.",
     "foundedYear": "1916",
-    "activeYears": "100+"
+    "activeYears": "100+",
+    "showPhilosophy": true,
+    "showCaptainMandate": true,
+    "showCompetitions": true,
+    "showTraining": true,
+    "showLegacy": true
   }
 }

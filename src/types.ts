@@ -6,6 +6,7 @@ export interface NewsItem {
   publishDate: string;
   imageUrl: string;
   rank?: number;
+  isVisible?: boolean;
 }
 
 export interface Player {
@@ -16,6 +17,7 @@ export interface Player {
   faculty: string;
   imageUrl: string;
   isFeatured?: boolean;
+  isVisible?: boolean;
 }
 
 export interface Staff {
@@ -25,6 +27,7 @@ export interface Staff {
   year: string;
   imageUrl: string;
   order: number;
+  isVisible?: boolean;
 }
 
 export interface PlayerScore {
@@ -40,6 +43,7 @@ export interface TournamentScore {
   result: string;
   playersCount: number;
   scoresList: PlayerScore[];
+  isVisible?: boolean;
 }
 
 export interface GalleryImage {
@@ -237,6 +241,12 @@ export interface ClubActivityContent {
   legacyDescription: string;
   foundedYear: string;
   activeYears: string;
+  // Visibility toggles
+  showPhilosophy: boolean;
+  showCaptainMandate: boolean;
+  showCompetitions: boolean;
+  showTraining: boolean;
+  showLegacy: boolean;
 }
 
 export interface DatabaseState {

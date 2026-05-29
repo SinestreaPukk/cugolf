@@ -10,7 +10,7 @@ interface BlogViewProps {
 
 export default function BlogView({ news, siteLabels, siteSettings }: BlogViewProps) {
   // Sort by rank (descending) and then by date (descending)
-  const sortedNews = [...news].sort((a, b) => {
+  const sortedNews = [...news].filter(n => n.isVisible !== false).sort((a, b) => {
     const rankA = a.rank || 0;
     const rankB = b.rank || 0;
     if (rankA !== rankB) return rankB - rankA;

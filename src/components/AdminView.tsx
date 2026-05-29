@@ -201,6 +201,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
   const [newsImage, setNewsImage] = useState("");
   const [newsDate, setNewsDate] = useState("");
   const [newsRank, setNewsRank] = useState<number>(0);
+  const [newsIsVisible, setNewsIsVisible] = useState(true);
 
   const [editingPlayerId, setEditingPlayerId] = useState<string | null>(null);
   const [playerName, setPlayerName] = useState("");
@@ -209,6 +210,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
   const [playerFaculty, setPlayerFaculty] = useState("");
   const [playerImage, setPlayerImage] = useState("");
   const [playerIsFeatured, setPlayerIsFeatured] = useState(false);
+  const [playerIsVisible, setPlayerIsVisible] = useState(true);
 
   const [editingStaffId, setEditingStaffId] = useState<string | null>(null);
   const [staffName, setStaffName] = useState("");
@@ -216,6 +218,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
   const [staffFaculty, setStaffFaculty] = useState("");
   const [staffImage, setStaffImage] = useState("");
   const [staffOrder, setStaffOrder] = useState<number>(1);
+  const [staffIsVisible, setStaffIsVisible] = useState(true);
 
   const [editingScoreId, setEditingScoreId] = useState<string | null>(null);
   const [scoreTournamentName, setScoreTournamentName] = useState("");
@@ -224,6 +227,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
   const [scoreList, setScoreList] = useState<PlayerScore[]>([
     { playerName: "Methas 'Pete' Srisai", score: 71, position: "3rd" }
   ]);
+  const [scoreIsVisible, setScoreIsVisible] = useState(true);
 
   // Gallery quick add variables
   const [galTitle, setGalTitle] = useState("");
@@ -300,6 +304,11 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
   const [caLegacyDescription, setCaLegacyDescription] = useState(dbState.clubActivity?.legacyDescription || "");
   const [caFoundedYear, setCaFoundedYear] = useState(dbState.clubActivity?.foundedYear || "1916");
   const [caActiveYears, setCaActiveYears] = useState(dbState.clubActivity?.activeYears || "100+");
+  const [caShowPhilosophy, setCaShowPhilosophy] = useState(dbState.clubActivity?.showPhilosophy ?? true);
+  const [caShowCaptainMandate, setCaShowCaptainMandate] = useState(dbState.clubActivity?.showCaptainMandate ?? true);
+  const [caShowCompetitions, setCaShowCompetitions] = useState(dbState.clubActivity?.showCompetitions ?? true);
+  const [caShowTraining, setCaShowTraining] = useState(dbState.clubActivity?.showTraining ?? true);
+  const [caShowLegacy, setCaShowLegacy] = useState(dbState.clubActivity?.showLegacy ?? true);
 
   // Site Labels states
   const [labelNavHome, setLabelNavHome] = useState(dbState.siteLabels?.navHome || "HOME");
@@ -459,6 +468,11 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
       setCaLegacyDescription(dbState.clubActivity.legacyDescription || "");
       setCaFoundedYear(dbState.clubActivity.foundedYear || "");
       setCaActiveYears(dbState.clubActivity.activeYears || "");
+      setCaShowPhilosophy(dbState.clubActivity.showPhilosophy ?? true);
+      setCaShowCaptainMandate(dbState.clubActivity.showCaptainMandate ?? true);
+      setCaShowCompetitions(dbState.clubActivity.showCompetitions ?? true);
+      setCaShowTraining(dbState.clubActivity.showTraining ?? true);
+      setCaShowLegacy(dbState.clubActivity.showLegacy ?? true);
     }
     if (dbState?.siteLabels) {
       setLabelNavHome(dbState.siteLabels?.navHome || "HOME");
@@ -606,7 +620,8 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
         content: newsContent,
         imageUrl: newsImage || "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&q=80&w=1200",
         publishDate: newsDate || new Date().toISOString().split("T")[0],
-        rank: newsRank
+        rank: newsRank,
+        isVisible: newsIsVisible
       };
 
       if (editingNewsId) {
@@ -625,6 +640,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
       setNewsImage("");
       setNewsDate("");
       setNewsRank(0);
+      setNewsIsVisible(true);
       refreshState();
     } catch (err: any) {
       triggerErrorMsg(err.message || "Failed to save changes.");
@@ -641,6 +657,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
     setNewsImage(item.imageUrl);
     setNewsDate(item.publishDate);
     setNewsRank(item.rank || 0);
+    setNewsIsVisible(item.isVisible ?? true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -672,7 +689,8 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
         year: playerYear,
         faculty: playerFaculty || "Faculty of Sports Science",
         imageUrl: playerImage || "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400",
-        isFeatured: playerIsFeatured
+        isFeatured: playerIsFeatured,
+        isVisible: playerIsVisible
       };
 
       if (editingPlayerId) {
@@ -690,6 +708,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
       setPlayerFaculty("");
       setPlayerImage("");
       setPlayerIsFeatured(false);
+      setPlayerIsVisible(true);
       refreshState();
     } catch (err) {
       triggerErrorMsg("Failed to save player.");
@@ -706,6 +725,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
     setPlayerFaculty(item.faculty || "");
     setPlayerImage(item.imageUrl);
     setPlayerIsFeatured(!!item.isFeatured);
+    setPlayerIsVisible(item.isVisible ?? true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -736,7 +756,8 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
         role: staffRole,
         year: staffFaculty || "Faculty of Sports Science",
         imageUrl: staffImage || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400",
-        order: staffOrder
+        order: staffOrder,
+        isVisible: staffIsVisible
       };
 
       if (editingStaffId) {
@@ -753,6 +774,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
       setStaffFaculty("");
       setStaffImage("");
       setStaffOrder(1);
+      setStaffIsVisible(true);
       refreshState();
     } catch (err) {
       triggerErrorMsg("Failed to save staff.");
@@ -768,6 +790,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
     setStaffFaculty(item.year);
     setStaffImage(item.imageUrl);
     setStaffOrder(item.order);
+    setStaffIsVisible(item.isVisible ?? true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -797,7 +820,8 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
         tournamentName: scoreTournamentName,
         date: scoreDate,
         result: scoreResult,
-        scoresList: scoreList
+        scoresList: scoreList,
+        isVisible: scoreIsVisible
       };
 
       if (editingScoreId) {
@@ -813,6 +837,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
       setScoreDate("");
       setScoreResult("");
       setScoreList([{ playerName: "Methas 'Pete' Srisai", score: 71, position: "3rd" }]);
+      setScoreIsVisible(true);
       refreshState();
     } catch (err) {
       triggerErrorMsg("Failed to save scoreboard.");
@@ -842,6 +867,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
     setScoreDate(item.date);
     setScoreResult(item.result);
     setScoreList(item.scoresList);
+    setScoreIsVisible(item.isVisible ?? true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -1155,7 +1181,12 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
         trainingDescription: caTrainingDescription,
         legacyDescription: caLegacyDescription,
         foundedYear: caFoundedYear,
-        activeYears: caActiveYears
+        activeYears: caActiveYears,
+        showPhilosophy: caShowPhilosophy,
+        showCaptainMandate: caShowCaptainMandate,
+        showCompetitions: caShowCompetitions,
+        showTraining: caShowTraining,
+        showLegacy: caShowLegacy
       });
       if (success) {
         triggerSuccessMsg("CLUB ACTIVITIES CONTENT UPDATED.");
@@ -1588,6 +1619,21 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
                   helperText="Aspect ratio 16:9 or panoramic 24:9 looks best."
                 />
 
+                <div className="flex items-center gap-6 py-2">
+                  <div className="flex items-center gap-2">
+                    <input
+                      id="article_visible"
+                      type="checkbox"
+                      checked={newsIsVisible}
+                      onChange={(e) => setNewsIsVisible(e.target.checked)}
+                      className="h-4 w-4 text-[#ec4899] accent-[#ec4899]"
+                    />
+                    <label htmlFor="article_visible" className="font-mono text-[9px] font-bold text-[#121212]/75 uppercase">
+                      SET ARTICLE PUBLICLY VISIBLE
+                    </label>
+                  </div>
+                </div>
+
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
                     <label htmlFor="article_content" className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase block">CONTENT (Valid Markdown prose)</label>
@@ -1694,7 +1740,10 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
                 {(dbState.news || []).map((item) => (
                   <div key={item.id} className="border border-[#121212]/10 bg-stone-50 p-4 space-y-3 flex flex-col justify-between hover:border-[#121212]">
                     <div className="space-y-1.5">
-                      <span className="font-mono text-[9px] text-[#121212]/40 block">{item.publishDate}</span>
+                      <span className="font-mono text-[9px] text-[#121212]/40 block">
+                        {item.publishDate}
+                        {item.isVisible === false && <span className="text-red-500 ml-2 font-bold">(HIDDEN)</span>}
+                      </span>
                       <h3 className="font-display text-xs font-bold uppercase text-[#121212] leading-snug">{item.title}</h3>
                       <p className="text-[10px] text-[#121212]/60 line-clamp-2">{item.excerpt}</p>
                     </div>
@@ -1732,6 +1781,63 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
                 <h2 className="font-display text-sm font-bold uppercase tracking-wider text-[#121212] flex items-center gap-2">
                   <Sparkles size={16} className="text-[#da5f8e]" /> CLUB ACTIVITIES PAGE CONTENT
                 </h2>
+
+                {/* Section Visibility Toggles */}
+                <div className="bg-stone-50 border border-[#121212]/5 p-4 space-y-4">
+                  <h3 className="font-mono text-[10px] font-black text-[#121212] uppercase tracking-widest border-b border-[#121212]/10 pb-2">Section Visibility Toggles</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="show_philosophy"
+                        checked={caShowPhilosophy}
+                        onChange={(e) => setCaShowPhilosophy(e.target.checked)}
+                        className="h-3.5 w-3.5 text-[#da5f8e] accent-[#da5f8e]"
+                      />
+                      <label htmlFor="show_philosophy" className="font-mono text-[9px] font-bold text-[#121212]/70 uppercase">Philosophy</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="show_captain"
+                        checked={caShowCaptainMandate}
+                        onChange={(e) => setCaShowCaptainMandate(e.target.checked)}
+                        className="h-3.5 w-3.5 text-[#da5f8e] accent-[#da5f8e]"
+                      />
+                      <label htmlFor="show_captain" className="font-mono text-[9px] font-bold text-[#121212]/70 uppercase">Captain</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="show_competitions"
+                        checked={caShowCompetitions}
+                        onChange={(e) => setCaShowCompetitions(e.target.checked)}
+                        className="h-3.5 w-3.5 text-[#da5f8e] accent-[#da5f8e]"
+                      />
+                      <label htmlFor="show_competitions" className="font-mono text-[9px] font-bold text-[#121212]/70 uppercase">Tournaments</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="show_training"
+                        checked={caShowTraining}
+                        onChange={(e) => setCaShowTraining(e.target.checked)}
+                        className="h-3.5 w-3.5 text-[#da5f8e] accent-[#da5f8e]"
+                      />
+                      <label htmlFor="show_training" className="font-mono text-[9px] font-bold text-[#121212]/70 uppercase">Training</label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        id="show_legacy"
+                        checked={caShowLegacy}
+                        onChange={(e) => setCaShowLegacy(e.target.checked)}
+                        className="h-3.5 w-3.5 text-[#da5f8e] accent-[#da5f8e]"
+                      />
+                      <label htmlFor="show_legacy" className="font-mono text-[9px] font-bold text-[#121212]/70 uppercase">Legacy</label>
+                    </div>
+                  </div>
+                </div>
 
                 <div className="space-y-6">
                   {/* Hero Image */}
@@ -2055,17 +2161,31 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
                   helperText="A square or portrait headshot looks best."
                 />
 
-                <div className="flex items-center gap-2 py-3">
-                  <input
-                    id="player_lead"
-                    type="checkbox"
-                    checked={playerIsFeatured}
-                    onChange={(e) => setPlayerIsFeatured(e.target.checked)}
-                    className="h-4 w-4 text-[#ec4899] accent-[#ec4899]"
-                  />
-                  <label htmlFor="player_lead" className="font-mono text-[9px] font-bold text-[#121212]/75 uppercase">
-                    FEATURE ON HOME RADAR (SQUAD LEAD)
-                  </label>
+                <div className="flex items-center gap-6 py-1">
+                  <div className="flex items-center gap-2">
+                    <input
+                      id="player_lead"
+                      type="checkbox"
+                      checked={playerIsFeatured}
+                      onChange={(e) => setPlayerIsFeatured(e.target.checked)}
+                      className="h-4 w-4 text-[#ec4899] accent-[#ec4899]"
+                    />
+                    <label htmlFor="player_lead" className="font-mono text-[9px] font-bold text-[#121212]/75 uppercase">
+                      FEATURE ON HOME RADAR (SQUAD LEAD)
+                    </label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input
+                      id="player_visible"
+                      type="checkbox"
+                      checked={playerIsVisible}
+                      onChange={(e) => setPlayerIsVisible(e.target.checked)}
+                      className="h-4 w-4 text-[#ec4899] accent-[#ec4899]"
+                    />
+                    <label htmlFor="player_visible" className="font-mono text-[9px] font-bold text-[#121212]/75 uppercase">
+                      SET PUBLICLY VISIBLE
+                    </label>
+                  </div>
                 </div>
               </div>
 
@@ -2160,6 +2280,19 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
                   placeholder="https://images.unsplash.com/photo-..."
                   helperText="A square or portrait headshot looks best."
                 />
+
+                <div className="flex items-center gap-2 py-1">
+                  <input
+                    id="staff_visible"
+                    type="checkbox"
+                    checked={staffIsVisible}
+                    onChange={(e) => setStaffIsVisible(e.target.checked)}
+                    className="h-4 w-4 text-[#ec4899] accent-[#ec4899]"
+                  />
+                  <label htmlFor="staff_visible" className="font-mono text-[9px] font-bold text-[#121212]/75 uppercase">
+                    SET PUBLICLY VISIBLE
+                  </label>
+                </div>
               </div>
 
               <div className="flex items-center gap-4 border-t border-[#121212]/10 pt-4">
@@ -2204,7 +2337,10 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
                 {(dbState.roster || []).map((player) => (
                   <div key={player.id} className="py-3 flex items-center justify-between">
                     <div>
-                      <div className="font-display text-xs font-bold uppercase text-[#121212]">{player.name}</div>
+                      <div className="font-display text-xs font-bold uppercase text-[#121212]">
+                        {player.name}
+                        {player.isVisible === false && <span className="text-red-500 ml-2 font-mono text-[9px] font-bold">(HIDDEN)</span>}
+                      </div>
                       <div className="font-mono text-[9px] text-[#121212]/40">
                         {player.year} • {player.faculty || "No Faculty"} • Index: <strong className="text-stone-700">{player.handicap}</strong>
                       </div>
@@ -2240,7 +2376,10 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
                 {(dbState.staff || []).map((p) => (
                   <div key={p.id} className="py-3 flex items-center justify-between">
                     <div>
-                      <div className="font-display text-xs font-bold uppercase text-[#121212]">{p.name}</div>
+                      <div className="font-display text-xs font-bold uppercase text-[#121212]">
+                        {p.name}
+                        {p.isVisible === false && <span className="text-red-500 ml-2 font-mono text-[9px] font-bold">(HIDDEN)</span>}
+                      </div>
                       <div className="font-mono text-[9px] text-[#121212]/40">
                         {p.role} • Order Int: {p.order}
                       </div>
@@ -2315,6 +2454,19 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
                       className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs text-[#121212] focus:outline-none"
                     />
                   </div>
+                </div>
+
+                <div className="flex items-center gap-2 py-1">
+                  <input
+                    id="score_visible"
+                    type="checkbox"
+                    checked={scoreIsVisible}
+                    onChange={(e) => setScoreIsVisible(e.target.checked)}
+                    className="h-4 w-4 text-[#ec4899] accent-[#ec4899]"
+                  />
+                  <label htmlFor="score_visible" className="font-mono text-[9px] font-bold text-[#121212]/75 uppercase">
+                    SET PUBLICLY VISIBLE
+                  </label>
                 </div>
 
                 {/* Sub-item scores editor registry */}
@@ -2427,6 +2579,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
 
                     <h4 className="font-display text-xs font-bold uppercase text-[#121212] leading-tight">
                       {score.tournamentName}
+                      {score.isVisible === false && <span className="text-red-500 ml-2 font-mono text-[9px] font-bold">(HIDDEN)</span>}
                     </h4>
 
                     {/* micro rows */}

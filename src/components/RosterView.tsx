@@ -14,6 +14,7 @@ export default function RosterView({ roster, siteLabels }: RosterViewProps) {
   const yearsList = ["All", "Freshman", "Sophomore", "Junior", "Senior"];
 
   const filteredPlayers = (roster || []).filter((player) => {
+    if (player.isVisible === false) return false;
     const matchesSearch = player.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesYear = selectedYear === "All" || player.year.toLowerCase() === selectedYear.toLowerCase();
     return matchesSearch && matchesYear;

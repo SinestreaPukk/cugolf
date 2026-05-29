@@ -19,7 +19,7 @@ interface HomeViewProps {
 export default function HomeView({ news, scores, roster, welcomeSection, upcomingActivity, homeSponsorSection, sponsors, siteLabels, siteSettings }: HomeViewProps) {
 
   // Sort by rank (descending) and then by date (descending)
-  const sortedNews = [...(news || [])].sort((a, b) => {
+  const sortedNews = [...(news || [])].filter(n => n.isVisible !== false).sort((a, b) => {
     const rankA = a.rank || 0;
     const rankB = b.rank || 0;
     if (rankA !== rankB) return rankB - rankA;
@@ -27,7 +27,7 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
   });
 
   const blogs = (sortedNews || []).slice(0, 3);
-  const quickScores = (scores || []).slice(0, 3);
+  const quickScores = (scores || []).filter(s => s.isVisible !== false).slice(0, 3);
 
   return (
     <div id="home_view" className="space-y-16 animate-fade-in px-4 md:px-0">

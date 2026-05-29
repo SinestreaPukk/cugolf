@@ -160,7 +160,12 @@ app.get("/api/db", async (req, res) => {
         trainingDescription: "Our squad trains at the finest facilities in Thailand, including Amata Spring Country Club and Alpine Golf Club. We utilize state-of-the-art launch monitors and video analysis to refine every aspect of our game, from short-game precision to driving distance.",
         legacyDescription: "Founded in the early 20th century, the Chulalongkorn University Golf Club has been the pioneer of collegiate golf in Thailand. From the traditional wooden clubs of the 1930s to the titanium drivers of today, our commitment to excellence remains unchanged. We are proud to represent the Pink spirit on every green we touch.",
         foundedYear: "1916",
-        activeYears: "100+"
+        activeYears: "100+",
+        showPhilosophy: true,
+        showCaptainMandate: true,
+        showCompetitions: true,
+        showTraining: true,
+        showLegacy: true
       };
     }
 
@@ -358,7 +363,8 @@ app.post("/api/news", async (req, res) => {
       content: req.body.content || "",
       publishDate: req.body.publishDate || new Date().toISOString().split("T")[0],
       imageUrl: req.body.imageUrl || "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&q=80&w=1200",
-      rank: typeof req.body.rank === "number" ? req.body.rank : 0
+      rank: typeof req.body.rank === "number" ? req.body.rank : 0,
+      isVisible: req.body.isVisible ?? true
     };
     const { error } = await supabase.from("news").insert(newItem);
     if (error) {
@@ -393,7 +399,8 @@ app.post("/api/roster", async (req, res) => {
     year: req.body.year || "Freshman",
     faculty: req.body.faculty || "Faculty of Sports Science",
     imageUrl: req.body.imageUrl || "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400",
-    isFeatured: !!req.body.isFeatured
+    isFeatured: !!req.body.isFeatured,
+    isVisible: req.body.isVisible ?? true
   };
   const { error } = await supabase.from("roster").insert(newItem);
   if (error) return res.status(500).json({ success: false, message: error.message });
@@ -420,7 +427,8 @@ app.post("/api/staff", async (req, res) => {
     role: req.body.role || "Committee Member",
     year: req.body.year || "Club Operations",
     imageUrl: req.body.imageUrl || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400",
-    order: typeof req.body.order === "number" ? req.body.order : 0
+    order: typeof req.body.order === "number" ? req.body.order : 0,
+    isVisible: req.body.isVisible ?? true
   };
   const { error } = await supabase.from("staff").insert(newItem);
   if (error) return res.status(500).json({ success: false, message: error.message });
@@ -447,7 +455,8 @@ app.post("/api/scores", async (req, res) => {
     date: req.body.date || new Date().toISOString().split("T")[0],
     result: req.body.result || "Practice Round",
     playersCount: Array.isArray(req.body.scoresList) ? req.body.scoresList.length : 0,
-    scoresList: req.body.scoresList || []
+    scoresList: req.body.scoresList || [],
+    isVisible: req.body.isVisible ?? true
   };
   const { error } = await supabase.from("scores").insert(newItem);
   if (error) return res.status(500).json({ success: false, message: error.message });

@@ -44,7 +44,7 @@ export default function ScoresView({ scores, siteLabels }: ScoresViewProps) {
         {/* Interactive Match Score list */}
         <div className="space-y-6">
           <div className="border border-stone-200 bg-white divide-y divide-stone-150 rounded-lg overflow-hidden shadow-xs">
-            {(scores || []).map((score) => {
+            {(scores || []).filter(s => s.isVisible !== false).map((score) => {
               const isExpanded = expandedId === score.id;
 
               return (

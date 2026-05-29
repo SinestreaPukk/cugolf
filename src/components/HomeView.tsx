@@ -318,7 +318,7 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
 
         <div className="shrink-0 relative z-10">
           <a
-            href="https://forms.gle/your-link"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSdaKMAAJw0pSaf7k9atDaUiuws7zpuYg6-903oI2qt2Qk4UIg/viewform?usp=sharing&ouid=106138206988272329432"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-3 bg-white text-[#121212] px-10 py-5 font-mono text-xs font-black tracking-widest uppercase hover:bg-[#da5f8e] hover:text-white transition-all duration-350 shadow-xl"

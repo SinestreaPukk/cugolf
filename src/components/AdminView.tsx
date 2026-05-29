@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import golfersSilhouette from "../assets/images/golfers_silhouette.png";
 import MarkdownRenderer from "./MarkdownRenderer";
-import { DatabaseState, NewsItem, Player, Staff, TournamentScore, GalleryImage, PlayerScore, WelcomeSection, Sponsor, SiteSettings } from "../types";
+import { DatabaseState, NewsItem, Player, Staff, TournamentScore, GalleryImage, PlayerScore, WelcomeSection, Sponsor, SiteSettings, Competition, ClubActivityContent } from "../types";
 import {
   loginAdmin,
   createNews,
@@ -26,6 +26,7 @@ import {
   updateSiteSettings,
   updateSiteLabels,
   updateHomeSponsorSection,
+  updateClubActivity,
   uploadPhoto
 } from "../utils/api";
 import {
@@ -185,7 +186,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
   const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   // Active sub-section state
-  const [activeSubTab, setActiveSubTab] = useState<"news" | "roster" | "scores" | "gallery" | "welcome" | "upcoming" | "sponsors" | "siteSettings" | "siteLabels" | "homeSponsors">("news");
+  const [activeSubTab, setActiveSubTab] = useState<"news" | "roster" | "scores" | "gallery" | "welcome" | "upcoming" | "sponsors" | "siteSettings" | "siteLabels" | "homeSponsors" | "clubActivity">("news");
 
   // Notifications
   const [successMsg, setSuccessMsg] = useState("");
@@ -283,6 +284,22 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
   const [homeSponButtonText, setHomeSponButtonText] = useState(dbState.homeSponsorSection?.buttonText || "LEARN MORE");
   const [homeSponButtonUrl, setHomeSponButtonUrl] = useState(dbState.homeSponsorSection?.buttonUrl || "/sponsors");
   const [homeSponShowSection, setHomeSponShowSection] = useState(dbState.homeSponsorSection?.showSection ?? true);
+
+  // Club Activity CMS states
+  const [caHeroImageUrl, setCaHeroImageUrl] = useState(dbState.clubActivity?.heroImageUrl || "");
+  const [caPhilosophyTitle, setCaPhilosophyTitle] = useState(dbState.clubActivity?.philosophyTitle || "OUR PHILOSOPHY");
+  const [caPhilosophyQuote, setCaPhilosophyQuote] = useState(dbState.clubActivity?.philosophyQuote || "");
+  const [caPhilosophyDescription, setCaPhilosophyDescription] = useState(dbState.clubActivity?.philosophyDescription || "");
+  const [caTechnicalExcellenceDescription, setCaTechnicalExcellenceDescription] = useState(dbState.clubActivity?.technicalExcellenceDescription || "");
+  const [caCaptainName, setCaCaptainName] = useState(dbState.clubActivity?.captainName || "");
+  const [caCaptainRole, setCaCaptainRole] = useState(dbState.clubActivity?.captainRole || "");
+  const [caCaptainImageUrl, setCaCaptainImageUrl] = useState(dbState.clubActivity?.captainImageUrl || "");
+  const [caCaptainPhilosophy, setCaCaptainPhilosophy] = useState(dbState.clubActivity?.captainPhilosophy || "");
+  const [caCompetitions, setCaCompetitions] = useState<Competition[]>(dbState.clubActivity?.competitions || []);
+  const [caTrainingDescription, setCaTrainingDescription] = useState(dbState.clubActivity?.trainingDescription || "");
+  const [caLegacyDescription, setCaLegacyDescription] = useState(dbState.clubActivity?.legacyDescription || "");
+  const [caFoundedYear, setCaFoundedYear] = useState(dbState.clubActivity?.foundedYear || "1916");
+  const [caActiveYears, setCaActiveYears] = useState(dbState.clubActivity?.activeYears || "100+");
 
   // Site Labels states
   const [labelNavHome, setLabelNavHome] = useState(dbState.siteLabels?.navHome || "HOME");
@@ -426,6 +443,22 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
       setUpcomingLocation(dbState.upcomingActivity?.location || "");
       setUpcomingRegUrl(dbState.upcomingActivity?.registrationUrl || "");
       setUpcomingShowSection(dbState.upcomingActivity?.showSection ?? true);
+    }
+    if (dbState?.clubActivity) {
+      setCaHeroImageUrl(dbState.clubActivity.heroImageUrl || "");
+      setCaPhilosophyTitle(dbState.clubActivity.philosophyTitle || "");
+      setCaPhilosophyQuote(dbState.clubActivity.philosophyQuote || "");
+      setCaPhilosophyDescription(dbState.clubActivity.philosophyDescription || "");
+      setCaTechnicalExcellenceDescription(dbState.clubActivity.technicalExcellenceDescription || "");
+      setCaCaptainName(dbState.clubActivity.captainName || "");
+      setCaCaptainRole(dbState.clubActivity.captainRole || "");
+      setCaCaptainImageUrl(dbState.clubActivity.captainImageUrl || "");
+      setCaCaptainPhilosophy(dbState.clubActivity.captainPhilosophy || "");
+      setCaCompetitions(dbState.clubActivity.competitions || []);
+      setCaTrainingDescription(dbState.clubActivity.trainingDescription || "");
+      setCaLegacyDescription(dbState.clubActivity.legacyDescription || "");
+      setCaFoundedYear(dbState.clubActivity.foundedYear || "");
+      setCaActiveYears(dbState.clubActivity.activeYears || "");
     }
     if (dbState?.siteLabels) {
       setLabelNavHome(dbState.siteLabels?.navHome || "HOME");
@@ -1104,6 +1137,55 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
     }
   };
 
+  const handleUpdateClubActivity = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsMutating(true);
+    try {
+      const { success } = await updateClubActivity({
+        heroImageUrl: caHeroImageUrl,
+        philosophyTitle: caPhilosophyTitle,
+        philosophyQuote: caPhilosophyQuote,
+        philosophyDescription: caPhilosophyDescription,
+        technicalExcellenceDescription: caTechnicalExcellenceDescription,
+        captainName: caCaptainName,
+        captainRole: caCaptainRole,
+        captainImageUrl: caCaptainImageUrl,
+        captainPhilosophy: caCaptainPhilosophy,
+        competitions: caCompetitions,
+        trainingDescription: caTrainingDescription,
+        legacyDescription: caLegacyDescription,
+        foundedYear: caFoundedYear,
+        activeYears: caActiveYears
+      });
+      if (success) {
+        triggerSuccessMsg("CLUB ACTIVITIES CONTENT UPDATED.");
+        refreshState();
+      }
+    } catch (err: any) {
+      triggerErrorMsg(err.message || "Failed to update club activities content.");
+    } finally {
+      setIsMutating(false);
+    }
+  };
+
+  const handleAddCompetition = () => {
+    const newComp: Competition = {
+      id: `comp-${Date.now()}`,
+      title: "New Competition",
+      description: "Brief description of the tournament.",
+      difficulty: "NATIONAL LEVEL"
+    };
+    setCaCompetitions([...caCompetitions, newComp]);
+  };
+
+  const handleUpdateCompetition = (id: string, updates: Partial<Competition>) => {
+    setCaCompetitions(caCompetitions.map(c => c.id === id ? { ...c, ...updates } : c));
+  };
+
+  const handleDeleteCompetition = (id: string) => {
+    setCaCompetitions(caCompetitions.filter(c => c.id !== id));
+  };
+
   const handleUpdateSiteSettings = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsMutating(true);
@@ -1275,6 +1357,21 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
           >
             <span className="flex items-center gap-2 uppercase">
               <FileText size={14} /> ACTIVITIES BLOG & STORIES CMS
+            </span>
+          </button>
+
+          <button
+            onClick={() => {
+              setActiveSubTab("clubActivity");
+            }}
+            className={`px-5 py-3 font-mono text-xs font-black tracking-widest border-t-2 border-x-2 cursor-pointer transition-all ${
+              activeSubTab === "clubActivity"
+                ? "border-black bg-black text-white"
+                : "border-transparent text-black/50 hover:text-black hover:bg-neutral-100"
+            }`}
+          >
+            <span className="flex items-center gap-2 uppercase">
+              <Sparkles size={14} /> CLUB ACTIVITIES CMS
             </span>
           </button>
 
@@ -1623,6 +1720,264 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
             </div>
           </div>
 
+        </section>
+      )}
+
+      {/* --- SUB-TAB CORE 1.5: CLUB ACTIVITY CMS --- */}
+      {activeSubTab === "clubActivity" && (
+        <section className="mx-auto max-w-7xl font-sans animate-fade-in">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-8 space-y-6">
+              <div className="border border-[#121212] bg-white p-6 space-y-8">
+                <h2 className="font-display text-sm font-bold uppercase tracking-wider text-[#121212] flex items-center gap-2">
+                  <Sparkles size={16} className="text-[#da5f8e]" /> CLUB ACTIVITIES PAGE CONTENT
+                </h2>
+
+                <div className="space-y-6">
+                  {/* Hero Image */}
+                  <ImageUploadWidget
+                    id="ca_hero_image"
+                    label="PAGE HERO BACKGROUND IMAGE"
+                    value={caHeroImageUrl}
+                    onChange={setCaHeroImageUrl}
+                    placeholder="https://images.unsplash.com/photo-..."
+                    helperText="A panoramic (21:9 or 24:9) landscape looks best here."
+                  />
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Philosophy Section */}
+                    <div className="space-y-4 border-t border-stone-100 pt-6">
+                      <h3 className="font-mono text-[10px] font-black text-[#da5f8e] uppercase tracking-widest">Philosophy Section</h3>
+                      <div className="space-y-1.5">
+                        <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase">PHILOSOPHY TITLE</label>
+                        <input
+                          type="text"
+                          value={caPhilosophyTitle}
+                          onChange={(e) => setCaPhilosophyTitle(e.target.value)}
+                          className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase">BIG QUOTE</label>
+                        <textarea
+                          rows={3}
+                          value={caPhilosophyQuote}
+                          onChange={(e) => setCaPhilosophyQuote(e.target.value)}
+                          className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none italic"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase">PHILOSOPHY DESCRIPTION</label>
+                        <textarea
+                          rows={6}
+                          value={caPhilosophyDescription}
+                          onChange={(e) => setCaPhilosophyDescription(e.target.value)}
+                          className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none leading-relaxed"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Technical Excellence */}
+                    <div className="space-y-4 border-t border-stone-100 pt-6">
+                      <h3 className="font-mono text-[10px] font-black text-[#da5f8e] uppercase tracking-widest">Training & Excellence</h3>
+                      <div className="space-y-1.5">
+                        <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase">TECHNICAL EXCELLENCE DESC</label>
+                        <textarea
+                          rows={4}
+                          value={caTechnicalExcellenceDescription}
+                          onChange={(e) => setCaTechnicalExcellenceDescription(e.target.value)}
+                          className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none leading-relaxed"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase">TRAINING FACILITIES DESC</label>
+                        <textarea
+                          rows={4}
+                          value={caTrainingDescription}
+                          onChange={(e) => setCaTrainingDescription(e.target.value)}
+                          className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none leading-relaxed"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Captain's Mandate */}
+                  <div className="space-y-6 border-t border-stone-100 pt-6">
+                    <h3 className="font-mono text-[10px] font-black text-[#da5f8e] uppercase tracking-widest">Captain's Mandate</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase">CAPTAIN NAME</label>
+                        <input
+                          type="text"
+                          value={caCaptainName}
+                          onChange={(e) => setCaCaptainName(e.target.value)}
+                          className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase">CAPTAIN ROLE / TITLE</label>
+                        <input
+                          type="text"
+                          value={caCaptainRole}
+                          onChange={(e) => setCaCaptainRole(e.target.value)}
+                          className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                    <ImageUploadWidget
+                      id="ca_captain_image"
+                      label="CAPTAIN PROFILE IMAGE"
+                      value={caCaptainImageUrl}
+                      onChange={setCaCaptainImageUrl}
+                      placeholder="https://images.unsplash.com/photo-..."
+                    />
+                    <div className="space-y-1.5">
+                      <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase">CAPTAIN'S PHILOSOPHY TEXT</label>
+                      <textarea
+                        rows={6}
+                        value={caCaptainPhilosophy}
+                        onChange={(e) => setCaCaptainPhilosophy(e.target.value)}
+                        className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2.5 text-xs font-serif italic focus:outline-none leading-relaxed"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Competitions */}
+                  <div className="space-y-6 border-t border-stone-100 pt-6">
+                    <div className="flex justify-between items-center">
+                      <h3 className="font-mono text-[10px] font-black text-[#da5f8e] uppercase tracking-widest">Major Competitions Calendar</h3>
+                      <button
+                        onClick={handleAddCompetition}
+                        className="bg-black text-white px-3 py-1.5 font-mono text-[9px] font-black uppercase tracking-wider flex items-center gap-1.5"
+                      >
+                        <Plus size={10} /> ADD COMPETITION
+                      </button>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {caCompetitions.map((comp) => (
+                        <div key={comp.id} className="border border-stone-200 p-4 space-y-4 bg-stone-50/30 relative group">
+                          <button
+                            onClick={() => handleDeleteCompetition(comp.id)}
+                            className="absolute top-2 right-2 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                          <div className="space-y-1.5">
+                            <label className="font-mono text-[8px] font-bold text-[#121212]/40 uppercase">TITLE</label>
+                            <input
+                              type="text"
+                              value={comp.title}
+                              onChange={(e) => handleUpdateCompetition(comp.id, { title: e.target.value })}
+                              className="w-full bg-white border border-[#121212]/10 p-1.5 text-[11px] focus:outline-none"
+                            />
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="font-mono text-[8px] font-bold text-[#121212]/40 uppercase">LEVEL / DIFFICULTY</label>
+                            <input
+                              type="text"
+                              value={comp.difficulty}
+                              onChange={(e) => handleUpdateCompetition(comp.id, { difficulty: e.target.value })}
+                              className="w-full bg-white border border-[#121212]/10 p-1.5 text-[11px] focus:outline-none font-mono"
+                            />
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="font-mono text-[8px] font-bold text-[#121212]/40 uppercase">DESCRIPTION</label>
+                            <textarea
+                              rows={3}
+                              value={comp.description}
+                              onChange={(e) => handleUpdateCompetition(comp.id, { description: e.target.value })}
+                              className="w-full bg-white border border-[#121212]/10 p-1.5 text-[11px] focus:outline-none leading-relaxed"
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Legacy Section */}
+                  <div className="space-y-6 border-t border-stone-100 pt-6">
+                    <h3 className="font-mono text-[10px] font-black text-[#da5f8e] uppercase tracking-widest">Legacy & History</h3>
+                    <div className="space-y-1.5">
+                      <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase">LEGACY DESCRIPTION</label>
+                      <textarea
+                        rows={4}
+                        value={caLegacyDescription}
+                        onChange={(e) => setCaLegacyDescription(e.target.value)}
+                        className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none leading-relaxed"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase">FOUNDED YEAR</label>
+                        <input
+                          type="text"
+                          value={caFoundedYear}
+                          onChange={(e) => setCaFoundedYear(e.target.value)}
+                          className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none font-mono"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase">ACTIVE YEARS LABEL</label>
+                        <input
+                          type="text"
+                          value={caActiveYears}
+                          onChange={(e) => setCaActiveYears(e.target.value)}
+                          className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none font-mono"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div className="flex items-center gap-4 border-t border-[#121212]/10 pt-8">
+                  <button
+                    onClick={handleUpdateClubActivity}
+                    className="bg-neutral-950 text-white hover:bg-[#da5f8e] px-8 py-3 font-mono text-xs font-black tracking-widest uppercase flex items-center gap-2 cursor-pointer transition-colors shadow-lg"
+                  >
+                    <Save size={14} /> COMMIT CLUB ACTIVITIES CONTENT SET LIVE
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Preview Sidebar */}
+            <div className="lg:col-span-4 space-y-6">
+              <div className="border border-[#121212] bg-stone-50 p-6 space-y-6 sticky top-32">
+                <h3 className="font-display text-[10px] font-black uppercase text-neutral-400 tracking-[0.2em]">CMS GUIDELINES</h3>
+                <div className="space-y-4">
+                  <div className="space-y-1">
+                    <span className="block font-mono text-[9px] font-bold text-black uppercase">Editorial Standard</span>
+                    <p className="text-[10px] text-stone-500 leading-relaxed">
+                      Maintain a professional, prestigious tone. Use high-resolution images for the hero section to establish authority.
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="block font-mono text-[9px] font-bold text-black uppercase">Captain's Philosophy</span>
+                    <p className="text-[10px] text-stone-500 leading-relaxed">
+                      This section is crucial for recruiting and branding. Use an authentic voice that represents the current leadership.
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <span className="block font-mono text-[9px] font-bold text-black uppercase">Image Assets</span>
+                    <p className="text-[10px] text-stone-500 leading-relaxed">
+                      Prefer photos with high contrast or grayscale for the background to ensure text remains legible.
+                    </p>
+                  </div>
+                </div>
+                <div className="pt-6 border-t border-stone-200">
+                  <a 
+                    href="/activities/club" 
+                    target="_blank" 
+                    className="inline-flex items-center gap-1.5 text-[9px] font-mono font-black text-[#da5f8e] uppercase hover:underline"
+                  >
+                    <Eye size={10} /> VIEW LIVE PAGE <ArrowUpRight size={10} />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
       )}
 

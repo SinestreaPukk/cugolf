@@ -39,7 +39,7 @@ async function migrate() {
   }
 
   // 2. Migrate Configs
-  const configs = ['welcomeSection', 'upcomingActivity', 'siteSettings', 'siteLabels'];
+  const configs = ['welcomeSection', 'upcomingActivity', 'siteSettings', 'siteLabels', 'clubActivity', 'homeSponsorSection'];
   for (const configName of configs) {
     if (db[configName]) {
       console.log(`Migrating ${configName}...`);

@@ -1,17 +1,20 @@
-import { SiteLabels, SiteSettings, TournamentScore } from "../types";
+import { SiteLabels, SiteSettings, TournamentScore, ClubActivityContent } from "../types";
 import { Trophy, Target, Award, Shield, Clock, BookOpen, Star, Users } from "lucide-react";
 import { useEffect } from "react";
 
 interface AboutClubViewProps {
+  clubActivity: ClubActivityContent;
   scores: TournamentScore[];
   siteLabels?: SiteLabels;
   siteSettings?: SiteSettings;
 }
 
-export default function AboutClubView({ scores, siteLabels }: AboutClubViewProps) {
+export default function AboutClubView({ clubActivity, scores, siteLabels }: AboutClubViewProps) {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  if (!clubActivity) return null;
 
   return (
     <div className="space-y-24 animate-fade-in pb-24">
@@ -19,7 +22,7 @@ export default function AboutClubView({ scores, siteLabels }: AboutClubViewProps
       <section className="relative h-[60vh] flex flex-col items-center justify-center text-center overflow-hidden bg-neutral-950">
         <div className="absolute inset-0 opacity-40">
            <img 
-            src="/uploads/windsor_team_legacy.png" 
+            src={clubActivity.heroImageUrl || "/uploads/windsor_team_legacy.png"} 
             className="w-full h-full object-cover grayscale" 
             alt="CU Golf Club Team"
            />
@@ -28,7 +31,7 @@ export default function AboutClubView({ scores, siteLabels }: AboutClubViewProps
         
         <div className="relative z-10 space-y-6 px-4">
           <span className="font-mono text-[10px] md:text-xs font-black text-[#da5f8e] tracking-[0.4em] uppercase">
-            ESTABLISHED 1916 • THE PINK LEGACY
+            ESTABLISHED {clubActivity.foundedYear || "1916"} • THE PINK LEGACY
           </span>
           <h1 className="font-display text-5xl md:text-8xl font-black text-white uppercase tracking-tighter leading-[0.85]">
             CLUB <br /> <span className="text-[#da5f8e]">ACTIVITIES</span>
@@ -44,10 +47,10 @@ export default function AboutClubView({ scores, siteLabels }: AboutClubViewProps
         <div className="md:col-span-5 space-y-6 sticky top-32">
           <div className="h-1.5 w-20 bg-[#da5f8e]" />
           <h2 className="font-display text-4xl font-black text-neutral-950 uppercase leading-none">
-            OUR <br /> PHILOSOPHY
+            {clubActivity.philosophyTitle || "OUR PHILOSOPHY"}
           </h2>
           <p className="font-serif italic text-xl text-stone-500 leading-relaxed">
-            "More than just a sport, golf at Chulalongkorn is a vehicle for personal growth, discipline, and lifelong camaraderie."
+            "{clubActivity.philosophyQuote}"
           </p>
         </div>
         
@@ -57,8 +60,8 @@ export default function AboutClubView({ scores, siteLabels }: AboutClubViewProps
               <Shield className="text-[#da5f8e]" size={20} />
               น้ำใจน้องพี่สีชมพู (THE PINK SPIRIT)
             </h3>
-            <p className="font-sans text-stone-600 leading-relaxed text-justify">
-              At CU Golf Club, we believe in the "Pink Spirit"—a unique blend of fierce competitive drive and absolute integrity. As Thailand's oldest university, our golf program carries the weight of a century-old tradition. We don't just produce athletes; we cultivate leaders who understand that peak performance on the green is rooted in humility, respect for the game, and support for one's teammates.
+            <p className="font-sans text-stone-600 leading-relaxed text-justify whitespace-pre-line">
+              {clubActivity.philosophyDescription}
             </p>
           </div>
 
@@ -67,8 +70,8 @@ export default function AboutClubView({ scores, siteLabels }: AboutClubViewProps
               <Target className="text-[#da5f8e]" size={20} />
               TECHNICAL EXCELLENCE
             </h3>
-            <p className="font-sans text-stone-600 leading-relaxed text-justify">
-              We leverage modern analytics and professional coaching to ensure our squad remains at the forefront of collegiate golf. Our training focuses on precision, mental fortitude, and strategic course management, preparing students for the high-pressure environment of national championships.
+            <p className="font-sans text-stone-600 leading-relaxed text-justify whitespace-pre-line">
+              {clubActivity.technicalExcellenceDescription}
             </p>
           </div>
         </div>
@@ -79,7 +82,7 @@ export default function AboutClubView({ scores, siteLabels }: AboutClubViewProps
         <div className="mx-auto max-w-5xl px-4 grid grid-cols-1 md:grid-cols-12 gap-16 items-center">
           <div className="md:col-span-4 aspect-[3/4] overflow-hidden bg-neutral-950 border-4 border-white shadow-2xl rotate-[-2deg]">
              <img 
-               src="/uploads/Screenshot_2026-05-26_at_21_44_02-1779806963893.png" 
+               src={clubActivity.captainImageUrl || "/uploads/Screenshot_2026-05-26_at_21_44_02-1779806963893.png"} 
                className="w-full h-full object-cover"
                alt="Club Captain"
              />
@@ -88,25 +91,20 @@ export default function AboutClubView({ scores, siteLabels }: AboutClubViewProps
           <div className="md:col-span-8 space-y-8">
             <div className="space-y-2">
               <span className="font-mono text-[10px] font-black text-[#da5f8e] tracking-widest uppercase">
-                2026 SEASON MANDATE
+                {new Date().getFullYear()} SEASON MANDATE
               </span>
               <h2 className="font-display text-4xl md:text-5xl font-black text-neutral-950 uppercase leading-none">
                 CAPTAIN'S <br /> PHILOSOPHY
               </h2>
             </div>
             
-            <div className="prose prose-stone prose-lg italic font-serif text-stone-700 leading-relaxed">
-              <p>
-                "My primary goal for this season is to bridge the gap between our storied history and the modern competitive landscape. We are not just a club; we are a high-performance unit. We prioritize consistency over occasional brilliance. Every practice session is a step toward our goal of reclaiming the Varsity Championship title."
-              </p>
-              <p>
-                "Unity is our greatest asset. Whether you're a freshman or a senior, on the green, we are one Pink Squad."
-              </p>
+            <div className="prose prose-stone prose-lg italic font-serif text-stone-700 leading-relaxed whitespace-pre-line">
+              {clubActivity.captainPhilosophy}
             </div>
             
             <div className="pt-4 border-t border-stone-200">
-              <span className="block font-display text-lg font-black text-neutral-950 uppercase">Sakditouch Pukkanasut</span>
-              <span className="block font-mono text-[10px] font-bold text-stone-400 uppercase tracking-widest">PRESIDENT & SQUAD CAPTAIN</span>
+              <span className="block font-display text-lg font-black text-neutral-950 uppercase">{clubActivity.captainName}</span>
+              <span className="block font-mono text-[10px] font-bold text-stone-400 uppercase tracking-widest">{clubActivity.captainRole}</span>
             </div>
           </div>
         </div>
@@ -124,35 +122,13 @@ export default function AboutClubView({ scores, siteLabels }: AboutClubViewProps
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {[
-            {
-              title: "CHANG U. GOLF CHAMPIONSHIP",
-              desc: "The premier collegiate golf tournament in Thailand. CU Golf Club competes against the nation's top universities for the ultimate team trophy.",
-              icon: <Trophy className="text-[#da5f8e]" size={32} />,
-              difficulty: "ELITE LEVEL"
-            },
-            {
-              title: "THE UNIVERSITY GAMES OF THAILAND",
-              desc: "An annual multi-sport event where our representatives compete for individual and team gold medals in the Inthanin Games and beyond.",
-              icon: <Award className="text-[#da5f8e]" size={32} />,
-              difficulty: "NATIONAL LEVEL"
-            },
-            {
-              title: "CHULALYMPICS GOLF",
-              desc: "Our internal university tournament featuring Putting, Long Drive, and Closest to the Pin challenges across all faculties.",
-              icon: <Star className="text-[#da5f8e]" size={32} />,
-              difficulty: "UNIVERSITY LEVEL"
-            },
-            {
-              title: "FRIENDLY INTERNATIONAL MATCHES",
-              desc: "Expanding our horizons through matches with international partners like Meiji University (Japan) and others across Asia.",
-              icon: <Users className="text-[#da5f8e]" size={32} />,
-              difficulty: "INTERNATIONAL"
-            }
-          ].map((comp, idx) => (
+          {(clubActivity.competitions || []).map((comp, idx) => (
             <div key={idx} className="border border-stone-200 p-8 space-y-6 hover:border-[#da5f8e] transition-colors group">
               <div className="flex justify-between items-start">
-                {comp.icon}
+                {idx % 4 === 0 ? <Trophy className="text-[#da5f8e]" size={32} /> : 
+                 idx % 4 === 1 ? <Award className="text-[#da5f8e]" size={32} /> :
+                 idx % 4 === 2 ? <Star className="text-[#da5f8e]" size={32} /> :
+                 <Users className="text-[#da5f8e]" size={32} />}
                 <span className="font-mono text-[9px] font-black bg-stone-100 px-2 py-1 text-stone-500 group-hover:bg-[#da5f8e] group-hover:text-white transition-colors">
                   {comp.difficulty}
                 </span>
@@ -162,7 +138,7 @@ export default function AboutClubView({ scores, siteLabels }: AboutClubViewProps
                   {comp.title}
                 </h4>
                 <p className="font-sans text-sm text-stone-500 leading-relaxed">
-                  {comp.desc}
+                  {comp.description}
                 </p>
               </div>
             </div>
@@ -178,8 +154,8 @@ export default function AboutClubView({ scores, siteLabels }: AboutClubViewProps
             <h2 className="font-display text-3xl font-black uppercase leading-tight">
               WORLD-CLASS <br /> TRAINING GROUNDS
             </h2>
-            <p className="font-sans text-sm text-stone-400 leading-relaxed text-justify">
-              Our squad trains at the finest facilities in Thailand, including Amata Spring Country Club and Alpine Golf Club. We utilize state-of-the-art launch monitors and video analysis to refine every aspect of our game, from short-game precision to driving distance.
+            <p className="font-sans text-sm text-stone-400 leading-relaxed text-justify whitespace-pre-line">
+              {clubActivity.trainingDescription}
             </p>
          </div>
          
@@ -209,17 +185,17 @@ export default function AboutClubView({ scores, siteLabels }: AboutClubViewProps
       <section className="mx-auto max-w-3xl px-4 text-center space-y-8">
         <div className="h-1 w-24 bg-[#da5f8e] mx-auto" />
         <h2 className="font-display text-3xl font-black text-neutral-950 uppercase">OUR LEGACY</h2>
-        <p className="font-sans text-stone-600 leading-relaxed">
-          Founded in the early 20th century, the Chulalongkorn University Golf Club has been the pioneer of collegiate golf in Thailand. From the traditional wooden clubs of the 1930s to the titanium drivers of today, our commitment to excellence remains unchanged. We are proud to represent the Pink spirit on every green we touch.
+        <p className="font-sans text-stone-600 leading-relaxed whitespace-pre-line">
+          {clubActivity.legacyDescription}
         </p>
         <div className="flex justify-center items-center gap-8 pt-8">
            <div className="text-center">
-             <span className="block font-display text-3xl font-black text-neutral-950">1916</span>
+             <span className="block font-display text-3xl font-black text-neutral-950">{clubActivity.foundedYear}</span>
              <span className="block font-mono text-[9px] font-bold text-stone-400 uppercase">FOUNDED</span>
            </div>
            <div className="h-12 w-px bg-stone-200" />
            <div className="text-center">
-             <span className="block font-display text-3xl font-black text-neutral-950">100+</span>
+             <span className="block font-display text-3xl font-black text-neutral-950">{clubActivity.activeYears}</span>
              <span className="block font-mono text-[9px] font-bold text-stone-400 uppercase">ACTIVE YEARS</span>
            </div>
            <div className="h-12 w-px bg-stone-200" />
@@ -232,3 +208,4 @@ export default function AboutClubView({ scores, siteLabels }: AboutClubViewProps
     </div>
   );
 }
+

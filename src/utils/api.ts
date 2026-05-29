@@ -1,4 +1,4 @@
-import { DatabaseState, NewsItem, Player, Staff, TournamentScore, GalleryImage, WelcomeSection, UpcomingActivity, Sponsor, SiteSettings, SiteLabels, HomeSponsorSection } from "../types";
+import { DatabaseState, NewsItem, Player, Staff, TournamentScore, GalleryImage, WelcomeSection, UpcomingActivity, Sponsor, SiteSettings, SiteLabels, HomeSponsorSection, ClubActivityContent } from "../types";
 
 // Dynamic API helpers
 export async function getDatabaseState(): Promise<DatabaseState> {
@@ -220,6 +220,16 @@ export async function updateHomeSponsorSection(item: HomeSponsorSection): Promis
     body: JSON.stringify(item)
   });
   if (!res.ok) throw new Error("Failed to update home sponsor section");
+  return res.json();
+}
+
+export async function updateClubActivity(item: ClubActivityContent): Promise<{ success: boolean }> {
+  const res = await fetch("/api/club-activity", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(item)
+  });
+  if (!res.ok) throw new Error("Failed to update club activity content");
   return res.json();
 }
 

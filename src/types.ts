@@ -215,6 +215,30 @@ export interface UpcomingActivity {
   showSection: boolean;
 }
 
+export interface Competition {
+  id: string;
+  title: string;
+  description: string;
+  difficulty: string;
+}
+
+export interface ClubActivityContent {
+  heroImageUrl: string;
+  philosophyTitle: string;
+  philosophyQuote: string;
+  philosophyDescription: string;
+  technicalExcellenceDescription: string;
+  captainName: string;
+  captainRole: string;
+  captainImageUrl: string;
+  captainPhilosophy: string;
+  competitions: Competition[];
+  trainingDescription: string;
+  legacyDescription: string;
+  foundedYear: string;
+  activeYears: string;
+}
+
 export interface DatabaseState {
   news: NewsItem[];
   roster: Player[];
@@ -224,6 +248,7 @@ export interface DatabaseState {
   welcomeSection: WelcomeSection;
   upcomingActivity: UpcomingActivity;
   homeSponsorSection: HomeSponsorSection;
+  clubActivity: ClubActivityContent;
   sponsors: Sponsor[];
   siteSettings: SiteSettings;
   siteLabels: SiteLabels;

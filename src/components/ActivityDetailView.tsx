@@ -25,11 +25,11 @@ export default function ActivityDetailView({ news, siteLabels }: ActivityDetailV
   return (
     <article className="max-w-3xl mx-auto py-12 px-4 md:px-0 animate-fade-in">
       <Link
-        to="/activities"
+        to="/activities/blog"
         className="inline-flex items-center gap-2 text-[#da5f8e] font-mono text-xs font-bold uppercase tracking-widest hover:underline mb-12 group"
       >
         <ArrowLeft size={14} className="transition-transform group-hover:-translate-x-1" />
-        BACK TO ACTIVITIES
+        BACK TO BLOG
       </Link>
 
       <header className="space-y-8 mb-12">

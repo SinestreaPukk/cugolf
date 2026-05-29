@@ -1,5 +1,5 @@
-import { ArrowRight, Menu, X, Instagram } from "lucide-react";
-import { useState } from "react";
+import { ArrowRight, Menu, X, Instagram, ChevronDown } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "./Logo";
 import { SiteLabels, SiteSettings } from "../types";
@@ -27,11 +27,33 @@ interface NavbarProps {
 
 export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSettings }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isActivitiesOpen, setIsActivitiesOpen] = useState(false);
+  const [isMobileActivitiesOpen, setIsMobileActivitiesOpen] = useState(false);
   const location = useLocation();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsActivitiesOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const navLinks = [
     { id: "home", label: siteLabels?.navHome || "HOME", path: "/", show: true },
-    { id: "blog", label: siteLabels?.navBlog || "ACTIVITIES", path: "/activities", show: true },
+    { 
+      id: "activities", 
+      label: siteLabels?.navBlog || "ACTIVITIES", 
+      path: "/activities", 
+      show: true,
+      dropdown: [
+        { label: "BLOG", path: "/activities/blog" },
+        { label: "CLUB ACTIVITIES", path: "/activities/club" },
+      ]
+    },
     { id: "roster", label: siteLabels?.navRoster || "TEAM ROSTER", path: "/roster", show: siteSettings?.showNavbarRoster ?? true },
     { id: "staff", label: siteLabels?.navStaff || "STAFF & BOARD", path: "/staff", show: siteSettings?.showNavbarStaff ?? true },
     { id: "scores", label: siteLabels?.navScores || "SCORES & STATS", path: "/scores", show: siteSettings?.showNavbarScores ?? true },
@@ -67,17 +89,51 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
         {/* Desktop Navigation Links */}
         <nav className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
-            <Link
-              key={link.id}
-              to={link.path}
-              className={`relative py-1 font-sans text-[11px] font-bold tracking-widest uppercase transition-all duration-200 cursor-pointer ${
-                isActive(link.path)
-                  ? "text-neutral-950 border-b border-neutral-900"
-                  : "text-stone-400 hover:text-neutral-900 hover:opacity-100"
-              }`}
-            >
-              {link.label}
-            </Link>
+            link.dropdown ? (
+              <div key={link.id} className="relative group" ref={dropdownRef}>
+                <button
+                  onClick={() => setIsActivitiesOpen(!isActivitiesOpen)}
+                  onMouseEnter={() => setIsActivitiesOpen(true)}
+                  className={`flex items-center gap-1 py-1 font-sans text-[11px] font-bold tracking-widest uppercase transition-all duration-200 cursor-pointer ${
+                    isActive(link.path)
+                      ? "text-neutral-950 border-b border-neutral-900"
+                      : "text-stone-400 hover:text-neutral-900 hover:opacity-100"
+                  }`}
+                >
+                  {link.label} <ChevronDown size={12} className={`transition-transform duration-200 ${isActivitiesOpen ? "rotate-180" : ""}`} />
+                </button>
+                
+                {isActivitiesOpen && (
+                  <div 
+                    className="absolute top-full left-0 mt-2 w-48 bg-white border border-stone-200 shadow-xl py-2 animate-fade-in"
+                    onMouseLeave={() => setIsActivitiesOpen(false)}
+                  >
+                    {link.dropdown.map((subItem) => (
+                      <Link
+                        key={subItem.path}
+                        to={subItem.path}
+                        onClick={() => setIsActivitiesOpen(false)}
+                        className="block px-4 py-2 font-sans text-[10px] font-bold tracking-widest text-stone-400 hover:text-neutral-950 hover:bg-stone-50 transition-colors uppercase"
+                      >
+                        {subItem.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                key={link.id}
+                to={link.path}
+                className={`relative py-1 font-sans text-[11px] font-bold tracking-widest uppercase transition-all duration-200 cursor-pointer ${
+                  isActive(link.path)
+                    ? "text-neutral-950 border-b border-neutral-900"
+                    : "text-stone-400 hover:text-neutral-900 hover:opacity-100"
+                }`}
+              >
+                {link.label}
+              </Link>
+            )
           ))}
         </nav>
 
@@ -116,19 +172,51 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
 
       {/* Mobile Menu Panel */}
       {isOpen && (
-        <div className="fixed inset-x-0 top-[76px] border-b border-stone-200 bg-white/95 backdrop-blur-md px-6 py-8 md:hidden shadow-md animate-fade-in z-50">
+        <div className="fixed inset-x-0 top-[76px] border-b border-stone-200 bg-white/95 backdrop-blur-md px-6 py-8 md:hidden shadow-md animate-fade-in z-50 overflow-y-auto max-h-[calc(100vh-76px)]">
           <div className="flex flex-col gap-5">
             {navLinks.map((link) => (
-              <Link
-                key={link.id}
-                to={link.path}
-                onClick={() => setIsOpen(false)}
-                className={`text-left font-display text-base font-bold tracking-tight py-1.5 uppercase transition-all ${
-                  isActive(link.path) ? "text-neutral-950 pl-3 border-l-2 border-neutral-950" : "text-stone-400"
-                }`}
-              >
-                {link.label}
-              </Link>
+              <div key={link.id} className="flex flex-col">
+                {link.dropdown ? (
+                  <>
+                    <button
+                      onClick={() => setIsMobileActivitiesOpen(!isMobileActivitiesOpen)}
+                      className={`flex items-center justify-between text-left font-display text-base font-bold tracking-tight py-1.5 uppercase transition-all ${
+                        isActive(link.path) ? "text-neutral-950 pl-3 border-l-2 border-neutral-950" : "text-stone-400"
+                      }`}
+                    >
+                      {link.label}
+                      <ChevronDown size={18} className={`transition-transform duration-200 ${isMobileActivitiesOpen ? "rotate-180" : ""}`} />
+                    </button>
+                    {isMobileActivitiesOpen && (
+                      <div className="pl-6 flex flex-col gap-4 mt-4 mb-2 animate-fade-in">
+                        {link.dropdown.map((subItem) => (
+                          <Link
+                            key={subItem.path}
+                            to={subItem.path}
+                            onClick={() => {
+                              setIsOpen(false);
+                              setIsMobileActivitiesOpen(false);
+                            }}
+                            className="text-left font-sans text-xs font-bold tracking-widest text-stone-400 hover:text-neutral-950 uppercase"
+                          >
+                            {subItem.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <Link
+                    to={link.path}
+                    onClick={() => setIsOpen(false)}
+                    className={`text-left font-display text-base font-bold tracking-tight py-1.5 uppercase transition-all ${
+                      isActive(link.path) ? "text-neutral-950 pl-3 border-l-2 border-neutral-950" : "text-stone-400"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                )}
+              </div>
             ))}
 
             <hr className="border-stone-150" />
@@ -160,4 +248,5 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
     </header>
   );
 }
+
 

@@ -46,7 +46,7 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
               {siteLabels?.homeBlogTitle || "ACTIVITIES BLOG & STORIES"}
             </h2>
             <Link
-              to="/activities"
+              to="/activities/blog"
               className="font-mono text-[9px] md:text-[10px] font-bold text-[#da5f8e] hover:text-[#c24273] tracking-widest uppercase cursor-pointer hover:underline underline-offset-4"
             >
               VIEW ALL STORIES

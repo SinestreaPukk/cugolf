@@ -59,28 +59,8 @@ function AppContent() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [location.pathname]);
 
-  // Loading screen
-  if (loading) {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#fcfbf9] text-[#121212] font-sans antialiased">
-        <div className="space-y-4 text-center">
-          <div className="font-display text-4xl font-extrabold tracking-tighter uppercase leading-none">
-            CU <span className="text-[#ec4899] font-normal font-serif italic">GOLF</span>
-          </div>
-          <div className="h-0.5 w-16 bg-[#ec4899] mx-auto" />
-          <p className="font-mono text-[9px] tracking-[0.2em] text-[#121212]/50 uppercase">
-            ACCELERATING SPORTS DATABASE SYSTEM
-          </p>
-          <div className="flex items-center justify-center pt-4">
-            <RefreshCw size={20} className="animate-spin text-[#ec4899]" />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   // Fatal load error page
-  if (errorMsg) {
+  if (errorMsg && !dbState) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-[#fcfbf9] p-6 text-[#121212] font-sans text-center">
         <div className="border border-red-500/20 bg-red-500/5 p-8 max-w-md space-y-4">
@@ -103,7 +83,8 @@ function AppContent() {
     );
   }
 
-  // Final check to prevent any accidental null dbState access
+  // Allow app to run if we have cached or initial state, otherwise we can optionally render nothing briefly
+  if (!dbState && loading) return null; // Avoids flashing the loading screen, just stays blank briefly until data loads
   if (!dbState) return null;
 
   return (

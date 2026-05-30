@@ -48,11 +48,11 @@ export default function WelcomeSectionView({ welcomeSection, siteLabels }: Welco
         <div className="p-6 md:p-8 pt-5 md:pt-6 md:col-span-4 flex flex-col justify-start bg-white text-stone-900 space-y-3.5">
           
           {/* Main Title Headers */}
-          <div className="space-y-1">
-            <h1 className="font-thai text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold italic text-[#da5f8e] tracking-wide leading-[1.15] py-0 antialiased">
+          <div className="space-y-4">
+            <h1 className="font-thai text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold italic text-[#da5f8e] tracking-wide leading-tight py-0 antialiased pb-2">
               {welcomeSection.titleThai || "น้ำใจน้องพี่สีชมพู"}
             </h1>
-            <h2 className="font-display text-[14px] md:text-base font-bold text-neutral-500 tracking-widest leading-none uppercase">
+            <h2 className="font-display text-[14px] md:text-base font-bold text-neutral-500 tracking-widest leading-normal uppercase">
               {welcomeSection.titleEnglish || "CHULALONGKORN UNIVERSITY GOLF CLUB"}
             </h2>
           </div>

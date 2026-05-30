@@ -30,9 +30,6 @@ export default function AboutClubView({ clubActivity, scores, siteLabels }: Abou
         </div>
         
         <div className="relative z-10 space-y-6 px-4">
-          <span className="font-mono text-[10px] md:text-xs font-black text-[#da5f8e] tracking-[0.4em] uppercase">
-            ESTABLISHED {clubActivity.foundedYear || "1916"} • THE PINK LEGACY
-          </span>
           <h1 className="font-display text-5xl md:text-8xl font-black text-white uppercase tracking-tighter leading-[0.85]">
             CLUB <br /> <span className="text-[#da5f8e]">ACTIVITIES</span>
           </h1>

@@ -2857,7 +2857,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
                   <div className="p-4 md:col-span-4 space-y-4">
                     <div className="space-y-1.5">
                       <span className="bg-black text-white font-mono text-[7px] font-bold px-1 tracking-wider uppercase block w-max">
-                        ESTABLISHED IN 1916 • CO-CURRICULAR CHARTER
+                        CO-CURRICULAR CHARTER
                       </span>
                       <h3 className="text-xl font-black tracking-tight leading-none text-black mt-1">
                         {welcomeTitleThai || "[THAI TITLE]"}

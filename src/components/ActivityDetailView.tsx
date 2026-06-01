@@ -27,7 +27,7 @@ export default function ActivityDetailView({ news, siteLabels }: ActivityDetailV
  <article className="max-w-3xl mx-auto py-12 px-4 md:px-0 animate-fade-in">
  <Link
  to="/activities/blog"
- className="inline-flex items-center gap-2 text-[#da5f8e] font-mono text-xs font-bold uppercase tracking-widest hover:underline mb-12 group"
+ className="inline-flex items-center gap-2 text-brand-pink font-mono text-xs font-bold uppercase tracking-widest hover:underline mb-12 group"
  >
  <ArrowLeft size={14} className="transition-transform group-hover:-translate-x-1"/>
  BACK TO BLOG
@@ -36,7 +36,7 @@ export default function ActivityDetailView({ news, siteLabels }: ActivityDetailV
  <header className="space-y-8 mb-12">
  <div className="space-y-4">
  <div className="flex items-center gap-3">
- <span className="bg-black text-white font-mono text-[9px] font-black px-2.5 py-1 tracking-widest uppercase">
+ <span className="bg-brand-ink text-brand-neutral font-mono text-[9px] font-black px-2.5 py-1 tracking-widest uppercase">
  {siteLabels?.homeModalOfficialBadge ||"OFFICIAL EDITORIAL"}
  </span>
  <div className="flex items-center gap-1.5 font-mono text-[10px] text-stone-400 font-bold uppercase tracking-widest">
@@ -45,11 +45,11 @@ export default function ActivityDetailView({ news, siteLabels }: ActivityDetailV
  </div>
  </div>
  
- <h1 className="font-display text-4xl md:text-6xl font-black tracking-tight text-neutral-950 uppercase leading-[0.9] md:leading-[0.85]">
+ <h1 className="font-display text-4xl md:text-6xl font-black tracking-tight text-brand-ink uppercase leading-[0.9] md:leading-[0.85]">
  {article.title}
  </h1>
  
- <div className="h-1.5 w-24 bg-[#da5f8e]"/>
+ <div className="h-1.5 w-24 bg-brand-pink"/>
  </div>
 
  <p className="font-sans text-xl text-stone-500 italic leading-relaxed border-l-4 border-stone-200 pl-6 py-2">

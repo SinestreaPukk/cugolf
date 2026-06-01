@@ -62,8 +62,8 @@ export default function ScoresView({ scores, siteLabels, isAdmin, onEditSection,
  
  {/* Interactive Match Score list */}
  <div className="space-y-6">
- <div className="border border-brand-ink bg-brand-neutral divide-y divide-stone-150 overflow-hidden">
- {(scores || []).filter(s => s.isVisible !== false).map((score) => {
+   <div className="border border-brand-ink bg-brand-neutral divide-y divide-stone-150 overflow-hidden shadow-[8px_8px_0px_rgba(18,18,18,0.08)]">
+     {(scores || []).filter(s => s.isVisible !== false).map((score) => {
  const isExpanded = expandedId === score.id;
 
  return (

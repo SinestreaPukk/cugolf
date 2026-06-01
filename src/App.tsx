@@ -97,18 +97,18 @@ function AppContent() {
       />
 
       {(dbState?.siteSettings?.showMarquee ?? true) && (
-        <div className="w-full bg-transparent text-neutral-900 py-1 overflow-hidden border-b border-stone-200 select-none relative z-30 flex items-center h-11 md:h-14">
+        <div className="w-full bg-brand-neutral text-stone-300 py-1 overflow-hidden border-b border-brand-ink select-none relative z-30 flex items-center h-11 md:h-14 opacity-50">
           <div className="w-full overflow-hidden whitespace-nowrap flex items-center">
-            <div className="animate-marquee inline-flex shrink-0 font-sans text-2xl md:text-3xl uppercase font-black tracking-tighter gap-6 leading-none">
+            <div className="animate-marquee inline-flex shrink-0 font-sans text-2xl md:text-3xl uppercase font-black tracking-tighter gap-6 leading-none" style={{ animationDuration: '45s' }}>
               {Array(10).fill(null).map((_, index) => {
                 const text = dbState?.siteSettings?.marqueeText || "Chulalongkorn University Golf Club • Drive to Excellence";
                 const parts = text.includes("•") ? text.split("•") : text.includes("-") ? text.split("-") : [text];
                 return (
                   <span key={index} className="inline-flex items-center gap-6">
                     {parts.map((part, pIdx) => (
-                      <span key={pIdx} className="inline-flex items-center gap-6">
+                      <span key={pIdx} className="inline-flex items-center gap-6 text-stone-300">
                         <span>{part.trim()}</span>
-                        <span className="text-brand-pink font-sans font-black text-2xl md:text-3xl leading-none">•</span>
+                        <span className="text-brand-pink/50 font-sans font-black text-2xl md:text-3xl leading-none">•</span>
                       </span>
                     ))}
                   </span>

@@ -28,7 +28,7 @@ export default function MarkdownRenderer({ text }: { text: string }) {
 
  if (trimmed.startsWith("###")) {
  return (
- <h3 key={idx} className="font-display text-2xl font-bold tracking-tight text-neutral-950 mt-10 mb-4 uppercase">
+ <h3 key={idx} className="font-display text-2xl font-bold tracking-tight text-brand-ink mt-10 mb-4 uppercase">
  {trimmed.replace("###","")}
  </h3>
  );
@@ -36,7 +36,7 @@ export default function MarkdownRenderer({ text }: { text: string }) {
  
  if (trimmed.startsWith("####")) {
  return (
- <h4 key={idx} className="font-display text-lg font-black uppercase tracking-wider text-black mt-8 mb-3">
+ <h4 key={idx} className="font-display text-lg font-black uppercase tracking-wider text-brand-ink mt-8 mb-3">
  {trimmed.replace("####","")}
  </h4>
  );
@@ -44,7 +44,7 @@ export default function MarkdownRenderer({ text }: { text: string }) {
  
  if (trimmed.startsWith(">")) {
  return (
- <blockquote key={idx} className="border-l-4 border-[#da5f8e] pl-6 italic my-8 font-serif text-xl text-stone-700 bg-stone-50 py-4 pr-4">
+ <blockquote key={idx} className="border-l-4 border-brand-pink pl-6 italic my-8 font-serif text-xl text-stone-700 bg-brand-stone py-4 pr-4">
  {trimmed.replace(">","")}
  </blockquote>
  );

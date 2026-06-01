@@ -67,7 +67,7 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  };
 
  return (
- <header className="sticky top-0 z-50 border-b border-[#121212] bg-white/90 backdrop-blur-md transition-all duration-350">
+ <header className="sticky top-0 z-50 border-b border-brand-ink bg-brand-neutral/90 backdrop-blur-md transition-all duration-350">
  <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:py-5">
  {/* Logo / Brand Name in impact editorial typography */}
  <Link
@@ -77,7 +77,7 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  >
  <Logo showText={false} size="md"/>
  <div className="flex flex-col">
- <span className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-neutral-950 leading-none">
+ <span className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-brand-ink leading-none">
  {siteLabels?.navBrandTitle ||"cugolfclub."}
  </span>
  <span className="font-mono text-[7.5px] font-bold tracking-wider text-neutral-400 mt-1">
@@ -96,7 +96,7 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  onMouseEnter={() => setIsActivitiesOpen(true)}
  className={`flex items-center gap-1 py-1 font-sans text-[11px] font-bold tracking-widest uppercase transition-all duration-200 cursor-pointer ${
  isActive(link.path)
- ?"text-neutral-950 border-b border-neutral-900"
+ ?"text-brand-ink border-b border-neutral-900"
  :"text-stone-400 hover:text-neutral-900 hover:opacity-100"
  }`}
  >
@@ -105,7 +105,7 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  
  {isActivitiesOpen && (
  <div 
- className="absolute top-full left-0 mt-2 w-48 bg-white border border-[#121212] py-2 animate-fade-in"
+ className="absolute top-full left-0 mt-2 w-48 bg-brand-neutral border border-brand-ink py-2 animate-fade-in"
  onMouseLeave={() => setIsActivitiesOpen(false)}
  >
  {link.dropdown.map((subItem) => (
@@ -113,7 +113,7 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  key={subItem.path}
  to={subItem.path}
  onClick={() => setIsActivitiesOpen(false)}
- className="block px-4 py-2 font-sans text-[10px] font-bold tracking-widest text-stone-400 hover:text-neutral-950 hover:bg-stone-50 transition-colors uppercase"
+ className="block px-4 py-2 font-sans text-[10px] font-bold tracking-widest text-stone-400 hover:text-brand-ink hover:bg-brand-stone transition-colors uppercase"
  >
  {subItem.label}
  </Link>
@@ -127,7 +127,7 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  to={link.path}
  className={`relative py-1 font-sans text-[11px] font-bold tracking-widest uppercase transition-all duration-200 cursor-pointer ${
  isActive(link.path)
- ?"text-neutral-950 border-b border-neutral-900"
+ ?"text-brand-ink border-b border-neutral-900"
  :"text-stone-400 hover:text-neutral-900 hover:opacity-100"
  }`}
  >
@@ -144,7 +144,7 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  href="https://www.instagram.com/cugolfclub/"
  target="_blank"
  rel="noopener noreferrer"
- className="text-stone-400 hover:text-neutral-950 transition-colors p-1"
+ className="text-stone-400 hover:text-brand-ink transition-colors p-1"
  title="Follow us on Instagram"
  >
  <Instagram size={18} />
@@ -153,7 +153,7 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  href="https://www.tiktok.com/@cugolfclub"
  target="_blank"
  rel="noopener noreferrer"
- className="text-stone-400 hover:text-neutral-950 transition-colors p-1"
+ className="text-stone-400 hover:text-brand-ink transition-colors p-1"
  title="Follow us on TikTok"
  >
  <TikTokIcon size={18} />
@@ -172,7 +172,7 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
 
  {/* Mobile Menu Panel */}
  {isOpen && (
- <div className="fixed inset-x-0 top-[76px] border-b border-[#121212] bg-white/95 backdrop-blur-md px-6 py-8 md:hidden animate-fade-in z-50 overflow-y-auto max-h-[calc(100vh-76px)]">
+ <div className="fixed inset-x-0 top-[76px] border-b border-brand-ink bg-brand-neutral/95 backdrop-blur-md px-6 py-8 md:hidden animate-fade-in z-50 overflow-y-auto max-h-[calc(100vh-76px)]">
  <div className="flex flex-col gap-5">
  {navLinks.map((link) => (
  <div key={link.id} className="flex flex-col">
@@ -181,7 +181,7 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  <button
  onClick={() => setIsMobileActivitiesOpen(!isMobileActivitiesOpen)}
  className={`flex items-center justify-between text-left font-display text-base font-bold tracking-tight py-1.5 uppercase transition-all ${
- isActive(link.path) ?"text-neutral-950 pl-3 border-l-2 border-neutral-950":"text-stone-400"
+ isActive(link.path) ?"text-brand-ink pl-3 border-l-2 border-brand-ink":"text-stone-400"
  }`}
  >
  {link.label}
@@ -197,7 +197,7 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  setIsOpen(false);
  setIsMobileActivitiesOpen(false);
  }}
- className="text-left font-sans text-xs font-bold tracking-widest text-stone-400 hover:text-neutral-950 uppercase"
+ className="text-left font-sans text-xs font-bold tracking-widest text-stone-400 hover:text-brand-ink uppercase"
  >
  {subItem.label}
  </Link>
@@ -210,7 +210,7 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  to={link.path}
  onClick={() => setIsOpen(false)}
  className={`text-left font-display text-base font-bold tracking-tight py-1.5 uppercase transition-all ${
- isActive(link.path) ?"text-neutral-950 pl-3 border-l-2 border-neutral-950":"text-stone-400"
+ isActive(link.path) ?"text-brand-ink pl-3 border-l-2 border-brand-ink":"text-stone-400"
  }`}
  >
  {link.label}
@@ -219,7 +219,7 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  </div>
  ))}
 
- <hr className="border-[#121212]"/>
+ <hr className="border-brand-ink"/>
 
  <div className="flex flex-col gap-3">
  <a

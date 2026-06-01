@@ -62,11 +62,11 @@ function AppContent() {
   // Fatal load error page
   if (errorMsg && !dbState) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#fcfbf9] p-6 text-[#121212] font-sans text-center">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-brand-neutral p-6 text-brand-ink font-sans text-center">
         <div className="border border-red-500/20 bg-red-500/5 p-8 max-w-md space-y-4">
           <AlertCircle size={36} className="mx-auto text-red-600" />
           <h2 className="font-display text-base font-bold uppercase tracking-tight">DATALINK CONNECTION FAILURE</h2>
-          <p className="text-xs leading-relaxed text-[#121212]/70">
+          <p className="text-xs leading-relaxed text-brand-ink/70">
             {errorMsg}
           </p>
           <button
@@ -74,7 +74,7 @@ function AppContent() {
               setLoading(true);
               refreshState();
             }}
-            className="inline-flex items-center gap-2 bg-[#121212] text-white px-5 py-2 text-xs font-mono uppercase font-bold hover:bg-[#ec4899] transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 bg-brand-ink text-brand-neutral px-5 py-2 text-xs font-mono uppercase font-bold hover:bg-brand-pink transition-all cursor-pointer"
           >
             RETRY DIRECTORY SYNC
           </button>
@@ -88,7 +88,7 @@ function AppContent() {
   if (!dbState) return null;
 
   return (
-    <div className="flex min-h-screen flex-col bg-stone-50 text-neutral-900">
+    <div className="flex min-h-screen flex-col bg-brand-stone text-neutral-900">
       <Navbar
         currentTab={location.pathname.substring(1) || "home"}
         isAdminLoggedIn={!!adminToken}
@@ -108,7 +108,7 @@ function AppContent() {
                     {parts.map((part, pIdx) => (
                       <span key={pIdx} className="inline-flex items-center gap-6">
                         <span>{part.trim()}</span>
-                        <span className="text-[#ec4899] font-sans font-black text-2xl md:text-3xl leading-none">•</span>
+                        <span className="text-brand-pink font-sans font-black text-2xl md:text-3xl leading-none">•</span>
                       </span>
                     ))}
                   </span>
@@ -119,10 +119,10 @@ function AppContent() {
         </div>
       )}
 
-      <main className="flex-grow py-8 md:py-12 bg-white">
+      <main className="flex-grow py-8 md:py-12 bg-brand-neutral">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           {adminToken && (
-            <div className="mb-8 border-2 border-black text-black bg-neutral-100 p-4 flex items-center justify-between font-mono text-[10px] uppercase font-bold tracking-wider">
+            <div className="mb-8 border-2 border-brand-ink text-brand-ink bg-neutral-100 p-4 flex items-center justify-between font-mono text-[10px] uppercase font-bold tracking-wider">
               <div className="flex items-center gap-2">
                 <ShieldCheck size={14} className="text-[#000000]" />
                 <span>CHULALONGKORN GOLF SQUAD CMS ACTIVE</span>

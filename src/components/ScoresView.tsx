@@ -20,13 +20,13 @@ export default function ScoresView({ scores, siteLabels, isAdmin, onEditSection,
 
  const isActive = activeSectionId ==="scores_list";
  const wrapperClasses = isAdmin 
- ? `relative transition-all duration-200 cursor-pointer ${isActive ? 'ring-4 ring-[#da5f8e] bg-[#da5f8e]/5 z-40' : 'hover:ring-4 hover:ring-[#da5f8e]/50 hover:bg-[#da5f8e]/5'}` 
+ ? `relative transition-all duration-200 cursor-pointer ${isActive ? 'ring-4 ring-[#da5f8e] bg-brand-pink/5 z-40' : 'hover:ring-4 hover:ring-[#da5f8e]/50 hover:bg-brand-pink/5'}` 
  :"";
 
  return (
  <div 
  id="scores_view"
- className={`space-y-12 animate-fade-in px-4 md:px-0 bg-white pb-12 ${wrapperClasses}`}
+ className={`space-y-12 animate-fade-in px-4 md:px-0 bg-brand-neutral pb-12 ${wrapperClasses}`}
  onClick={(e) => {
  if (isAdmin && onEditSection) {
  e.stopPropagation();
@@ -35,19 +35,19 @@ export default function ScoresView({ scores, siteLabels, isAdmin, onEditSection,
  }}
  >
  {isAdmin && (
- <div className={`absolute top-4 left-4 z-50 bg-[#da5f8e] text-white px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+ <div className={`absolute top-4 left-4 z-50 bg-brand-pink text-brand-neutral px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
  <Edit size={12} /> EDIT SCORES COLLECTION
  </div>
  )}
  
  {/* Editorial Header */}
  <section className="mx-auto max-w-7xl pt-6 text-center md:text-left space-y-4">
- <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-[#121212] pb-4 gap-4">
+ <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-brand-ink pb-4 gap-4">
  <div className="space-y-2">
  <span className="inline-block bg-neutral-900 text-stone-100 font-mono text-[8.5px] px-2.5 py-1 tracking-widest uppercase font-bold">
  {siteLabels?.scoresSubtitle ||"UNOFFICIAL LEADERS RECORD"}
  </span>
- <h1 className="font-display text-3xl font-extrabold tracking-tight text-neutral-950 uppercase leading-none">
+ <h1 className="font-display text-3xl font-extrabold tracking-tight text-brand-ink uppercase leading-none">
  {siteLabels?.scoresTitle ||"TOURNAMENT RESULTS & STATS"}
  </h1>
  </div>
@@ -62,12 +62,12 @@ export default function ScoresView({ scores, siteLabels, isAdmin, onEditSection,
  
  {/* Interactive Match Score list */}
  <div className="space-y-6">
- <div className="border border-[#121212] bg-white divide-y divide-stone-150 overflow-hidden">
+ <div className="border border-brand-ink bg-brand-neutral divide-y divide-stone-150 overflow-hidden">
  {(scores || []).filter(s => s.isVisible !== false).map((score) => {
  const isExpanded = expandedId === score.id;
 
  return (
- <div key={score.id} className="p-6 md:p-8 space-y-6 bg-white hover:bg-stone-50/50 transition-colors duration-300">
+ <div key={score.id} className="p-6 md:p-8 space-y-6 bg-brand-neutral hover:bg-brand-stone/50 transition-colors duration-300">
  
  {/* Basic Card Overview */}
  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -82,7 +82,7 @@ export default function ScoresView({ scores, siteLabels, isAdmin, onEditSection,
  {siteLabels?.scoresOfficialStatsBadge ||"UNOFFICIAL STATS"}
  </span>
  </div>
- <h3 className="font-display text-lg font-bold text-neutral-950 uppercase tracking-tight leading-none">
+ <h3 className="font-display text-lg font-bold text-brand-ink uppercase tracking-tight leading-none">
  {score.tournamentName}
  </h3>
  <p className="text-xs text-stone-600 font-mono font-bold uppercase tracking-wider flex items-center gap-1.5">
@@ -109,7 +109,7 @@ export default function ScoresView({ scores, siteLabels, isAdmin, onEditSection,
 
  {/* Expanded Leaderboard details */}
  {isExpanded && (
- <div className="border border-[#121212] overflow-hidden animate-slide-down bg-white">
+ <div className="border border-brand-ink overflow-hidden animate-slide-down bg-brand-neutral">
  <div className="bg-[#18181b] text-stone-200 px-4 py-2.5 font-mono text-[8.5px] tracking-wider uppercase flex items-center gap-1.5 font-bold border-b border-stone-800">
  <ClipboardList size={11} className="text-stone-450"/>
  {siteLabels?.scoresDetailedLeaderboardTitle ||"DETAILED COMPETITIVE LEADERBOARD"} ({score.playersCount} ATTESTED)
@@ -118,7 +118,7 @@ export default function ScoresView({ scores, siteLabels, isAdmin, onEditSection,
  <div className="overflow-x-auto">
  <table className="w-full text-left font-sans text-xs">
  <thead>
- <tr className="bg-stone-50 border-b border-[#121212] font-mono text-[8.5px] text-stone-400 uppercase tracking-wider font-semibold">
+ <tr className="bg-brand-stone border-b border-brand-ink font-mono text-[8.5px] text-stone-400 uppercase tracking-wider font-semibold">
  <th className="px-4 py-3">{siteLabels?.scoresTablePlayerHeader ||"PLAYER NAME"}</th>
  <th className="px-4 py-3 text-center">{siteLabels?.scoresTableScoreHeader ||"STROKE SCORE"}</th>
  <th className="px-4 py-3 text-right">{siteLabels?.scoresTablePositionHeader ||"POSITION"}</th>
@@ -126,7 +126,7 @@ export default function ScoresView({ scores, siteLabels, isAdmin, onEditSection,
  </thead>
  <tbody className="divide-y divide-stone-100">
  {(score.scoresList || []).map((sl, index) => (
- <tr key={index} className="hover:bg-stone-50/50 transition-colors uppercase font-medium text-stone-750">
+ <tr key={index} className="hover:bg-brand-stone/50 transition-colors uppercase font-medium text-stone-750">
  <td className="px-4 py-3 text-stone-800 flex items-center gap-2 font-bold">
  <Medal size={11} className={index === 0 ?"text-amber-500 shrink-0": index === 1 ?"text-stone-400 shrink-0":"text-stone-350 shrink-0"} />
  {sl.playerName}
@@ -143,7 +143,7 @@ export default function ScoresView({ scores, siteLabels, isAdmin, onEditSection,
  </table>
  </div>
 
- <div className="bg-stone-50 border-t border-[#121212] p-3 flex justify-between items-center text-[8.5px] font-mono text-stone-400 font-bold uppercase">
+ <div className="bg-brand-stone border-t border-brand-ink p-3 flex justify-between items-center text-[8.5px] font-mono text-stone-400 font-bold uppercase">
  <span>{siteLabels?.scoresAttestationLabel ||"CU UNOFFICIAL GOLF SCORECARD ATTESTATION"}</span>
  <span>{siteLabels?.scoresVerifiedDirectoryLabel ||"COACH VERIFIED DIRECTORY"}</span>
  </div>

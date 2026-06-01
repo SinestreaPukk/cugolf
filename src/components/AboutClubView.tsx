@@ -21,13 +21,13 @@ export default function AboutClubView({ clubActivity, scores, siteLabels, isAdmi
  const isActive = activeSectionId === sectionId;
  return (
  <div 
- className={`absolute inset-0 z-40 transition-all duration-200 cursor-pointer ${isActive ? 'ring-4 ring-[#da5f8e] bg-[#da5f8e]/5' : 'hover:ring-4 hover:ring-[#da5f8e]/50 hover:bg-[#da5f8e]/5'}`}
+ className={`absolute inset-0 z-40 transition-all duration-200 cursor-pointer ${isActive ? 'ring-4 ring-[#da5f8e] bg-brand-pink/5' : 'hover:ring-4 hover:ring-[#da5f8e]/50 hover:bg-brand-pink/5'}`}
  onClick={(e) => {
  e.stopPropagation();
  onEditSection(sectionId);
  }}
  >
- <div className={`absolute top-4 left-4 bg-[#da5f8e] text-white px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+ <div className={`absolute top-4 left-4 bg-brand-pink text-brand-neutral px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
  <Edit size={12} /> {label}
  </div>
  </div>
@@ -37,7 +37,7 @@ export default function AboutClubView({ clubActivity, scores, siteLabels, isAdmi
  return (
  <div className="space-y-24 animate-fade-in pb-24">
  {/* 1. HERO SECTION */}
- <section className="relative h-[60vh] flex flex-col items-center justify-center text-center overflow-hidden bg-neutral-950">
+ <section className="relative h-[60vh] flex flex-col items-center justify-center text-center overflow-hidden bg-brand-ink">
  {renderEditOverlay("ca_hero","EDIT HERO SECTION")}
  <div className="absolute inset-0 opacity-40">
  <img 
@@ -49,8 +49,8 @@ export default function AboutClubView({ clubActivity, scores, siteLabels, isAdmi
  </div>
  
  <div className="relative z-10 space-y-6 px-4">
- <h1 className="font-display text-5xl md:text-8xl font-black text-white uppercase tracking-tighter leading-[0.85]">
- CLUB <br /> <span className="text-[#da5f8e]">ACTIVITIES</span>
+ <h1 className="font-display text-5xl md:text-8xl font-black text-brand-neutral uppercase tracking-tighter leading-[0.85]">
+ CLUB <br /> <span className="text-brand-pink">ACTIVITIES</span>
  </h1>
  <p className="font-sans text-stone-400 text-sm md:text-base max-w-xl mx-auto uppercase tracking-wide leading-relaxed">
  The definitive home for competitive excellence and traditional sportsmanship at Chulalongkorn University.
@@ -63,8 +63,8 @@ export default function AboutClubView({ clubActivity, scores, siteLabels, isAdmi
  <section className="mx-auto max-w-5xl px-4 grid grid-cols-1 md:grid-cols-12 gap-12 items-start relative">
  {renderEditOverlay("ca_philosophy","EDIT PHILOSOPHY")}
  <div className="md:col-span-5 space-y-6 sticky top-32">
- <div className="h-1.5 w-20 bg-[#da5f8e]"/>
- <h2 className="font-display text-4xl font-black text-neutral-950 uppercase leading-none">
+ <div className="h-1.5 w-20 bg-brand-pink"/>
+ <h2 className="font-display text-4xl font-black text-brand-ink uppercase leading-none">
  {clubActivity.philosophyTitle ||"OUR PHILOSOPHY"}
  </h2>
  <p className="font-serif italic text-xl text-stone-500 leading-relaxed">
@@ -74,8 +74,8 @@ export default function AboutClubView({ clubActivity, scores, siteLabels, isAdmi
  
  <div className="md:col-span-7 space-y-12">
  <div className="space-y-6">
- <h3 className="font-display text-lg font-bold text-neutral-950 uppercase flex items-center gap-3">
- <Shield className="text-[#da5f8e]"size={20} />
+ <h3 className="font-display text-lg font-bold text-brand-ink uppercase flex items-center gap-3">
+ <Shield className="text-brand-pink"size={20} />
  น้ำใจน้องพี่สีชมพู (THE PINK SPIRIT)
  </h3>
  <p className="font-sans text-stone-600 leading-relaxed text-justify whitespace-pre-line">
@@ -84,8 +84,8 @@ export default function AboutClubView({ clubActivity, scores, siteLabels, isAdmi
  </div>
 
  <div className="space-y-6">
- <h3 className="font-display text-lg font-bold text-neutral-950 uppercase flex items-center gap-3">
- <Target className="text-[#da5f8e]"size={20} />
+ <h3 className="font-display text-lg font-bold text-brand-ink uppercase flex items-center gap-3">
+ <Target className="text-brand-pink"size={20} />
  TECHNICAL EXCELLENCE
  </h3>
  <p className="font-sans text-stone-600 leading-relaxed text-justify whitespace-pre-line">
@@ -98,10 +98,10 @@ export default function AboutClubView({ clubActivity, scores, siteLabels, isAdmi
 
  {/* 3. CAPTAIN'S POLICY */}
  {(clubActivity.showCaptainMandate ?? true) && (
- <section className="bg-stone-50 py-24 border-y border-[#121212] relative">
+ <section className="bg-brand-stone py-24 border-y border-brand-ink relative">
  {renderEditOverlay("ca_captain","EDIT CAPTAIN'S MANDATE")}
  <div className="mx-auto max-w-5xl px-4 grid grid-cols-1 md:grid-cols-12 gap-16 items-center">
- <div className="md:col-span-4 aspect-[3/4] overflow-hidden bg-neutral-950 border-4 border-white rotate-[-2deg]">
+ <div className="md:col-span-4 aspect-[3/4] overflow-hidden bg-brand-ink border-4 border-white rotate-[-2deg]">
  <img 
  src={clubActivity.captainImageUrl ||"/uploads/Screenshot_2026-05-26_at_21_44_02-1779806963893.png"} 
  className="w-full h-full object-cover"
@@ -111,10 +111,10 @@ export default function AboutClubView({ clubActivity, scores, siteLabels, isAdmi
  
  <div className="md:col-span-8 space-y-8">
  <div className="space-y-2">
- <span className="font-mono text-[10px] font-black text-[#da5f8e] tracking-widest uppercase">
+ <span className="font-mono text-[10px] font-black text-brand-pink tracking-widest uppercase">
  {new Date().getFullYear()} SEASON MANDATE
  </span>
- <h2 className="font-display text-4xl md:text-5xl font-black text-neutral-950 uppercase leading-none">
+ <h2 className="font-display text-4xl md:text-5xl font-black text-brand-ink uppercase leading-none">
  CAPTAIN'S <br /> PHILOSOPHY
  </h2>
  </div>
@@ -123,8 +123,8 @@ export default function AboutClubView({ clubActivity, scores, siteLabels, isAdmi
  {clubActivity.captainPhilosophy}
  </div>
  
- <div className="pt-4 border-t border-[#121212]">
- <span className="block font-display text-lg font-black text-neutral-950 uppercase">{clubActivity.captainName}</span>
+ <div className="pt-4 border-t border-brand-ink">
+ <span className="block font-display text-lg font-black text-brand-ink uppercase">{clubActivity.captainName}</span>
  <span className="block font-mono text-[10px] font-bold text-stone-400 uppercase tracking-widest">{clubActivity.captainRole}</span>
  </div>
  </div>
@@ -137,8 +137,8 @@ export default function AboutClubView({ clubActivity, scores, siteLabels, isAdmi
  <section className="mx-auto max-w-5xl px-4 space-y-16 relative">
  {renderEditOverlay("ca_competitions","EDIT COMPETITIONS")}
  <div className="text-center space-y-4">
- <h2 className="font-display text-4xl md:text-6xl font-black text-neutral-950 uppercase leading-none">
- MAJOR <br /> <span className="text-[#da5f8e]">COMPETITIONS</span>
+ <h2 className="font-display text-4xl md:text-6xl font-black text-brand-ink uppercase leading-none">
+ MAJOR <br /> <span className="text-brand-pink">COMPETITIONS</span>
  </h2>
  <p className="font-mono text-[10px] font-bold text-stone-400 uppercase tracking-[0.2em]">
  OUR ANNUAL COMPETITIVE CALENDAR
@@ -147,18 +147,18 @@ export default function AboutClubView({ clubActivity, scores, siteLabels, isAdmi
 
  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
  {(clubActivity.competitions || []).map((comp, idx) => (
- <div key={idx} className="border border-[#121212] p-8 space-y-6 hover:border-[#da5f8e] transition-colors group bg-white">
+ <div key={idx} className="border border-brand-ink p-8 space-y-6 hover:border-brand-pink transition-colors group bg-brand-neutral">
  <div className="flex justify-between items-start">
- {idx % 4 === 0 ? <Trophy className="text-[#da5f8e]"size={32} /> : 
- idx % 4 === 1 ? <Award className="text-[#da5f8e]"size={32} /> :
- idx % 4 === 2 ? <Star className="text-[#da5f8e]"size={32} /> :
- <Users className="text-[#da5f8e]"size={32} />}
- <span className="font-mono text-[9px] font-black bg-stone-100 px-2 py-1 text-stone-500 group-hover:bg-[#da5f8e] group-hover:text-white transition-colors">
+ {idx % 4 === 0 ? <Trophy className="text-brand-pink"size={32} /> : 
+ idx % 4 === 1 ? <Award className="text-brand-pink"size={32} /> :
+ idx % 4 === 2 ? <Star className="text-brand-pink"size={32} /> :
+ <Users className="text-brand-pink"size={32} />}
+ <span className="font-mono text-[9px] font-black bg-brand-stone px-2 py-1 text-stone-500 group-hover:bg-brand-pink group-hover:text-brand-neutral transition-colors">
  {comp.difficulty}
  </span>
  </div>
  <div className="space-y-3">
- <h4 className="font-display text-xl font-black text-neutral-950 uppercase leading-tight">
+ <h4 className="font-display text-xl font-black text-brand-ink uppercase leading-tight">
  {comp.title}
  </h4>
  <p className="font-sans text-sm text-stone-500 leading-relaxed">
@@ -173,9 +173,9 @@ export default function AboutClubView({ clubActivity, scores, siteLabels, isAdmi
 
  {/* 5. TRAINING & INFRASTRUCTURE (Summary) */}
  {(clubActivity.showTraining ?? true) && (
- <section className="mx-auto max-w-5xl px-4 grid grid-cols-1 md:grid-cols-12 gap-12 bg-neutral-950 text-white p-12 overflow-hidden relative">
+ <section className="mx-auto max-w-5xl px-4 grid grid-cols-1 md:grid-cols-12 gap-12 bg-brand-ink text-brand-neutral p-12 overflow-hidden relative">
  {renderEditOverlay("ca_training","EDIT TRAINING GROUNDS")}
- <div className="absolute top-0 right-0 w-64 h-64 bg-[#da5f8e]/10 blur-3xl -mr-32 -mt-32"/>
+ <div className="absolute top-0 right-0 w-64 h-64 bg-brand-pink/10 blur-3xl -mr-32 -mt-32"/>
  
  <div className="md:col-span-6 space-y-6 relative z-10">
  <h2 className="font-display text-3xl font-black uppercase leading-tight">
@@ -188,20 +188,20 @@ export default function AboutClubView({ clubActivity, scores, siteLabels, isAdmi
  
  <div className="md:col-span-6 flex items-center justify-center relative z-10">
  <div className="grid grid-cols-2 gap-4 w-full">
- <div className="bg-white/5 p-6 border border-white/10 space-y-2">
- <span className="block font-display text-2xl font-black text-[#da5f8e]">3x</span>
+ <div className="bg-brand-neutral/5 p-6 border border-white/10 space-y-2">
+ <span className="block font-display text-2xl font-black text-brand-pink">3x</span>
  <span className="block font-mono text-[9px] font-bold text-stone-500 uppercase">Weekly Team Sessions</span>
  </div>
- <div className="bg-white/5 p-6 border border-white/10 space-y-2">
- <span className="block font-display text-2xl font-black text-[#da5f8e]">AMATA</span>
+ <div className="bg-brand-neutral/5 p-6 border border-white/10 space-y-2">
+ <span className="block font-display text-2xl font-black text-brand-pink">AMATA</span>
  <span className="block font-mono text-[9px] font-bold text-stone-500 uppercase">Primary Home Base</span>
  </div>
- <div className="bg-white/5 p-6 border border-white/10 space-y-2">
- <span className="block font-display text-2xl font-black text-[#da5f8e]">Pro-Led</span>
+ <div className="bg-brand-neutral/5 p-6 border border-white/10 space-y-2">
+ <span className="block font-display text-2xl font-black text-brand-pink">Pro-Led</span>
  <span className="block font-mono text-[9px] font-bold text-stone-500 uppercase">Coach Consultations</span>
  </div>
- <div className="bg-white/5 p-6 border border-white/10 space-y-2">
- <span className="block font-display text-2xl font-black text-[#da5f8e]">100%</span>
+ <div className="bg-brand-neutral/5 p-6 border border-white/10 space-y-2">
+ <span className="block font-display text-2xl font-black text-brand-pink">100%</span>
  <span className="block font-mono text-[9px] font-bold text-stone-500 uppercase">Athlete Dedication</span>
  </div>
  </div>
@@ -213,24 +213,24 @@ export default function AboutClubView({ clubActivity, scores, siteLabels, isAdmi
  {(clubActivity.showLegacy ?? true) && (
  <section className="mx-auto max-w-3xl px-4 text-center space-y-8 relative">
  {renderEditOverlay("ca_legacy","EDIT LEGACY SECTION")}
- <div className="h-1 w-24 bg-[#da5f8e] mx-auto"/>
- <h2 className="font-display text-3xl font-black text-neutral-950 uppercase">OUR LEGACY</h2>
+ <div className="h-1 w-24 bg-brand-pink mx-auto"/>
+ <h2 className="font-display text-3xl font-black text-brand-ink uppercase">OUR LEGACY</h2>
  <p className="font-sans text-stone-600 leading-relaxed whitespace-pre-line">
  {clubActivity.legacyDescription}
  </p>
  <div className="flex justify-center items-center gap-8 pt-8">
  <div className="text-center">
- <span className="block font-display text-3xl font-black text-neutral-950">{clubActivity.foundedYear}</span>
+ <span className="block font-display text-3xl font-black text-brand-ink">{clubActivity.foundedYear}</span>
  <span className="block font-mono text-[9px] font-bold text-stone-400 uppercase">FOUNDED</span>
  </div>
  <div className="h-12 w-px bg-stone-200"/>
  <div className="text-center">
- <span className="block font-display text-3xl font-black text-neutral-950">{clubActivity.activeYears}</span>
+ <span className="block font-display text-3xl font-black text-brand-ink">{clubActivity.activeYears}</span>
  <span className="block font-mono text-[9px] font-bold text-stone-400 uppercase">ACTIVE YEARS</span>
  </div>
  <div className="h-12 w-px bg-stone-200"/>
  <div className="text-center">
- <span className="block font-display text-3xl font-black text-neutral-950">#1</span>
+ <span className="block font-display text-3xl font-black text-brand-ink">#1</span>
  <span className="block font-mono text-[9px] font-bold text-stone-400 uppercase">TRADITION</span>
  </div>
  </div>

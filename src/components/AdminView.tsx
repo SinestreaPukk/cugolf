@@ -189,6 +189,25 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<"home" | "club" | "roster" | "staff" | "scores" | "sponsors" | "settings">("home");
 
+  // Read ?edit query param to auto-open sidebar
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const editId = searchParams.get("edit");
+    if (editId) {
+      setActiveSectionId(editId);
+      // Derive activeView from editId prefix if needed
+      if (editId.startsWith("home_")) setActiveView("home");
+      else if (editId.startsWith("ca_")) setActiveView("club");
+      else if (editId === "news_list" || editId === "news_edit") setActiveView("club"); // Or wherever blog lives in CMS nav
+      else if (editId === "roster_list" || editId === "roster_edit") setActiveView("roster");
+      else if (editId === "staff_list" || editId === "staff_edit") setActiveView("staff");
+      else if (editId === "scores_list" || editId === "scores_edit") setActiveView("scores");
+      
+      // Clean up URL without reloading
+      window.history.replaceState({}, '', '/admin');
+    }
+  }, []);
+
   const handleSectionSelect = (sectionId: string) => {
     setActiveSectionId(sectionId);
   };

@@ -148,17 +148,19 @@ function AppContent() {
                 sponsors={dbState.sponsors || []}
                 siteLabels={dbState.siteLabels}
                 siteSettings={dbState.siteSettings}
+                isAdmin={!!adminToken}
+                onEditSection={(id) => navigate(`/admin?edit=${id}`)}
               />
             } />
-            <Route path="/blog" element={<BlogView news={dbState.news || []} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} />} />
-            <Route path="/activities" element={<BlogView news={dbState.news || []} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} />} />
-            <Route path="/activities/blog" element={<BlogView news={dbState.news || []} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} />} />
-            <Route path="/activities/club" element={<AboutClubView clubActivity={dbState.clubActivity} scores={dbState.scores || []} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} />} />
-            <Route path="/activities/:id" element={<ActivityDetailView news={dbState.news || []} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} />} />
-            <Route path="/roster" element={<RosterView roster={dbState.roster || []} siteLabels={dbState.siteLabels} />} />
-            <Route path="/staff" element={<StaffView staff={dbState.staff || []} siteLabels={dbState.siteLabels} />} />
-            <Route path="/scores" element={<ScoresView scores={dbState.scores || []} siteLabels={dbState.siteLabels} />} />
-            <Route path="/sponsors" element={<SponsorsView sponsors={dbState.sponsors || []} siteLabels={dbState.siteLabels} />} />
+            <Route path="/blog" element={<BlogView news={dbState.news || []} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
+            <Route path="/activities" element={<BlogView news={dbState.news || []} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
+            <Route path="/activities/blog" element={<BlogView news={dbState.news || []} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
+            <Route path="/activities/club" element={<AboutClubView clubActivity={dbState.clubActivity} scores={dbState.scores || []} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
+            <Route path="/activities/:id" element={<ActivityDetailView news={dbState.news || []} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} isAdmin={!!adminToken} />} />
+            <Route path="/roster" element={<RosterView roster={dbState.roster || []} siteLabels={dbState.siteLabels} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
+            <Route path="/staff" element={<StaffView staff={dbState.staff || []} siteLabels={dbState.siteLabels} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
+            <Route path="/scores" element={<ScoresView scores={dbState.scores || []} siteLabels={dbState.siteLabels} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
+            <Route path="/sponsors" element={<SponsorsView sponsors={dbState.sponsors || []} siteLabels={dbState.siteLabels} isAdmin={!!adminToken} />} />
             <Route path="/admin" element={
               <AdminView
                 dbState={dbState}
@@ -179,6 +181,8 @@ function AppContent() {
                 sponsors={dbState.sponsors || []}
                 siteLabels={dbState.siteLabels}
                 siteSettings={dbState.siteSettings}
+                isAdmin={!!adminToken}
+                onEditSection={(id) => navigate(`/admin?edit=${id}`)}
               />
             } />
           </Routes>

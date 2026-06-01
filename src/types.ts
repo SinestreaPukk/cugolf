@@ -54,6 +54,12 @@ export interface GalleryImage {
   category: string;
 }
 
+export interface AdminEditProps {
+  isAdmin?: boolean;
+  onEditSection?: (sectionId: string) => void;
+  activeSectionId?: string | null;
+}
+
 export interface WelcomeSection {
   imageUrl: string;
   titleThai: string;

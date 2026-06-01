@@ -1,17 +1,36 @@
-import { Staff, SiteLabels } from "../types";
-import { Award, ShieldAlert, GraduationCap, Star } from "lucide-react";
+import { Staff, SiteLabels, AdminEditProps } from "../types";
+import { Award, ShieldAlert, GraduationCap, Star, Edit } from "lucide-react";
 
-interface StaffViewProps {
+interface StaffViewProps extends AdminEditProps {
   staff: Staff[];
   siteLabels?: SiteLabels;
 }
 
-export default function StaffView({ staff, siteLabels }: StaffViewProps) {
+export default function StaffView({ staff, siteLabels, isAdmin, onEditSection, activeSectionId }: StaffViewProps) {
   // Sort staff by order
   const sortedStaff = [...(staff || [])].filter(s => s.isVisible !== false).sort((a, b) => a.order - b.order);
 
+  const isActive = activeSectionId === "staff_list";
+  const wrapperClasses = isAdmin 
+    ? `relative transition-all duration-200 cursor-pointer ${isActive ? 'ring-4 ring-[#da5f8e] bg-[#da5f8e]/5 z-40' : 'hover:ring-4 hover:ring-[#da5f8e]/50 hover:bg-[#da5f8e]/5'}` 
+    : "";
+
   return (
-    <div id="staff_view" className="space-y-16 animate-fade-in px-4 md:px-0 bg-stone-50/20">
+    <div 
+      id="staff_view" 
+      className={`space-y-16 animate-fade-in px-4 md:px-0 bg-stone-50/20 pb-12 ${wrapperClasses}`}
+      onClick={(e) => {
+        if (isAdmin && onEditSection) {
+          e.stopPropagation();
+          onEditSection("staff_list");
+        }
+      }}
+    >
+      {isAdmin && (
+        <div className={`absolute top-4 left-4 z-50 bg-[#da5f8e] text-white px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest flex items-center gap-2 shadow-lg transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+          <Edit size={12} /> EDIT STAFF COLLECTION
+        </div>
+      )}
       
       {/* Title */}
       <section className="mx-auto max-w-7xl pt-6 text-center md:text-left space-y-4">

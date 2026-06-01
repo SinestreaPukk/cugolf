@@ -1,13 +1,13 @@
-import { TournamentScore, SiteLabels } from "../types";
+import { TournamentScore, SiteLabels, AdminEditProps } from "../types";
 import { useState } from "react";
-import { Award, Calendar, Users, Eye, EyeOff, ClipboardList, Target, Medal } from "lucide-react";
+import { Award, Calendar, Users, Eye, EyeOff, ClipboardList, Target, Medal, Edit } from "lucide-react";
 
-interface ScoresViewProps {
+interface ScoresViewProps extends AdminEditProps {
   scores: TournamentScore[];
   siteLabels?: SiteLabels;
 }
 
-export default function ScoresView({ scores, siteLabels }: ScoresViewProps) {
+export default function ScoresView({ scores, siteLabels, isAdmin, onEditSection, activeSectionId }: ScoresViewProps) {
   const [expandedId, setExpandedId] = useState<string | null>(scores[0]?.id || null);
 
   const toggleExpand = (id: string) => {
@@ -18,8 +18,27 @@ export default function ScoresView({ scores, siteLabels }: ScoresViewProps) {
     }
   };
 
+  const isActive = activeSectionId === "scores_list";
+  const wrapperClasses = isAdmin 
+    ? `relative transition-all duration-200 cursor-pointer ${isActive ? 'ring-4 ring-[#da5f8e] bg-[#da5f8e]/5 z-40' : 'hover:ring-4 hover:ring-[#da5f8e]/50 hover:bg-[#da5f8e]/5'}` 
+    : "";
+
   return (
-    <div id="scores_view" className="space-y-12 animate-fade-in px-4 md:px-0 bg-stone-50/20">
+    <div 
+      id="scores_view" 
+      className={`space-y-12 animate-fade-in px-4 md:px-0 bg-stone-50/20 pb-12 ${wrapperClasses}`}
+      onClick={(e) => {
+        if (isAdmin && onEditSection) {
+          e.stopPropagation();
+          onEditSection("scores_list");
+        }
+      }}
+    >
+      {isAdmin && (
+        <div className={`absolute top-4 left-4 z-50 bg-[#da5f8e] text-white px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest flex items-center gap-2 shadow-lg transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+          <Edit size={12} /> EDIT SCORES COLLECTION
+        </div>
+      )}
       
       {/* Editorial Header */}
       <section className="mx-auto max-w-7xl pt-6 text-center md:text-left space-y-4">

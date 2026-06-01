@@ -1,14 +1,14 @@
-import { NewsItem, SiteLabels, SiteSettings } from "../types";
-import { ArrowRight, Calendar, Clock, BookOpen, ChevronRight } from "lucide-react";
+import { NewsItem, SiteLabels, SiteSettings, AdminEditProps } from "../types";
+import { ArrowRight, Calendar, Clock, BookOpen, ChevronRight, Edit } from "lucide-react";
 import { Link } from "react-router-dom";
 
-interface BlogViewProps {
+interface BlogViewProps extends AdminEditProps {
   news: NewsItem[];
   siteLabels?: SiteLabels;
   siteSettings?: SiteSettings;
 }
 
-export default function BlogView({ news, siteLabels, siteSettings }: BlogViewProps) {
+export default function BlogView({ news, siteLabels, siteSettings, isAdmin, onEditSection, activeSectionId }: BlogViewProps) {
   // Sort by rank (descending) and then by date (descending)
   const sortedNews = [...news].filter(n => n.isVisible !== false).sort((a, b) => {
     const rankA = a.rank || 0;
@@ -17,8 +17,27 @@ export default function BlogView({ news, siteLabels, siteSettings }: BlogViewPro
     return new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime();
   });
 
+  const isActive = activeSectionId === "news_list";
+  const wrapperClasses = isAdmin 
+    ? `relative transition-all duration-200 cursor-pointer ${isActive ? 'ring-4 ring-[#da5f8e] bg-[#da5f8e]/5 z-40' : 'hover:ring-4 hover:ring-[#da5f8e]/50 hover:bg-[#da5f8e]/5'}` 
+    : "";
+
   return (
-    <div id="blog_view" className="space-y-12 animate-fade-in px-4 md:px-0 bg-white">
+    <div 
+      id="blog_view" 
+      className={`space-y-12 animate-fade-in px-4 md:px-0 bg-white ${wrapperClasses}`}
+      onClick={(e) => {
+        if (isAdmin && onEditSection) {
+          e.stopPropagation();
+          onEditSection("news_list");
+        }
+      }}
+    >
+      {isAdmin && (
+        <div className={`absolute top-4 left-4 z-50 bg-[#da5f8e] text-white px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest flex items-center gap-2 shadow-lg transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+          <Edit size={12} /> EDIT BLOG COLLECTION
+        </div>
+      )}
       
       {/* Editorial Title Banner */}
       <section className="mx-auto max-w-7xl pt-10 text-center md:text-left">

@@ -1,10 +1,10 @@
-import { NewsItem, TournamentScore, Player, WelcomeSection, UpcomingActivity, SiteLabels, SiteSettings, HomeSponsorSection, Sponsor } from "../types";
-import { ArrowRight, Calendar, User, ChevronRight, BookOpen, Clock, Trophy, Target, MapPin, ArrowUpRight } from "lucide-react";
+import { NewsItem, TournamentScore, Player, WelcomeSection, UpcomingActivity, SiteLabels, SiteSettings, HomeSponsorSection, Sponsor, AdminEditProps } from "../types";
+import { ArrowRight, Calendar, User, ChevronRight, BookOpen, Clock, Trophy, Target, MapPin, ArrowUpRight, Edit } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import WelcomeSectionView from "./WelcomeSectionView";
 
-interface HomeViewProps {
+interface HomeViewProps extends AdminEditProps {
   news: NewsItem[];
   scores: TournamentScore[];
   roster: Player[];
@@ -16,7 +16,7 @@ interface HomeViewProps {
   siteSettings?: SiteSettings;
 }
 
-export default function HomeView({ news, scores, roster, welcomeSection, upcomingActivity, homeSponsorSection, sponsors, siteLabels, siteSettings }: HomeViewProps) {
+export default function HomeView({ news, scores, roster, welcomeSection, upcomingActivity, homeSponsorSection, sponsors, siteLabels, siteSettings, isAdmin, onEditSection, activeSectionId }: HomeViewProps) {
 
   // Sort by rank (descending) and then by date (descending)
   const sortedNews = [...(news || [])].filter(n => n.isVisible !== false).sort((a, b) => {
@@ -34,7 +34,13 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
       
       {/* Dynamic Legacy welcome slider and photo layout */}
       {(siteSettings?.showHomeWelcome ?? true) && (
-        <WelcomeSectionView welcomeSection={welcomeSection} siteLabels={siteLabels} />
+        <WelcomeSectionView 
+          welcomeSection={welcomeSection} 
+          siteLabels={siteLabels} 
+          isAdmin={isAdmin} 
+          onEditSection={onEditSection} 
+          activeSectionId={activeSectionId} 
+        />
       )}
       
       {/* 1. ACTIVITIES BLOG & STORIES - Showing exactly 3 blogs */}
@@ -183,7 +189,20 @@ export default function HomeView({ news, scores, roster, welcomeSection, upcomin
 
       {/* 2. SPONSOR SHOWCASE SECTION */}
       {(siteSettings?.showHomeSponsors ?? true) && (homeSponsorSection?.showSection ?? true) && (
-        <section className="mx-auto max-w-7xl space-y-12">
+        <section 
+          className={`mx-auto max-w-7xl space-y-12 relative ${isAdmin ? 'transition-all duration-200 cursor-pointer' : ''} ${isAdmin && activeSectionId === 'home_sponsors' ? 'ring-4 ring-[#da5f8e] bg-[#da5f8e]/5 z-40' : isAdmin ? 'hover:ring-4 hover:ring-[#da5f8e]/50 hover:bg-[#da5f8e]/5' : ''}`}
+          onClick={(e) => {
+            if (isAdmin && onEditSection) {
+              e.stopPropagation();
+              onEditSection("home_sponsors");
+            }
+          }}
+        >
+          {isAdmin && (
+            <div className={`absolute top-4 left-4 z-50 bg-[#da5f8e] text-white px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest flex items-center gap-2 shadow-lg transition-opacity ${activeSectionId === 'home_sponsors' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+              <Edit size={12} /> EDIT SPONSORS SECTION
+            </div>
+          )}
           {/* Sponsor Marquee */}
           <div className="border-y border-stone-200 py-8 overflow-hidden bg-stone-50/50">
             <div className="flex animate-marquee whitespace-nowrap gap-12 items-center">

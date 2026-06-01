@@ -3,8 +3,9 @@ import { Calendar, User, ArrowLeft, Clock } from "lucide-react";
 import { Link, useParams, Navigate } from "react-router-dom";
 import { useEffect } from "react";
 import MarkdownRenderer from "./MarkdownRenderer";
+import { AdminEditProps } from "../types";
 
-interface ActivityDetailViewProps {
+interface ActivityDetailViewProps extends AdminEditProps {
   news: NewsItem[];
   siteLabels?: SiteLabels;
   siteSettings?: SiteSettings;

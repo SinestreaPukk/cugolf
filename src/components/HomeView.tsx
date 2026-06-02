@@ -338,7 +338,7 @@ export default function HomeView({ news, scores, roster, gallery, welcomeSection
      </div>
 
      {/* Sponsor Marquee - Full Width */}
-     <div className="w-screen left-1/2 -translate-x-1/2 relative border-y border-brand-ink py-8 overflow-hidden bg-brand-stone/30">
+     <div className="w-screen left-1/2 -translate-x-1/2 relative border-y border-brand-ink py-8 overflow-hidden bg-brand-neutral">
        <div className="flex animate-marquee whitespace-nowrap gap-12 items-center" style={{ animationDuration: '40s' }}>
          {Array(6).fill(null).map((_, groupIdx) => (
            <div key={groupIdx} className="flex items-center gap-12 shrink-0">

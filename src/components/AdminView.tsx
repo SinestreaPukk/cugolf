@@ -2132,6 +2132,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  news={dbState.news || []}
  scores={dbState.scores || []}
  roster={dbState.roster || []}
+ gallery={dbState.gallery || []}
  welcomeSection={{
  ...dbState.welcomeSection,
  imageUrl: welcomeImageUrl,
@@ -2343,28 +2344,6 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  {/* 
  Note on pointer-events-none: 
  We disable clicks inside the preview on the right panel so it acts purely as a visual reflection 
- of the form data on the left, preventing accidental navigation away from the CMS context. 
- */}
- {renderPreview()}
- </div>
- </div>
-
- </div>
- </div>
- );
-}
-icks inside the preview on the right panel so it acts purely as a visual reflection 
- of the form data on the left, preventing accidental navigation away from the CMS context. 
- */}
- {renderPreview()}
- </div>
- </div>
-
- </div>
- </div>
- );
-}
-the right panel so it acts purely as a visual reflection 
  of the form data on the left, preventing accidental navigation away from the CMS context. 
  */}
  {renderPreview()}

@@ -1,5 +1,5 @@
-import { NewsItem, TournamentScore, Player, WelcomeSection, UpcomingActivity, SiteLabels, SiteSettings, HomeSponsorSection, Sponsor, AdminEditProps } from"../types";
-import { ArrowRight, Calendar, User, ChevronRight, BookOpen, Clock, Trophy, Target, MapPin, ArrowUpRight, Edit } from"lucide-react";
+import { NewsItem, TournamentScore, Player, WelcomeSection, UpcomingActivity, SiteLabels, SiteSettings, HomeSponsorSection, Sponsor, AdminEditProps, GalleryImage } from"../types";
+import { ArrowRight, Calendar, User, ChevronRight, BookOpen, Clock, Trophy, Target, MapPin, ArrowUpRight, Edit, Image } from"lucide-react";
 import { useState } from"react";
 import { Link } from"react-router-dom";
 import WelcomeSectionView from"./WelcomeSectionView";
@@ -8,6 +8,7 @@ interface HomeViewProps extends AdminEditProps {
  news: NewsItem[];
  scores: TournamentScore[];
  roster: Player[];
+ gallery: GalleryImage[];
  welcomeSection: WelcomeSection;
  upcomingActivity: UpcomingActivity;
  homeSponsorSection?: HomeSponsorSection;
@@ -16,7 +17,7 @@ interface HomeViewProps extends AdminEditProps {
  siteSettings?: SiteSettings;
 }
 
-export default function HomeView({ news, scores, roster, welcomeSection, upcomingActivity, homeSponsorSection, sponsors, siteLabels, siteSettings, isAdmin, onEditSection, activeSectionId }: HomeViewProps) {
+export default function HomeView({ news, scores, roster, gallery, welcomeSection, upcomingActivity, homeSponsorSection, sponsors, siteLabels, siteSettings, isAdmin, onEditSection, activeSectionId }: HomeViewProps) {
 
  // Sort by rank (descending) and then by date (descending)
  const sortedNews = [...(news || [])].filter(n => n.isVisible !== false).sort((a, b) => {

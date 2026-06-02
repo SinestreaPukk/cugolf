@@ -19,13 +19,13 @@ export default function BlogView({ news, siteLabels, siteSettings, isAdmin, onEd
 
  const isActive = activeSectionId ==="news_list";
  const wrapperClasses = isAdmin 
- ? `relative transition-all duration-200 cursor-pointer ${isActive ? 'ring-4 ring-[#da5f8e] bg-[#da5f8e]/5 z-40' : 'hover:ring-4 hover:ring-[#da5f8e]/50 hover:bg-[#da5f8e]/5'}` 
+ ? `relative transition-all duration-200 cursor-pointer ${isActive ? 'ring-4 ring-brand-pink bg-brand-pink/5 z-40' : 'hover:ring-4 hover:ring-brand-pink/50 hover:bg-brand-pink/5'}` 
  :"";
 
  return (
  <div 
  id="blog_view"
- className={`space-y-12 animate-fade-in px-4 md:px-0 bg-white ${wrapperClasses}`}
+ className={`space-y-20 animate-fade-in px-4 md:px-0 bg-brand-neutral min-h-screen ${wrapperClasses}`}
  onClick={(e) => {
  if (isAdmin && onEditSection) {
  e.stopPropagation();
@@ -34,73 +34,73 @@ export default function BlogView({ news, siteLabels, siteSettings, isAdmin, onEd
  }}
  >
  {isAdmin && (
- <div className={`absolute top-4 left-4 z-50 bg-[#da5f8e] text-white px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+ <div className={`absolute top-4 left-4 z-50 bg-brand-pink text-brand-neutral px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
  <Edit size={12} /> EDIT BLOG COLLECTION
  </div>
  )}
  
  {/* Editorial Title Banner */}
- <section className="mx-auto max-w-7xl pt-10 text-center md:text-left">
- <div className="flex flex-col md:flex-row md:items-end justify-between border-b-2 border-neutral-950 pb-6 gap-6">
- <div className="space-y-2">
- <span className="inline-block bg-[#da5f8e] text-white font-mono text-[10px] px-3 py-1 tracking-[0.3em] uppercase font-black">
- {siteLabels?.homeBlogSubtitle ||"C.U.G.C. LATEST LOGS"}
+ <section className="mx-auto max-w-7xl pt-16 md:pt-24">
+ <div className="flex flex-col md:flex-row md:items-end justify-between border-b-4 border-brand-ink pb-8 gap-8">
+ <div className="space-y-4">
+ <span className="inline-block bg-brand-pink text-brand-neutral font-mono text-[11px] px-4 py-1.5 tracking-[0.4em] uppercase font-black shadow-lg">
+ {siteLabels?.homeBlogSubtitle ||"OFFICIAL ARCHIVE"}
  </span>
- <h1 className="font-display text-5xl md:text-6xl font-bold tracking-tight text-neutral-950 leading-none uppercase">
+ <h1 className="font-display text-4xl md:text-7xl font-black tracking-tighter text-brand-ink leading-[0.85] uppercase">
  {siteLabels?.homeBlogTitle ||"ACTIVITIES BLOG & STORIES"}
  </h1>
  </div>
- <span className="font-mono text-[10px] font-black text-neutral-400 tracking-[0.2em] uppercase">
- &nbsp;
- </span>
+ <div className="font-mono text-[10px] font-black text-stone-400 tracking-[0.3em] uppercase flex items-center gap-4 bg-brand-stone px-6 py-3 border border-brand-ink/10">
+ <Clock size={14} className="text-brand-pink" /> LATEST UPDATES: {sortedNews[0]?.publishDate || "N/A"}
+ </div>
  </div>
  </section>
 
- {/* Blog Grid */}
- <section className="mx-auto max-w-7xl pb-24">
+ {/* Blog Grid with Editorial Rhythm */}
+ <section className="mx-auto max-w-7xl pb-32">
  {sortedNews.length > 0 ? (
- <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
- {sortedNews.map((blog) => (
+ <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16">
+ {sortedNews.map((blog, idx) => (
  <Link
  key={blog.id}
  to={`/activities/${blog.id}`}
- className="group relative border border-[#121212] bg-white overflow-hidden transition-all duration-300 flex flex-col justify-between hover:"
+ className={`group relative border-2 border-brand-ink bg-brand-neutral overflow-hidden transition-all duration-500 flex flex-col justify-between shadow-[8px_8px_0px_rgba(18,18,18,0.05)] hover:shadow-none hover:translate-y-2 hover:translate-x-2 ${idx % 3 === 1 ? 'md:mt-12' : ''}`}
  >
  {/* Image Showcase */}
- <div className="relative aspect-[16/9] border-b border-neutral-100 overflow-hidden bg-stone-50">
+ <div className="relative aspect-[3/2] border-b-2 border-brand-ink overflow-hidden bg-brand-stone">
  <img
  src={blog.imageUrl}
  alt={blog.title}
  referrerPolicy="no-referrer"
- className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+ className="h-full w-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110"
  />
  <div className="absolute top-4 left-4">
- <span className="bg-neutral-900 text-stone-100 font-mono text-[9px] font-bold px-2.5 py-1 tracking-widest uppercase">
- {blog.rank && blog.rank > 0 ?"FEATURED":"ACTIVITY"}
+ <span className="bg-brand-ink text-brand-neutral font-mono text-[9px] font-black px-3 py-1.5 tracking-[0.2em] uppercase shadow-xl">
+ {blog.rank && blog.rank > 0 ?"FEATURED STORY":"REGISTRY LOG"}
  </span>
  </div>
  </div>
 
  {/* Info parameters */}
- <div className="p-6 flex-grow flex flex-col justify-between">
- <div className="space-y-3">
- <div className="flex items-center gap-1.5 font-mono text-[10px] text-stone-400 font-semibold uppercase">
- <Calendar size={12} className="text-stone-300"/>
+ <div className="p-8 flex-grow flex flex-col justify-between space-y-6">
+ <div className="space-y-4">
+ <div className="flex items-center gap-2 font-mono text-[10px] text-stone-400 font-black uppercase tracking-widest">
+ <Calendar size={12} className="text-brand-pink"/>
  <span>{blog.publishDate}</span>
  </div>
- <h3 className="font-display text-lg font-bold text-neutral-950 tracking-tight hover:underline transition-colors uppercase leading-tight line-clamp-2">
+ <h3 className="font-display text-2xl font-black text-brand-ink tracking-tight group-hover:text-brand-pink transition-colors uppercase leading-[0.9] line-clamp-2">
  {blog.title}
  </h3>
- <p className="font-sans text-xs text-stone-600 leading-relaxed line-clamp-3">
+ <p className="font-sans text-sm text-stone-600 leading-relaxed line-clamp-3 italic">
  {blog.excerpt}
  </p>
  </div>
 
- <div className="mt-6 pt-4 border-t border-neutral-50 flex items-center justify-between">
+ <div className="pt-6 border-t-2 border-brand-stone flex items-center">
  <span
- className="group inline-flex items-center gap-2 font-mono text-[10px] font-bold tracking-widest text-[#da5f8e] uppercase cursor-pointer hover:underline"
+ className="group inline-flex items-center gap-3 font-mono text-[11px] font-black tracking-[0.2em] text-brand-ink group-hover:text-brand-pink transition-colors uppercase"
  >
- READ STORY <ChevronRight size={14} className="transition-transform group-hover:translate-x-1"/>
+ READ COVERAGE <ChevronRight size={16} className="transition-transform group-hover:translate-x-2"/>
  </span>
  </div>
  </div>
@@ -109,11 +109,12 @@ export default function BlogView({ news, siteLabels, siteSettings, isAdmin, onEd
  ))}
  </div>
  ) : (
- <div className="border border-dashed border-[#121212] p-20 text-center max-w-xl mx-auto bg-neutral-50">
- <BookOpen size={48} strokeWidth={1} className="mx-auto text-neutral-300 mb-6"/>
- <h3 className="font-display text-xl font-bold uppercase text-neutral-950 mb-3">
+ <div className="border-4 border-dashed border-brand-ink p-32 text-center max-w-3xl mx-auto bg-brand-stone/10">
+ <BookOpen size={64} strokeWidth={1} className="mx-auto text-brand-pink opacity-20 mb-8"/>
+ <h3 className="font-display text-2xl font-black uppercase text-brand-ink tracking-widest">
  {siteLabels?.homeNoBlogs ||"No activities blogs published yet."}
  </h3>
+ <p className="font-mono text-xs text-stone-400 uppercase tracking-widest mt-4">Database link active • Registry empty</p>
  </div>
  )}
  </section>

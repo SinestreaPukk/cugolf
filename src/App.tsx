@@ -97,7 +97,7 @@ function AppContent() {
       />
 
       {(dbState?.siteSettings?.showMarquee ?? true) && (
-        <div className="w-full bg-brand-ink text-brand-neutral py-1.5 overflow-hidden border-b border-brand-ink select-none relative z-30 flex items-center h-11 md:h-14">
+        <div className="w-full bg-brand-neutral text-brand-ink py-2 overflow-hidden border-b border-brand-ink select-none relative z-30 flex items-center h-11 md:h-14">
           <div className="w-full overflow-hidden whitespace-nowrap flex items-center">
             <div className="animate-marquee inline-flex shrink-0 font-sans text-2xl md:text-3xl uppercase font-black tracking-tighter gap-6 leading-none" style={{ animationDuration: '45s' }}>
               {Array(10).fill(null).map((_, index) => {
@@ -106,7 +106,7 @@ function AppContent() {
                 return (
                   <span key={index} className="inline-flex items-center gap-6">
                     {parts.map((part, pIdx) => (
-                      <span key={pIdx} className="inline-flex items-center gap-6 text-brand-neutral">
+                      <span key={pIdx} className="inline-flex items-center gap-6 text-brand-ink">
                         <span>{part.trim()}</span>
                         <span className="text-brand-pink font-sans font-black text-2xl md:text-3xl leading-none">•</span>
                       </span>

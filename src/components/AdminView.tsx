@@ -107,7 +107,7 @@ function ImageUploadWidget({ id, value, onChange, label, placeholder, helperText
 
  return (
  <div className="space-y-1.5 text-left">
- <label htmlFor={id} className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase block">
+ <label htmlFor={id} className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">
  {label}
  </label>
  
@@ -118,7 +118,7 @@ function ImageUploadWidget({ id, value, onChange, label, placeholder, helperText
  value={value}
  onChange={(e) => onChange(e.target.value)}
  placeholder={placeholder ||"https://images.unsplash.com/... or own image path"}
- className="flex-1 bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:ring-1 focus:ring-black focus:outline-none text-[#121212] font-mono"
+ className="flex-1 bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:ring-1 focus:ring-black focus:outline-none text-brand-ink font-mono"
  />
  
  <input
@@ -133,7 +133,7 @@ function ImageUploadWidget({ id, value, onChange, label, placeholder, helperText
  type="button"
  onClick={() => fileInputRef.current?.click()}
  disabled={isUploading}
- className="shrink-0 border-2 border-black bg-white hover:bg-neutral-150 disabled:opacity-50 px-3.5 py-2 text-xs font-mono font-bold uppercase transition-all flex items-center gap-1.5 cursor-pointer text-black"
+ className="shrink-0 border-2 border-brand-ink bg-brand-neutral hover:bg-neutral-150 disabled:opacity-50 px-3.5 py-2 text-xs font-mono font-bold uppercase transition-all flex items-center gap-1.5 cursor-pointer text-brand-ink"
  >
  {isUploading ? (
  <span className="flex items-center gap-1">
@@ -154,7 +154,7 @@ function ImageUploadWidget({ id, value, onChange, label, placeholder, helperText
  className={`border-2 border-dashed p-3.5 text-center cursor-pointer transition-all ${
  isDragging 
  ?"border-emerald-600 bg-emerald-50/40 text-emerald-800"
- :"border-stone-200 bg-stone-50/50 hover:bg-stone-50 hover:border-black text-stone-500"
+ :"border-stone-200 bg-brand-stone/50 hover:bg-brand-stone hover:border-brand-ink text-stone-500"
  }`}
  >
  <span className="font-mono text-[9px] uppercase font-semibold">
@@ -174,7 +174,7 @@ function ImageUploadWidget({ id, value, onChange, label, placeholder, helperText
  </span>
  )}
 
- {helperText && <p className="text-[9px] text-[#121212]/50 italic uppercase">{helperText}</p>}
+ {helperText && <p className="text-[9px] text-brand-ink/50 italic uppercase">{helperText}</p>}
  </div>
  );
 }
@@ -1048,8 +1048,9 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  };
 
  const handleEditSponsorTrigger = (item: Sponsor) => {
- setActiveSubTab("sponsors");
- setEditingSponsorId(item.id);
+   setActiveView("sponsors");
+   setEditingSponsorId(item.id);
+
  setSponName(item.name);
  setSponDescription(item.description);
  setSponWebsiteUrl(item.websiteUrl ||"");
@@ -1290,12 +1291,12 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  if (!adminToken) {
  return (
  <div className="mx-auto max-w-md py-24 px-4 animate-fade-in">
- <div className="border-2 border-neutral-950 bg-white p-8 md:p-12 space-y-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
- <div className="text-center space-y-4 border-b-2 border-neutral-950 pb-8">
- <div className="mx-auto h-16 w-16 border-2 border-neutral-950 flex items-center justify-center text-white bg-neutral-950">
+ <div className="border-2 border-brand-ink bg-brand-neutral p-8 md:p-12 space-y-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
+ <div className="text-center space-y-4 border-b-2 border-brand-ink pb-8">
+ <div className="mx-auto h-16 w-16 border-2 border-brand-ink flex items-center justify-center text-brand-neutral bg-brand-ink">
  <Lock size={28} />
  </div>
- <h2 className="font-thai text-4xl font-bold uppercase tracking-tight text-neutral-950 leading-none pt-4">
+ <h2 className="font-thai text-4xl font-bold uppercase tracking-tight text-brand-ink leading-none pt-4">
  CMS ACCESS
  </h2>
  <p className="font-mono text-[10px] text-neutral-400 tracking-[0.3em] uppercase font-black">
@@ -1304,7 +1305,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  </div>
 
  {loginError && (
- <div className="bg-red-50 border-2 border-black text-black p-3.5 text-xs font-black flex items-center gap-2 uppercase">
+ <div className="bg-red-50 border-2 border-brand-ink text-brand-ink p-3.5 text-xs font-black flex items-center gap-2 uppercase">
  <AlertCircle size={16} />
  <span>{loginError}</span>
  </div>
@@ -1312,7 +1313,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
 
  <form onSubmit={handleLogin} className="space-y-4">
  <div className="space-y-1.5">
- <label htmlFor="passkey"className="font-mono text-[9px] font-black text-black/60 uppercase block">
+ <label htmlFor="passkey"className="font-mono text-[9px] font-black text-brand-ink/60 uppercase block">
  VARSITY PASSKEY CODE
  </label>
  <input
@@ -1322,13 +1323,13 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  placeholder="Enter Passkey"
  value={password}
  onChange={(e) => setPassword(e.target.value)}
- className="w-full bg-neutral-50 border-2 border-black py-2.5 px-3 font-mono text-xs focus:outline-none focus:bg-white text-black"
+ className="w-full bg-neutral-50 border-2 border-brand-ink py-2.5 px-3 font-mono text-xs focus:outline-none focus:bg-brand-neutral text-brand-ink"
  />
  </div>
  <button
  type="submit"
  disabled={isAuthenticating}
- className="w-full bg-black py-3 text-xs font-black tracking-widest text-white uppercase hover:bg-neutral-900 border-2 border-black transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+ className="w-full bg-brand-ink py-3 text-xs font-black tracking-widest text-brand-neutral uppercase hover:bg-neutral-900 border-2 border-brand-ink transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
  >
  {isAuthenticating ? (
  <>
@@ -1353,8 +1354,8 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  <div className="space-y-12">
  {/* WELCOME HERO */}
  <div className="space-y-6">
- <h2 className="font-display text-lg font-bold uppercase tracking-wider text-[#121212] flex items-center gap-2 border-b border-[#121212]/10 pb-2">
- <Layout size={20} className="text-[#da5f8e]"/> EDIT WELCOME HERO
+ <h2 className="font-display text-lg font-bold uppercase tracking-wider text-brand-ink flex items-center gap-2 border-b border-brand-ink/10 pb-2">
+ <Layout size={20} className="text-brand-pink"/> EDIT WELCOME HERO
  </h2>
  <div className="space-y-4">
  <ImageUploadWidget
@@ -1366,36 +1367,36 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  helperText="A wide panoramic or landscape golf course photo works best."
  />
  <div className="space-y-1.5">
- <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase block">PRIMARY TITLE (THAI OR MAIN)</label>
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">PRIMARY TITLE (THAI OR MAIN)</label>
  <input
  type="text"
  value={welcomeTitleThai}
  onChange={(e) => setWelcomeTitleThai(e.target.value)}
- className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none focus:border-[#ec4899] text-[#121212]"
+ className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none focus:border-brand-pink text-brand-ink"
  />
  </div>
  <div className="space-y-1.5">
- <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase block">SECONDARY TITLE (ENGLISH / SUB)</label>
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">SECONDARY TITLE (ENGLISH / SUB)</label>
  <input
  type="text"
  value={welcomeTitleEnglish}
  onChange={(e) => setWelcomeTitleEnglish(e.target.value)}
- className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none focus:border-[#ec4899] text-[#121212]"
+ className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none focus:border-brand-pink text-brand-ink"
  />
  </div>
  <div className="space-y-1.5">
- <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase block">WELCOME DESCRIPTION PARAGRAPH</label>
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">WELCOME DESCRIPTION PARAGRAPH</label>
  <textarea
  rows={5}
  value={welcomeDescription}
  onChange={(e) => setWelcomeDescription(e.target.value)}
- className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none leading-relaxed text-[#121212]"
+ className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none leading-relaxed text-brand-ink"
  />
  </div>
- <div className="pt-4 border-t border-[#121212]/10">
+ <div className="pt-4 border-t border-brand-ink/10">
  <button
  onClick={handleUpdateWelcomeSection}
- className="w-full bg-[#121212] text-white hover:bg-[#ec4899] px-6 py-3 font-mono text-xs font-bold tracking-wider uppercase flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+ className="w-full bg-brand-ink text-brand-neutral hover:bg-brand-pink px-6 py-3 font-mono text-xs font-bold tracking-wider uppercase flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
  >
  <Save size={14} /> SAVE WELCOME SECTION
  </button>
@@ -1404,9 +1405,9 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  </div>
 
  {/* HOME SPONSORS */}
- <div className="space-y-6 pt-12 border-t-4 border-[#121212]">
- <h2 className="font-display text-lg font-bold uppercase tracking-wider text-[#121212] flex items-center gap-2 border-b border-[#121212]/10 pb-2">
- <Sparkles size={20} className="text-[#da5f8e]"/> EDIT HOME SPONSORS
+ <div className="space-y-6 pt-12 border-t-4 border-brand-ink">
+ <h2 className="font-display text-lg font-bold uppercase tracking-wider text-brand-ink flex items-center gap-2 border-b border-brand-ink/10 pb-2">
+ <Sparkles size={20} className="text-brand-pink"/> EDIT HOME SPONSORS
  </h2>
  <div className="space-y-4">
  <div className="flex items-center gap-2 py-1">
@@ -1415,46 +1416,46 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  type="checkbox"
  checked={homeSponShowSection}
  onChange={(e) => setHomeSponShowSection(e.target.checked)}
- className="h-4 w-4 text-[#ec4899] accent-[#ec4899]"
+ className="h-4 w-4 text-brand-pink accent-brand-pink"
  />
- <label htmlFor="home_spon_show"className="font-mono text-[9px] font-bold text-[#121212]/75 uppercase">
+ <label htmlFor="home_spon_show"className="font-mono text-[9px] font-bold text-brand-ink/75 uppercase">
  SHOW THIS SECTION ON HOMEPAGE
  </label>
  </div>
  <div className="space-y-1.5">
- <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase block">TITLE</label>
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">TITLE</label>
  <input
  type="text"
  value={homeSponTitle}
  onChange={(e) => setHomeSponTitle(e.target.value)}
- className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none"
+ className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"
  />
  </div>
  <div className="space-y-1.5">
- <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase block">SUBTITLE</label>
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">SUBTITLE</label>
  <input
  type="text"
  value={homeSponSubtitle}
  onChange={(e) => setHomeSponSubtitle(e.target.value)}
- className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none"
+ className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"
  />
  </div>
  <div className="space-y-1.5">
- <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase block">DESCRIPTION</label>
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">DESCRIPTION</label>
  <textarea
  rows={4}
  value={homeSponDescription}
  onChange={(e) => setHomeSponDescription(e.target.value)}
- className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none leading-relaxed"
+ className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none leading-relaxed"
  />
  </div>
  <div className="space-y-1.5">
- <label className="font-mono text-[9px] font-bold text-[#121212]/60 uppercase block">MARQUEE RUNNING TEXT</label>
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">MARQUEE RUNNING TEXT</label>
  <input
  type="text"
  value={homeSponMarqueeText}
  onChange={(e) => setHomeSponMarqueeText(e.target.value)}
- className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none font-mono"
+ className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none font-mono"
  />
  </div>
  <ImageUploadWidget
@@ -1464,10 +1465,10 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  onChange={setHomeSponImageUrl}
  placeholder="https://images.unsplash.com/photo-..."
  />
- <div className="pt-4 border-t border-[#121212]/10">
+ <div className="pt-4 border-t border-brand-ink/10">
  <button
  onClick={handleUpdateHomeSponsorSection}
- className="w-full bg-[#121212] text-white hover:bg-[#ec4899] px-6 py-3 font-mono text-xs font-bold tracking-wider uppercase flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+ className="w-full bg-brand-ink text-brand-neutral hover:bg-brand-pink px-6 py-3 font-mono text-xs font-bold tracking-wider uppercase flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
  >
  <Save size={14} /> SAVE SPONSOR SECTION
  </button>
@@ -1481,8 +1482,8 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  return (
  <div className="space-y-12">
  <div className="space-y-6">
- <h2 className="font-display text-lg font-bold uppercase tracking-wider text-[#121212] flex items-center gap-2 border-b border-[#121212]/10 pb-2">
- <FileText size={20} className="text-[#da5f8e]"/> ACTIVITIES & STORIES
+ <h2 className="font-display text-lg font-bold uppercase tracking-wider text-brand-ink flex items-center gap-2 border-b border-brand-ink/10 pb-2">
+ <FileText size={20} className="text-brand-pink"/> ACTIVITIES & STORIES
  </h2>
  
  <button 
@@ -1490,51 +1491,51 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  setEditingNewsId(null); setNewsTitle(""); setNewsExcerpt(""); setNewsContent(""); setNewsImage(""); setNewsDate(""); setNewsRank(0); setNewsIsVisible(true);
  window.scrollTo({ top: 0, behavior:"smooth"});
  }}
- className="w-full bg-black text-white py-3 font-mono text-[10px] font-bold uppercase flex items-center justify-center gap-2 hover:bg-[#da5f8e]"
+ className="w-full bg-brand-ink text-brand-neutral py-3 font-mono text-[10px] font-bold uppercase flex items-center justify-center gap-2 hover:bg-brand-pink"
  >
  <Plus size={14} /> CREATE NEW STORY
  </button>
 
  <div className="space-y-6">
- <h3 className="font-mono text-[11px] font-black text-[#121212] uppercase tracking-widest border-b border-[#121212]/10 pb-2 mt-8">
+ <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2 mt-8">
  {editingNewsId ?"EDITING STORY":"NEW STORY CONTENT"}
  </h3>
  
  <div className="space-y-4">
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Title</label><input type="text"value={newsTitle} onChange={(e) => setNewsTitle(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Excerpt</label><textarea rows={3} value={newsExcerpt} onChange={(e) => setNewsExcerpt(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Title</label><input type="text"value={newsTitle} onChange={(e) => setNewsTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Excerpt</label><textarea rows={3} value={newsExcerpt} onChange={(e) => setNewsExcerpt(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
  <div className="grid grid-cols-2 gap-4">
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Date (YYYY-MM-DD)</label><input type="text"value={newsDate} onChange={(e) => setNewsDate(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs font-mono"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Rank (Higher = First)</label><input type="number"value={newsRank} onChange={(e) => setNewsRank(parseInt(e.target.value) || 0)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs font-mono"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Date (YYYY-MM-DD)</label><input type="text"value={newsDate} onChange={(e) => setNewsDate(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-mono"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Rank (Higher = First)</label><input type="number"value={newsRank} onChange={(e) => setNewsRank(parseInt(e.target.value) || 0)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-mono"/></div>
  </div>
  <ImageUploadWidget id="news_img"label="COVER IMAGE"value={newsImage} onChange={setNewsImage} />
  <div className="space-y-1.5">
  <label className="font-mono text-[9px] font-bold uppercase">Content (Markdown)</label>
- <textarea rows={10} value={newsContent} onChange={(e) => setNewsContent(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs font-mono leading-relaxed"/>
+ <textarea rows={10} value={newsContent} onChange={(e) => setNewsContent(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-mono leading-relaxed"/>
  </div>
  <div className="flex items-center gap-2 py-2">
- <input type="checkbox"id="news_vis"checked={newsIsVisible} onChange={(e) => setNewsIsVisible(e.target.checked)} className="h-4 w-4 accent-[#ec4899]"/>
+ <input type="checkbox"id="news_vis"checked={newsIsVisible} onChange={(e) => setNewsIsVisible(e.target.checked)} className="h-4 w-4 accent-brand-pink"/>
  <label htmlFor="news_vis"className="font-mono text-[9px] font-bold uppercase">PUBLICLY VISIBLE</label>
  </div>
  </div>
- <div className="flex gap-4 pt-4 border-t border-[#121212]/10">
- <button onClick={() => { setEditingNewsId(null); setNewsTitle(""); setNewsExcerpt(""); setNewsContent(""); setNewsImage(""); setNewsDate(""); setNewsRank(0); setNewsIsVisible(true); }} className="flex-1 bg-stone-100 py-3 font-mono text-[10px] font-bold uppercase hover:bg-stone-200">CLEAR FORM</button>
- <button onClick={handleSaveNews} className="flex-1 bg-black text-white py-3 font-mono text-[10px] font-bold uppercase hover:bg-[#ec4899] flex justify-center items-center gap-1.5"><Save size={12} /> SAVE STORY</button>
+ <div className="flex gap-4 pt-4 border-t border-brand-ink/10">
+ <button onClick={() => { setEditingNewsId(null); setNewsTitle(""); setNewsExcerpt(""); setNewsContent(""); setNewsImage(""); setNewsDate(""); setNewsRank(0); setNewsIsVisible(true); }} className="flex-1 bg-brand-stone py-3 font-mono text-[10px] font-bold uppercase hover:bg-stone-200">CLEAR FORM</button>
+ <button onClick={handleSaveNews} className="flex-1 bg-brand-ink text-brand-neutral py-3 font-mono text-[10px] font-bold uppercase hover:bg-brand-pink flex justify-center items-center gap-1.5"><Save size={12} /> SAVE STORY</button>
  </div>
  </div>
 
  <div className="pt-12">
- <h3 className="font-mono text-[11px] font-black text-[#121212] uppercase tracking-widest border-b border-[#121212]/10 pb-2 mb-4">PUBLISHED STORIES</h3>
+ <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2 mb-4">PUBLISHED STORIES</h3>
  <div className="space-y-3">
  {(dbState.news || []).map((item) => (
- <div key={item.id} className="border border-stone-200 p-4 bg-white hover:border-[#da5f8e] transition-colors">
+ <div key={item.id} className="border border-stone-200 p-4 bg-brand-neutral hover:border-brand-pink transition-colors">
  <div className="flex items-center justify-between mb-2">
  <span className="font-mono text-[9px] text-stone-400">{item.publishDate}</span>
  {item.isVisible === false && <span className="text-red-500 font-mono text-[9px] font-bold">HIDDEN</span>}
  </div>
  <h4 className="font-display text-xs font-bold uppercase line-clamp-1">{item.title}</h4>
  <div className="flex gap-2 mt-4">
- <button onClick={() => handleEditNewsTrigger(item)} className="flex-1 bg-stone-100 py-1.5 font-mono text-[9px] font-bold uppercase hover:bg-stone-200 flex justify-center items-center gap-1"><Edit size={10} /> Edit</button>
+ <button onClick={() => handleEditNewsTrigger(item)} className="flex-1 bg-brand-stone py-1.5 font-mono text-[9px] font-bold uppercase hover:bg-stone-200 flex justify-center items-center gap-1"><Edit size={10} /> Edit</button>
  <button onClick={() => handleDeleteNewsCall(item.id)} className="flex-1 bg-red-50 text-red-600 py-1.5 font-mono text-[9px] font-bold uppercase hover:bg-red-100 flex justify-center items-center gap-1"><Trash2 size={10} /> Delete</button>
  </div>
  </div>
@@ -1550,76 +1551,76 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  return (
  <div className="space-y-12">
  <div className="space-y-6">
- <h2 className="font-display text-lg font-bold uppercase tracking-wider text-[#121212] flex items-center gap-2 border-b border-[#121212]/10 pb-2">
- <Sparkles size={20} className="text-[#da5f8e]"/> EDIT CLUB ACTIVITIES PAGE
+ <h2 className="font-display text-lg font-bold uppercase tracking-wider text-brand-ink flex items-center gap-2 border-b border-brand-ink/10 pb-2">
+ <Sparkles size={20} className="text-brand-pink"/> EDIT CLUB ACTIVITIES PAGE
  </h2>
  
- <div className="bg-stone-50 border border-[#121212]/5 p-4 space-y-4">
- <h3 className="font-mono text-[10px] font-black text-[#121212] uppercase tracking-widest border-b border-[#121212]/10 pb-2">Visibility Toggles</h3>
+ <div className="bg-brand-stone border border-brand-ink/5 p-4 space-y-4">
+ <h3 className="font-mono text-[10px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2">Visibility Toggles</h3>
  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
- <div className="flex items-center gap-2"><input type="checkbox"id="show_philosophy"checked={caShowPhilosophy} onChange={(e) => setCaShowPhilosophy(e.target.checked)} className="h-3.5 w-3.5 accent-[#da5f8e]"/><label htmlFor="show_philosophy"className="font-mono text-[9px] font-bold uppercase">Philosophy</label></div>
- <div className="flex items-center gap-2"><input type="checkbox"id="show_captain"checked={caShowCaptainMandate} onChange={(e) => setCaShowCaptainMandate(e.target.checked)} className="h-3.5 w-3.5 accent-[#da5f8e]"/><label htmlFor="show_captain"className="font-mono text-[9px] font-bold uppercase">Captain</label></div>
- <div className="flex items-center gap-2"><input type="checkbox"id="show_competitions"checked={caShowCompetitions} onChange={(e) => setCaShowCompetitions(e.target.checked)} className="h-3.5 w-3.5 accent-[#da5f8e]"/><label htmlFor="show_competitions"className="font-mono text-[9px] font-bold uppercase">Tournaments</label></div>
- <div className="flex items-center gap-2"><input type="checkbox"id="show_training"checked={caShowTraining} onChange={(e) => setCaShowTraining(e.target.checked)} className="h-3.5 w-3.5 accent-[#da5f8e]"/><label htmlFor="show_training"className="font-mono text-[9px] font-bold uppercase">Training</label></div>
- <div className="flex items-center gap-2"><input type="checkbox"id="show_legacy"checked={caShowLegacy} onChange={(e) => setCaShowLegacy(e.target.checked)} className="h-3.5 w-3.5 accent-[#da5f8e]"/><label htmlFor="show_legacy"className="font-mono text-[9px] font-bold uppercase">Legacy</label></div>
+ <div className="flex items-center gap-2"><input type="checkbox"id="show_philosophy"checked={caShowPhilosophy} onChange={(e) => setCaShowPhilosophy(e.target.checked)} className="h-3.5 w-3.5 accent-brand-pink"/><label htmlFor="show_philosophy"className="font-mono text-[9px] font-bold uppercase">Philosophy</label></div>
+ <div className="flex items-center gap-2"><input type="checkbox"id="show_captain"checked={caShowCaptainMandate} onChange={(e) => setCaShowCaptainMandate(e.target.checked)} className="h-3.5 w-3.5 accent-brand-pink"/><label htmlFor="show_captain"className="font-mono text-[9px] font-bold uppercase">Captain</label></div>
+ <div className="flex items-center gap-2"><input type="checkbox"id="show_competitions"checked={caShowCompetitions} onChange={(e) => setCaShowCompetitions(e.target.checked)} className="h-3.5 w-3.5 accent-brand-pink"/><label htmlFor="show_competitions"className="font-mono text-[9px] font-bold uppercase">Tournaments</label></div>
+ <div className="flex items-center gap-2"><input type="checkbox"id="show_training"checked={caShowTraining} onChange={(e) => setCaShowTraining(e.target.checked)} className="h-3.5 w-3.5 accent-brand-pink"/><label htmlFor="show_training"className="font-mono text-[9px] font-bold uppercase">Training</label></div>
+ <div className="flex items-center gap-2"><input type="checkbox"id="show_legacy"checked={caShowLegacy} onChange={(e) => setCaShowLegacy(e.target.checked)} className="h-3.5 w-3.5 accent-brand-pink"/><label htmlFor="show_legacy"className="font-mono text-[9px] font-bold uppercase">Legacy</label></div>
  </div>
  </div>
  
  <div className="space-y-8">
  <div className="space-y-4">
- <h3 className="font-mono text-[11px] font-black text-[#121212] uppercase tracking-widest border-b border-[#121212]/10 pb-2">Hero Section</h3>
+ <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2">Hero Section</h3>
  <ImageUploadWidget id="ca_hero_image"label="HERO BACKGROUND IMAGE"value={caHeroImageUrl} onChange={setCaHeroImageUrl} />
  </div>
  
  <div className="space-y-4">
- <h3 className="font-mono text-[11px] font-black text-[#121212] uppercase tracking-widest border-b border-[#121212]/10 pb-2">Philosophy Section</h3>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Title</label><input type="text"value={caPhilosophyTitle} onChange={(e) => setCaPhilosophyTitle(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Quote</label><textarea rows={3} value={caPhilosophyQuote} onChange={(e) => setCaPhilosophyQuote(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none italic"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Description</label><textarea rows={6} value={caPhilosophyDescription} onChange={(e) => setCaPhilosophyDescription(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Technical Excellence</label><textarea rows={6} value={caTechnicalExcellenceDescription} onChange={(e) => setCaTechnicalExcellenceDescription(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none"/></div>
+ <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2">Philosophy Section</h3>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Title</label><input type="text"value={caPhilosophyTitle} onChange={(e) => setCaPhilosophyTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Quote</label><textarea rows={3} value={caPhilosophyQuote} onChange={(e) => setCaPhilosophyQuote(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none italic"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Description</label><textarea rows={6} value={caPhilosophyDescription} onChange={(e) => setCaPhilosophyDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Technical Excellence</label><textarea rows={6} value={caTechnicalExcellenceDescription} onChange={(e) => setCaTechnicalExcellenceDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
  </div>
 
  <div className="space-y-4">
- <h3 className="font-mono text-[11px] font-black text-[#121212] uppercase tracking-widest border-b border-[#121212]/10 pb-2">Captain's Mandate</h3>
+ <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2">Captain's Mandate</h3>
  <div className="grid grid-cols-2 gap-4">
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Name</label><input type="text"value={caCaptainName} onChange={(e) => setCaCaptainName(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Role</label><input type="text"value={caCaptainRole} onChange={(e) => setCaCaptainRole(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Name</label><input type="text"value={caCaptainName} onChange={(e) => setCaCaptainName(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Role</label><input type="text"value={caCaptainRole} onChange={(e) => setCaCaptainRole(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
  </div>
  <ImageUploadWidget id="ca_captain_img"label="CAPTAIN IMAGE"value={caCaptainImageUrl} onChange={setCaCaptainImageUrl} />
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Philosophy</label><textarea rows={6} value={caCaptainPhilosophy} onChange={(e) => setCaCaptainPhilosophy(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Philosophy</label><textarea rows={6} value={caCaptainPhilosophy} onChange={(e) => setCaCaptainPhilosophy(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
  </div>
 
  <div className="space-y-4">
- <h3 className="font-mono text-[11px] font-black text-[#121212] uppercase tracking-widest border-b border-[#121212]/10 pb-2 flex justify-between items-center">
+ <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2 flex justify-between items-center">
  <span>Major Competitions</span>
- <button onClick={handleAddCompetition} className="bg-black text-white px-3 py-1 font-mono text-[8px] font-black uppercase flex items-center gap-1"><Plus size={10} /> ADD COMPETITION</button>
+ <button onClick={handleAddCompetition} className="bg-brand-ink text-brand-neutral px-3 py-1 font-mono text-[8px] font-black uppercase flex items-center gap-1"><Plus size={10} /> ADD COMPETITION</button>
  </h3>
  <div className="space-y-4">
  {caCompetitions.map((comp) => (
- <div key={comp.id} className="border border-stone-200 p-4 space-y-3 bg-stone-50 relative">
+ <div key={comp.id} className="border border-stone-200 p-4 space-y-3 bg-brand-stone relative">
  <button onClick={() => handleDeleteCompetition(comp.id)} className="absolute top-2 right-2 text-red-500"><Trash2 size={12} /></button>
- <input type="text"value={comp.title} onChange={(e) => handleUpdateCompetition(comp.id, { title: e.target.value })} placeholder="Title"className="w-full bg-white border border-[#121212]/10 p-2 text-xs focus:outline-none font-bold"/>
- <input type="text"value={comp.difficulty} onChange={(e) => handleUpdateCompetition(comp.id, { difficulty: e.target.value })} placeholder="Difficulty/Level"className="w-full bg-white border border-[#121212]/10 p-2 text-xs focus:outline-none font-mono"/>
- <textarea rows={3} value={comp.description} onChange={(e) => handleUpdateCompetition(comp.id, { description: e.target.value })} placeholder="Description"className="w-full bg-white border border-[#121212]/10 p-2 text-xs focus:outline-none"/>
+ <input type="text"value={comp.title} onChange={(e) => handleUpdateCompetition(comp.id, { title: e.target.value })} placeholder="Title"className="w-full bg-brand-neutral border border-brand-ink/10 p-2 text-xs focus:outline-none font-bold"/>
+ <input type="text"value={comp.difficulty} onChange={(e) => handleUpdateCompetition(comp.id, { difficulty: e.target.value })} placeholder="Difficulty/Level"className="w-full bg-brand-neutral border border-brand-ink/10 p-2 text-xs focus:outline-none font-mono"/>
+ <textarea rows={3} value={comp.description} onChange={(e) => handleUpdateCompetition(comp.id, { description: e.target.value })} placeholder="Description"className="w-full bg-brand-neutral border border-brand-ink/10 p-2 text-xs focus:outline-none"/>
  </div>
  ))}
  </div>
  </div>
 
  <div className="space-y-4">
- <h3 className="font-mono text-[11px] font-black text-[#121212] uppercase tracking-widest border-b border-[#121212]/10 pb-2">Training & Legacy</h3>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Training Description</label><textarea rows={6} value={caTrainingDescription} onChange={(e) => setCaTrainingDescription(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none"/></div>
- <div className="space-y-1.5 mt-4"><label className="font-mono text-[9px] font-bold uppercase">Legacy Description</label><textarea rows={4} value={caLegacyDescription} onChange={(e) => setCaLegacyDescription(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none"/></div>
+ <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2">Training & Legacy</h3>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Training Description</label><textarea rows={6} value={caTrainingDescription} onChange={(e) => setCaTrainingDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
+ <div className="space-y-1.5 mt-4"><label className="font-mono text-[9px] font-bold uppercase">Legacy Description</label><textarea rows={4} value={caLegacyDescription} onChange={(e) => setCaLegacyDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
  <div className="grid grid-cols-2 gap-4">
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Founded Year</label><input type="text"value={caFoundedYear} onChange={(e) => setCaFoundedYear(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none font-mono"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Active Years</label><input type="text"value={caActiveYears} onChange={(e) => setCaActiveYears(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs focus:outline-none font-mono"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Founded Year</label><input type="text"value={caFoundedYear} onChange={(e) => setCaFoundedYear(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none font-mono"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Active Years</label><input type="text"value={caActiveYears} onChange={(e) => setCaActiveYears(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none font-mono"/></div>
  </div>
  </div>
 
  </div>
 
- <div className="pt-8 border-t border-[#121212]/10">
- <button onClick={handleUpdateClubActivity} className="w-full bg-[#121212] text-white hover:bg-[#ec4899] px-6 py-4 font-mono text-sm font-bold tracking-wider uppercase flex items-center justify-center gap-2 transition-colors cursor-pointer">
+ <div className="pt-8 border-t border-brand-ink/10">
+ <button onClick={handleUpdateClubActivity} className="w-full bg-brand-ink text-brand-neutral hover:bg-brand-pink px-6 py-4 font-mono text-sm font-bold tracking-wider uppercase flex items-center justify-center gap-2 transition-colors cursor-pointer">
  <Save size={16} /> SAVE CLUB ACTIVITIES
  </button>
  </div>
@@ -1631,57 +1632,57 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  return (
  <div className="space-y-12">
  <div className="space-y-6">
- <h2 className="font-display text-lg font-bold uppercase tracking-wider text-[#121212] flex items-center gap-2 border-b border-[#121212]/10 pb-2">
- <Users size={20} className="text-[#da5f8e]"/> VARSITY ROSTER
+ <h2 className="font-display text-lg font-bold uppercase tracking-wider text-brand-ink flex items-center gap-2 border-b border-brand-ink/10 pb-2">
+ <Users size={20} className="text-brand-pink"/> VARSITY ROSTER
  </h2>
  
  <button 
  onClick={() => { setEditingPlayerId(null); setPlayerName(""); setPlayerHandicap(1.5); setPlayerYear("Freshman"); setPlayerFaculty(""); setPlayerImage(""); setPlayerIsFeatured(false); setPlayerIsVisible(true); window.scrollTo({ top: 0, behavior:"smooth"}); }}
- className="w-full bg-black text-white py-3 font-mono text-[10px] font-bold uppercase flex items-center justify-center gap-2 hover:bg-[#da5f8e]"
+ className="w-full bg-brand-ink text-brand-neutral py-3 font-mono text-[10px] font-bold uppercase flex items-center justify-center gap-2 hover:bg-brand-pink"
  >
  <Plus size={14} /> ADD NEW PLAYER
  </button>
 
  <div className="space-y-6 mt-8">
- <h3 className="font-mono text-[11px] font-black text-[#121212] uppercase tracking-widest border-b border-[#121212]/10 pb-2">
+ <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2">
  {editingPlayerId ?"EDITING PLAYER":"NEW PLAYER FORM"}
  </h3>
  <div className="space-y-4">
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Name</label><input type="text"value={playerName} onChange={(e) => setPlayerName(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Name</label><input type="text"value={playerName} onChange={(e) => setPlayerName(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
  <div className="grid grid-cols-2 gap-4">
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Handicap</label><input type="number"step="0.1"value={playerHandicap} onChange={(e) => setPlayerHandicap(parseFloat(e.target.value) || 0)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs font-mono"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Handicap</label><input type="number"step="0.1"value={playerHandicap} onChange={(e) => setPlayerHandicap(parseFloat(e.target.value) || 0)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-mono"/></div>
  <div className="space-y-1.5">
  <label className="font-mono text-[9px] font-bold uppercase">Year</label>
- <select value={playerYear} onChange={(e) => setPlayerYear(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs">
+ <select value={playerYear} onChange={(e) => setPlayerYear(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs">
  <option value="Freshman">Freshman</option><option value="Sophomore">Sophomore</option><option value="Junior">Junior</option><option value="Senior">Senior</option><option value="Alumni">Alumni</option>
  </select>
  </div>
  </div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Faculty</label><input type="text"value={playerFaculty} onChange={(e) => setPlayerFaculty(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Faculty</label><input type="text"value={playerFaculty} onChange={(e) => setPlayerFaculty(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
  <ImageUploadWidget id="player_img"label="HEADSHOT IMAGE"value={playerImage} onChange={setPlayerImage} />
  <div className="flex items-center gap-4 py-2">
- <div className="flex items-center gap-2"><input type="checkbox"id="p_feat"checked={playerIsFeatured} onChange={(e) => setPlayerIsFeatured(e.target.checked)} className="h-4 w-4 accent-[#ec4899]"/><label htmlFor="p_feat"className="font-mono text-[9px] font-bold uppercase">FEATURED (LEAD)</label></div>
- <div className="flex items-center gap-2"><input type="checkbox"id="p_vis"checked={playerIsVisible} onChange={(e) => setPlayerIsVisible(e.target.checked)} className="h-4 w-4 accent-[#ec4899]"/><label htmlFor="p_vis"className="font-mono text-[9px] font-bold uppercase">VISIBLE</label></div>
+ <div className="flex items-center gap-2"><input type="checkbox"id="p_feat"checked={playerIsFeatured} onChange={(e) => setPlayerIsFeatured(e.target.checked)} className="h-4 w-4 accent-brand-pink"/><label htmlFor="p_feat"className="font-mono text-[9px] font-bold uppercase">FEATURED (LEAD)</label></div>
+ <div className="flex items-center gap-2"><input type="checkbox"id="p_vis"checked={playerIsVisible} onChange={(e) => setPlayerIsVisible(e.target.checked)} className="h-4 w-4 accent-brand-pink"/><label htmlFor="p_vis"className="font-mono text-[9px] font-bold uppercase">VISIBLE</label></div>
  </div>
  </div>
- <div className="flex gap-4 pt-4 border-t border-[#121212]/10">
- <button onClick={() => { setEditingPlayerId(null); setPlayerName(""); setPlayerHandicap(1.5); setPlayerYear("Freshman"); setPlayerFaculty(""); setPlayerImage(""); setPlayerIsFeatured(false); setPlayerIsVisible(true); }} className="flex-1 bg-stone-100 py-3 font-mono text-[10px] font-bold uppercase hover:bg-stone-200">CLEAR FORM</button>
- <button onClick={handleSavePlayer} className="flex-1 bg-black text-white py-3 font-mono text-[10px] font-bold uppercase hover:bg-[#ec4899] flex justify-center items-center gap-1.5"><Save size={12} /> SAVE PLAYER</button>
+ <div className="flex gap-4 pt-4 border-t border-brand-ink/10">
+ <button onClick={() => { setEditingPlayerId(null); setPlayerName(""); setPlayerHandicap(1.5); setPlayerYear("Freshman"); setPlayerFaculty(""); setPlayerImage(""); setPlayerIsFeatured(false); setPlayerIsVisible(true); }} className="flex-1 bg-brand-stone py-3 font-mono text-[10px] font-bold uppercase hover:bg-stone-200">CLEAR FORM</button>
+ <button onClick={handleSavePlayer} className="flex-1 bg-brand-ink text-brand-neutral py-3 font-mono text-[10px] font-bold uppercase hover:bg-brand-pink flex justify-center items-center gap-1.5"><Save size={12} /> SAVE PLAYER</button>
  </div>
  </div>
 
  <div className="pt-12">
- <h3 className="font-mono text-[11px] font-black text-[#121212] uppercase tracking-widest border-b border-[#121212]/10 pb-2 mb-4">ACTIVE SQUAD REGISTRY</h3>
+ <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2 mb-4">ACTIVE SQUAD REGISTRY</h3>
  <div className="space-y-3">
  {(dbState.roster || []).map((player) => (
- <div key={player.id} className="border border-stone-200 p-4 bg-white hover:border-[#da5f8e] transition-colors flex items-center gap-4 group">
- <div className="h-12 w-12 overflow-hidden bg-stone-100 shrink-0"><img src={player.imageUrl} className="w-full h-full object-cover"alt={player.name} /></div>
+ <div key={player.id} className="border border-stone-200 p-4 bg-brand-neutral hover:border-brand-pink transition-colors flex items-center gap-4 group">
+ <div className="h-12 w-12 overflow-hidden bg-brand-stone shrink-0"><img src={player.imageUrl} className="w-full h-full object-cover"alt={player.name} /></div>
  <div className="flex-grow">
  <h4 className="font-display text-xs font-bold uppercase">{player.name} {player.isVisible === false && <span className="text-red-500 font-mono">(HIDDEN)</span>}</h4>
  <p className="font-mono text-[9px] text-stone-500">{player.year} • HDCP {player.handicap}</p>
  </div>
  <div className="flex flex-col gap-1 shrink-0">
- <button onClick={() => handleEditPlayerTrigger(player)} className="p-1.5 bg-stone-100 hover:bg-stone-200"><Edit size={10} /></button>
+ <button onClick={() => handleEditPlayerTrigger(player)} className="p-1.5 bg-brand-stone hover:bg-stone-200"><Edit size={10} /></button>
  <button onClick={() => handleDeletePlayerCall(player.id)} className="p-1.5 bg-red-50 text-red-600 hover:bg-red-100"><Trash2 size={10} /></button>
  </div>
  </div>
@@ -1697,52 +1698,52 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  return (
  <div className="space-y-12">
  <div className="space-y-6">
- <h2 className="font-display text-lg font-bold uppercase tracking-wider text-[#121212] flex items-center gap-2 border-b border-[#121212]/10 pb-2">
- <Users size={20} className="text-[#da5f8e]"/> STAFF & BOARD
+ <h2 className="font-display text-lg font-bold uppercase tracking-wider text-brand-ink flex items-center gap-2 border-b border-brand-ink/10 pb-2">
+ <Users size={20} className="text-brand-pink"/> STAFF & BOARD
  </h2>
  
  <button 
  onClick={() => { setEditingStaffId(null); setStaffName(""); setStaffRole(""); setStaffFaculty(""); setStaffImage(""); setStaffOrder(1); setStaffIsVisible(true); window.scrollTo({ top: 0, behavior:"smooth"}); }}
- className="w-full bg-black text-white py-3 font-mono text-[10px] font-bold uppercase flex items-center justify-center gap-2 hover:bg-[#da5f8e]"
+ className="w-full bg-brand-ink text-brand-neutral py-3 font-mono text-[10px] font-bold uppercase flex items-center justify-center gap-2 hover:bg-brand-pink"
  >
  <Plus size={14} /> ADD STAFF MEMBER
  </button>
 
  <div className="space-y-6 mt-8">
- <h3 className="font-mono text-[11px] font-black text-[#121212] uppercase tracking-widest border-b border-[#121212]/10 pb-2">
+ <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2">
  {editingStaffId ?"EDITING STAFF":"NEW STAFF FORM"}
  </h3>
  <div className="space-y-4">
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Name</label><input type="text"value={staffName} onChange={(e) => setStaffName(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Role (Title)</label><input type="text"value={staffRole} onChange={(e) => setStaffRole(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Name</label><input type="text"value={staffName} onChange={(e) => setStaffName(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Role (Title)</label><input type="text"value={staffRole} onChange={(e) => setStaffRole(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
  <div className="grid grid-cols-2 gap-4">
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Year / Faculty</label><input type="text"value={staffFaculty} onChange={(e) => setStaffFaculty(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Order (1=First)</label><input type="number"value={staffOrder} onChange={(e) => setStaffOrder(parseInt(e.target.value) || 1)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs font-mono"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Year / Faculty</label><input type="text"value={staffFaculty} onChange={(e) => setStaffFaculty(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Order (1=First)</label><input type="number"value={staffOrder} onChange={(e) => setStaffOrder(parseInt(e.target.value) || 1)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-mono"/></div>
  </div>
  <ImageUploadWidget id="staff_img"label="HEADSHOT IMAGE"value={staffImage} onChange={setStaffImage} />
  <div className="flex items-center gap-2 py-2">
- <input type="checkbox"id="s_vis"checked={staffIsVisible} onChange={(e) => setStaffIsVisible(e.target.checked)} className="h-4 w-4 accent-[#ec4899]"/>
+ <input type="checkbox"id="s_vis"checked={staffIsVisible} onChange={(e) => setStaffIsVisible(e.target.checked)} className="h-4 w-4 accent-brand-pink"/>
  <label htmlFor="s_vis"className="font-mono text-[9px] font-bold uppercase">VISIBLE</label>
  </div>
  </div>
- <div className="flex gap-4 pt-4 border-t border-[#121212]/10">
- <button onClick={() => { setEditingStaffId(null); setStaffName(""); setStaffRole(""); setStaffFaculty(""); setStaffImage(""); setStaffOrder(1); setStaffIsVisible(true); }} className="flex-1 bg-stone-100 py-3 font-mono text-[10px] font-bold uppercase hover:bg-stone-200">CLEAR FORM</button>
- <button onClick={handleSaveStaff} className="flex-1 bg-black text-white py-3 font-mono text-[10px] font-bold uppercase hover:bg-[#ec4899] flex justify-center items-center gap-1.5"><Save size={12} /> SAVE STAFF</button>
+ <div className="flex gap-4 pt-4 border-t border-brand-ink/10">
+ <button onClick={() => { setEditingStaffId(null); setStaffName(""); setStaffRole(""); setStaffFaculty(""); setStaffImage(""); setStaffOrder(1); setStaffIsVisible(true); }} className="flex-1 bg-brand-stone py-3 font-mono text-[10px] font-bold uppercase hover:bg-stone-200">CLEAR FORM</button>
+ <button onClick={handleSaveStaff} className="flex-1 bg-brand-ink text-brand-neutral py-3 font-mono text-[10px] font-bold uppercase hover:bg-brand-pink flex justify-center items-center gap-1.5"><Save size={12} /> SAVE STAFF</button>
  </div>
  </div>
 
  <div className="pt-12">
- <h3 className="font-mono text-[11px] font-black text-[#121212] uppercase tracking-widest border-b border-[#121212]/10 pb-2 mb-4">ACTIVE STAFF DIRECTORY</h3>
+ <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2 mb-4">ACTIVE STAFF DIRECTORY</h3>
  <div className="space-y-3">
  {(dbState.staff || []).sort((a,b) => a.order - b.order).map((person) => (
- <div key={person.id} className="border border-stone-200 p-4 bg-white hover:border-[#da5f8e] transition-colors flex items-center gap-4 group">
- <div className="h-10 w-10 bg-stone-100 shrink-0"><img src={person.imageUrl} className="w-full h-full object-cover"alt={person.name} /></div>
+ <div key={person.id} className="border border-stone-200 p-4 bg-brand-neutral hover:border-brand-pink transition-colors flex items-center gap-4 group">
+ <div className="h-10 w-10 bg-brand-stone shrink-0"><img src={person.imageUrl} className="w-full h-full object-cover"alt={person.name} /></div>
  <div className="flex-grow">
  <h4 className="font-display text-xs font-bold uppercase">{person.name} {person.isVisible === false && <span className="text-red-500 font-mono">(HIDDEN)</span>}</h4>
  <p className="font-mono text-[9px] text-stone-500">{person.role} • {person.year}</p>
  </div>
  <div className="flex flex-col gap-1 shrink-0">
- <button onClick={() => handleEditStaffTrigger(person)} className="p-1.5 bg-stone-100 hover:bg-stone-200"><Edit size={10} /></button>
+ <button onClick={() => handleEditStaffTrigger(person)} className="p-1.5 bg-brand-stone hover:bg-stone-200"><Edit size={10} /></button>
  <button onClick={() => handleDeleteStaffCall(person.id)} className="p-1.5 bg-red-50 text-red-600 hover:bg-red-100"><Trash2 size={10} /></button>
  </div>
  </div>
@@ -1758,71 +1759,71 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  return (
  <div className="space-y-12">
  <div className="space-y-6">
- <h2 className="font-display text-lg font-bold uppercase tracking-wider text-[#121212] flex items-center gap-2 border-b border-[#121212]/10 pb-2">
- <Trophy size={20} className="text-[#da5f8e]"/> SCORES & STATS
+ <h2 className="font-display text-lg font-bold uppercase tracking-wider text-brand-ink flex items-center gap-2 border-b border-brand-ink/10 pb-2">
+ <Trophy size={20} className="text-brand-pink"/> SCORES & STATS
  </h2>
  
  <button 
  onClick={() => { setEditingScoreId(null); setScoreTournamentName(""); setScoreDate(""); setScoreResult(""); setScoreList([{ playerName:"", score: 72, position:""}]); setScoreIsVisible(true); window.scrollTo({ top: 0, behavior:"smooth"}); }}
- className="w-full bg-black text-white py-3 font-mono text-[10px] font-bold uppercase flex items-center justify-center gap-2 hover:bg-[#da5f8e]"
+ className="w-full bg-brand-ink text-brand-neutral py-3 font-mono text-[10px] font-bold uppercase flex items-center justify-center gap-2 hover:bg-brand-pink"
  >
  <Plus size={14} /> LOG NEW TOURNAMENT
  </button>
 
  <div className="space-y-6 mt-8">
- <h3 className="font-mono text-[11px] font-black text-[#121212] uppercase tracking-widest border-b border-[#121212]/10 pb-2">
+ <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2">
  {editingScoreId ?"EDITING TOURNAMENT":"NEW TOURNAMENT FORM"}
  </h3>
  <div className="space-y-4">
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Tournament Name</label><input type="text"value={scoreTournamentName} onChange={(e) => setScoreTournamentName(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Tournament Name</label><input type="text"value={scoreTournamentName} onChange={(e) => setScoreTournamentName(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
  <div className="grid grid-cols-2 gap-4">
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Date (YYYY-MM-DD)</label><input type="text"value={scoreDate} onChange={(e) => setScoreDate(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs font-mono"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Overall Result</label><input type="text"value={scoreResult} onChange={(e) => setScoreResult(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Date (YYYY-MM-DD)</label><input type="text"value={scoreDate} onChange={(e) => setScoreDate(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-mono"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Overall Result</label><input type="text"value={scoreResult} onChange={(e) => setScoreResult(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
  </div>
  <div className="flex items-center gap-2 py-1">
- <input type="checkbox"id="score_vis"checked={scoreIsVisible} onChange={(e) => setScoreIsVisible(e.target.checked)} className="h-4 w-4 accent-[#ec4899]"/>
+ <input type="checkbox"id="score_vis"checked={scoreIsVisible} onChange={(e) => setScoreIsVisible(e.target.checked)} className="h-4 w-4 accent-brand-pink"/>
  <label htmlFor="score_vis"className="font-mono text-[9px] font-bold uppercase">VISIBLE</label>
  </div>
  
- <div className="border border-stone-200 p-4 bg-stone-50 space-y-4">
+ <div className="border border-stone-200 p-4 bg-brand-stone space-y-4">
  <div className="flex justify-between items-center border-b border-stone-200 pb-2">
  <span className="font-mono text-[10px] font-bold uppercase">Player Scores</span>
- <button onClick={handleAddPlayerScoreRow} className="bg-black text-white px-2 py-1 font-mono text-[8px] flex items-center gap-1"><Plus size={10}/> ADD ROW</button>
+ <button onClick={handleAddPlayerScoreRow} className="bg-brand-ink text-brand-neutral px-2 py-1 font-mono text-[8px] flex items-center gap-1"><Plus size={10}/> ADD ROW</button>
  </div>
  {scoreList.map((row, idx) => (
- <div key={idx} className="flex gap-2 items-center bg-white p-2 border border-stone-200">
+ <div key={idx} className="flex gap-2 items-center bg-brand-neutral p-2 border border-stone-200">
  <input type="text"value={row.playerName} placeholder="Player Name"onChange={(e) => handleUpdatePlayerScoreRow(idx,"playerName", e.target.value)} className="flex-[2] bg-transparent text-xs p-1 focus:outline-none font-bold"/>
  <input type="number"value={row.score} placeholder="Score"onChange={(e) => handleUpdatePlayerScoreRow(idx,"score", parseInt(e.target.value)||72)} className="flex-1 bg-transparent text-xs p-1 font-mono text-center focus:outline-none"/>
- <input type="text"value={row.position} placeholder="Pos (e.g. 1st)"onChange={(e) => handleUpdatePlayerScoreRow(idx,"position", e.target.value)} className="flex-1 bg-transparent text-xs p-1 text-center text-[#da5f8e] font-bold focus:outline-none"/>
+ <input type="text"value={row.position} placeholder="Pos (e.g. 1st)"onChange={(e) => handleUpdatePlayerScoreRow(idx,"position", e.target.value)} className="flex-1 bg-transparent text-xs p-1 text-center text-brand-pink font-bold focus:outline-none"/>
  <button onClick={() => handleRemovePlayerScoreRow(idx)} className="text-red-500 p-1 hover:bg-red-50 rounded"><X size={12}/></button>
  </div>
  ))}
  </div>
  </div>
- <div className="flex gap-4 pt-4 border-t border-[#121212]/10">
- <button onClick={() => { setEditingScoreId(null); setScoreTournamentName(""); setScoreDate(""); setScoreResult(""); setScoreList([{ playerName:"", score: 72, position:""}]); setScoreIsVisible(true); }} className="flex-1 bg-stone-100 py-3 font-mono text-[10px] font-bold uppercase hover:bg-stone-200">CLEAR FORM</button>
- <button onClick={handleSaveTournament} className="flex-1 bg-black text-white py-3 font-mono text-[10px] font-bold uppercase hover:bg-[#ec4899] flex justify-center items-center gap-1.5"><Save size={12} /> SAVE LEADERBOARD</button>
+ <div className="flex gap-4 pt-4 border-t border-brand-ink/10">
+ <button onClick={() => { setEditingScoreId(null); setScoreTournamentName(""); setScoreDate(""); setScoreResult(""); setScoreList([{ playerName:"", score: 72, position:""}]); setScoreIsVisible(true); }} className="flex-1 bg-brand-stone py-3 font-mono text-[10px] font-bold uppercase hover:bg-stone-200">CLEAR FORM</button>
+ <button onClick={handleSaveTournament} className="flex-1 bg-brand-ink text-brand-neutral py-3 font-mono text-[10px] font-bold uppercase hover:bg-brand-pink flex justify-center items-center gap-1.5"><Save size={12} /> SAVE LEADERBOARD</button>
  </div>
  </div>
 
  <div className="pt-12">
- <h3 className="font-mono text-[11px] font-black text-[#121212] uppercase tracking-widest border-b border-[#121212]/10 pb-2 mb-4">REGISTERED MATCH LOGS</h3>
+ <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2 mb-4">REGISTERED MATCH LOGS</h3>
  <div className="space-y-3">
  {(dbState.scores || []).map((score) => (
- <div key={score.id} className="border border-[#121212]/10 bg-white p-4 space-y-3 flex flex-col justify-between hover:border-[#121212]">
+ <div key={score.id} className="border border-brand-ink/10 bg-brand-neutral p-4 space-y-3 flex flex-col justify-between hover:border-brand-ink">
  <div className="space-y-1.5">
- <span className="font-mono text-[9px] text-[#121212]/40 block uppercase">
+ <span className="font-mono text-[9px] text-brand-ink/40 block uppercase">
  {score.date} • {score.result}
  </span>
  </div>
- <h4 className="font-display text-xs font-bold uppercase text-[#121212] leading-tight">
+ <h4 className="font-display text-xs font-bold uppercase text-brand-ink leading-tight">
  {score.tournamentName}
  {score.isVisible === false && <span className="text-red-500 ml-2 font-mono text-[9px] font-bold">(HIDDEN)</span>}
  </h4>
  <div className="text-[10px] text-stone-500 font-mono">
  Field size: {score.scoresList?.length || 0} players.
  </div>
- <div className="flex items-center gap-3 pt-2 border-t border-[#121212]/5">
+ <div className="flex items-center gap-3 pt-2 border-t border-brand-ink/5">
  <button onClick={() => handleEditScoreTrigger(score)} className="inline-flex items-center gap-1 font-mono text-[10px] text-blue-600 hover:underline cursor-pointer"><Edit size={11} /> REVISE</button>
  <span>•</span>
  <button onClick={() => handleDeleteScoreCall(score.id)} className="inline-flex items-center gap-1 font-mono text-[10px] text-red-600 hover:underline cursor-pointer"><Trash2 size={11} /> DELETE</button>
@@ -1836,107 +1837,278 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  </div>
  );
 
- case"sponsors":
- return (
- <div className="space-y-12">
- <div className="space-y-6">
- <h2 className="font-display text-lg font-bold uppercase tracking-wider text-[#121212] flex items-center gap-2 border-b border-[#121212]/10 pb-2">
- <Award size={20} className="text-[#da5f8e]"/> SPONSORS & PARTNERS
- </h2>
- 
- <button 
- onClick={() => { setEditingSponsorId(null); setSponName(""); setSponDescription(""); setSponWebsiteUrl(""); setSponImageUrl(""); setSponIsActive(true); window.scrollTo({ top: 0, behavior:"smooth"}); }}
- className="w-full bg-black text-white py-3 font-mono text-[10px] font-bold uppercase flex items-center justify-center gap-2 hover:bg-[#da5f8e]"
- >
- <Plus size={14} /> REGISTER CORPORATE PARTNER
- </button>
+ case "sponsors":
+   return (
+     <div className="space-y-12">
+       <div className="space-y-6">
+         <h2 className="font-display text-lg font-bold uppercase tracking-wider text-brand-ink flex items-center gap-2 border-b border-brand-ink/10 pb-2">
+           <Award size={20} className="text-brand-pink" /> SPONSORS & PARTNERS
+         </h2>
 
- <div className="space-y-6 mt-8">
- <h3 className="font-mono text-[11px] font-black text-[#121212] uppercase tracking-widest border-b border-[#121212]/10 pb-2">
- {editingSponsorId ?"EDITING PARTNER":"NEW PARTNER FORM"}
- </h3>
- <div className="space-y-4">
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Partner Name</label><input type="text"value={sponName} onChange={(e) => setSponName(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs font-bold"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Description</label><textarea rows={3} value={sponDescription} onChange={(e) => setSponDescription(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Website URL</label><input type="text"value={sponWebsiteUrl} onChange={(e) => setSponWebsiteUrl(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs"/></div>
- <ImageUploadWidget id="spon_logo"label="SPONSOR LOGO IMAGE URL"value={sponImageUrl} onChange={setSponImageUrl} helperText="Transparent PNG is required."/>
- <div className="flex items-center gap-2 py-1">
- <input type="checkbox"id="spon_active"checked={sponIsActive} onChange={(e) => setSponIsActive(e.target.checked)} className="h-4 w-4 accent-[#ec4899]"/>
- <label htmlFor="spon_active"className="font-mono text-[9px] font-bold uppercase">ACTIVE CONTRACT (DISPLAYS ON SITE)</label>
- </div>
- </div>
- <div className="flex gap-4 pt-4 border-t border-[#121212]/10">
- <button onClick={() => { setEditingSponsorId(null); setSponName(""); setSponDescription(""); setSponWebsiteUrl(""); setSponImageUrl(""); setSponIsActive(true); }} className="flex-1 bg-stone-100 py-3 font-mono text-[10px] font-bold uppercase hover:bg-stone-200">CLEAR FORM</button>
- <button onClick={handleSaveSponsor} className="flex-1 bg-black text-white py-3 font-mono text-[10px] font-bold uppercase hover:bg-[#ec4899] flex justify-center items-center gap-1.5"><Save size={12} /> SAVE PARTNER</button>
- </div>
- </div>
+         <button 
+           onClick={() => { setEditingSponsorId(null); setSponName(""); setSponDescription(""); setSponWebsiteUrl(""); setSponImageUrl(""); setSponIsActive(true); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+           className="w-full bg-brand-ink text-brand-neutral py-3 font-mono text-[10px] font-bold uppercase flex items-center justify-center gap-2 hover:bg-brand-pink"
+         >
+           <Plus size={14} /> REGISTER CORPORATE PARTNER
+         </button>
 
- <div className="pt-12">
- <h3 className="font-mono text-[11px] font-black text-[#121212] uppercase tracking-widest border-b border-[#121212]/10 pb-2 mb-4">ACTIVE CORPORATE PARTNERS</h3>
- <div className="space-y-3">
- {(dbState.sponsors || []).map((spon) => (
- <div key={spon.id} className="border border-stone-200 p-4 bg-white flex items-center justify-between group hover:border-[#da5f8e] transition-colors gap-4">
- <div className="flex items-center gap-4 w-full">
- <div className="h-12 w-20 bg-stone-50 border border-stone-100 shrink-0 p-2">
- {spon.imageUrl ? <img src={spon.imageUrl} className="w-full h-full object-contain"alt={spon.name} /> : <span className="text-[8px] text-stone-400">NO LOGO</span>}
- </div>
- <div className="flex-grow">
- <h4 className="font-display text-xs font-bold uppercase">{spon.name}</h4>
- <p className="font-mono text-[9px] text-stone-500">{spon.isActive ?"ACTIVE":"INACTIVE"} • {spon.websiteUrl ||"No Link"}</p>
- </div>
- <div className="flex gap-1 shrink-0">
- <button onClick={() => handleEditSponsorTrigger(spon)} className="p-1.5 bg-stone-100 hover:bg-stone-200"><Edit size={10} /></button>
- <button onClick={() => handleDeleteSponsorCall(spon.id)} className="p-1.5 bg-red-50 text-red-600 hover:bg-red-100"><Trash2 size={10} /></button>
- </div>
- </div>
- </div>
- ))}
- </div>
- </div>
- </div>
- </div>
- );
+         <div className="space-y-6 mt-8">
+           <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2">
+             {editingSponsorId ? "EDITING PARTNER" : "NEW PARTNER FORM"}
+           </h3>
+           <div className="space-y-4">
+             <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Partner Name</label><input type="text" value={sponName} onChange={(e) => setSponName(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-bold" /></div>
+             <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Description</label><textarea rows={3} value={sponDescription} onChange={(e) => setSponDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
+             <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Website URL</label><input type="text" value={sponWebsiteUrl} onChange={(e) => setSponWebsiteUrl(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
+             <ImageUploadWidget id="spon_logo" label="SPONSOR LOGO IMAGE URL" value={sponImageUrl} onChange={setSponImageUrl} helperText="Transparent PNG is required." />
+             <div className="flex items-center gap-2 py-1">
+               <input type="checkbox" id="spon_active" checked={sponIsActive} onChange={(e) => setSponIsActive(e.target.checked)} className="h-4 w-4 accent-brand-pink" />
+               <label htmlFor="spon_active" className="font-mono text-[9px] font-bold uppercase">ACTIVE CONTRACT (DISPLAYS ON SITE)</label>
+             </div>
+           </div>
+           <div className="flex gap-4 pt-4 border-t border-brand-ink/10">
+             <button onClick={() => { setEditingSponsorId(null); setSponName(""); setSponDescription(""); setSponWebsiteUrl(""); setSponImageUrl(""); setSponIsActive(true); }} className="flex-1 bg-brand-stone py-3 font-mono text-[10px] font-bold uppercase hover:bg-stone-200">CLEAR FORM</button>
+             <button onClick={handleSaveSponsor} className="flex-1 bg-brand-ink text-brand-neutral py-3 font-mono text-[10px] font-bold uppercase hover:bg-brand-pink flex justify-center items-center gap-1.5"><Save size={12} /> SAVE PARTNER</button>
+           </div>
+         </div>
+
+         <div className="pt-12">
+           <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2 mb-4">ACTIVE CORPORATE PARTNERS</h3>
+           <div className="space-y-3">
+             {(dbState.sponsors || []).map((spon) => (
+               <div key={spon.id} className="border border-stone-200 p-4 bg-brand-neutral flex items-center justify-between group hover:border-brand-pink transition-colors gap-4">
+                 <div className="flex items-center gap-4 w-full">
+                   <div className="h-12 w-20 bg-brand-stone border border-stone-100 shrink-0 p-2">
+                     {spon.imageUrl ? <img src={spon.imageUrl} className="w-full h-full object-contain" alt={spon.name} /> : <span className="text-[8px] text-stone-400">NO LOGO</span>}
+                   </div>
+                   <div className="flex-grow">
+                     <h4 className="font-display text-xs font-bold uppercase">{spon.name}</h4>
+                     <p className="font-mono text-[9px] text-stone-500">{spon.isActive ? "ACTIVE" : "INACTIVE"} • {spon.websiteUrl || "No Link"}</p>
+                   </div>
+                   <div className="flex gap-1 shrink-0">
+                     <button onClick={() => handleEditSponsorTrigger(spon)} className="p-1.5 bg-brand-stone hover:bg-stone-200"><Edit size={10} /></button>
+                     <button onClick={() => handleDeleteSponsorCall(spon.id)} className="p-1.5 bg-red-50 text-red-600 hover:bg-red-100"><Trash2 size={10} /></button>
+                   </div>
+                 </div>
+               </div>
+             ))}
+           </div>
+         </div>
+       </div>
+     </div>
+   );
+
+ case "gallery":
+   return (
+     <div className="space-y-12">
+       <div className="space-y-6">
+         <h2 className="font-display text-lg font-bold uppercase tracking-wider text-brand-ink flex items-center gap-2 border-b border-brand-ink/10 pb-2">
+           <Image size={20} className="text-brand-pink" /> FIELD PHOTOGRAPHY
+         </h2>
+         <div className="space-y-6">
+           <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2">CURATE NEW PHOTO</h3>
+           <div className="space-y-4">
+             <div className="space-y-1.5">
+               <label className="font-mono text-[9px] font-bold uppercase">Caption Title</label>
+               <input type="text" value={galTitle} onChange={(e) => setGalTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" />
+             </div>
+             <ImageUploadWidget id="gal_img" label="GALLERY PHOTO" value={galUrl} onChange={setGalUrl} />
+             <div className="space-y-1.5">
+               <label className="font-mono text-[9px] font-bold uppercase">Category</label>
+               <select value={galCategory} onChange={(e) => setGalCategory(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs">
+                 <option value="Tournament">Tournament Action</option>
+                 <option value="Practice">Practice Session</option>
+                 <option value="Training">Training & Drills</option>
+                 <option value="Tech Analysis">High-Tech Diagnostics</option>
+               </select>
+             </div>
+           </div>
+           <button onClick={handleSaveGalleryImage} className="w-full bg-brand-ink text-brand-neutral py-3 font-mono text-[10px] font-bold uppercase flex items-center justify-center gap-2 hover:bg-brand-pink">
+             <Plus size={14} /> CURATE IMAGE
+           </button>
+         </div>
+
+         <div className="pt-12">
+           <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2 mb-4">CURATED CABINET</h3>
+           <div className="grid grid-cols-2 gap-4">
+             {(dbState.gallery || []).map((img) => (
+               <div key={img.id} className="group relative aspect-square border border-brand-ink/15 bg-brand-stone overflow-hidden">
+                 <img src={img.imageUrl} alt={img.title} className="w-full h-full object-cover" />
+                 <div className="absolute inset-x-0 bottom-0 bg-brand-ink/90 p-2 transform translate-y-full group-hover:translate-y-0 transition-transform">
+                   <p className="text-[8px] text-brand-neutral font-bold uppercase line-clamp-1">{img.title}</p>
+                   <button onClick={() => handleDeleteGalleryCall(img.id)} className="text-red-400 text-[8px] font-bold hover:underline mt-1 flex items-center gap-1">
+                     <Trash2 size={8} /> DELETE
+                   </button>
+                 </div>
+               </div>
+             ))}
+           </div>
+         </div>
+       </div>
+     </div>
+   );
+
+ case "upcoming":
+   return (
+     <div className="space-y-12">
+       <div className="space-y-6">
+         <h2 className="font-display text-lg font-bold uppercase tracking-wider text-brand-ink flex items-center gap-2 border-b border-brand-ink/10 pb-2">
+           <Calendar size={20} className="text-brand-pink" /> UPCOMING ACTIVITY
+         </h2>
+         <form onSubmit={handleUpdateUpcomingActivity} className="space-y-6">
+           <div className="flex items-center justify-between bg-brand-stone p-4 border border-brand-ink/5">
+             <span className="font-mono text-[10px] font-bold uppercase">Show Section on Home</span>
+             <input type="checkbox" checked={upcomingShowSection} onChange={(e) => setUpcomingShowSection(e.target.checked)} className="accent-brand-pink h-4 w-4" />
+           </div>
+           <div className="space-y-4">
+             <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Activity Title</label><input type="text" value={upcomingTitle} onChange={(e) => setUpcomingTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
+             <div className="grid grid-cols-2 gap-4">
+               <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Date</label><input type="text" value={upcomingDate} onChange={(e) => setUpcomingDate(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-mono" /></div>
+               <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Location</label><input type="text" value={upcomingLocation} onChange={(e) => setUpcomingLocation(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
+             </div>
+             <ImageUploadWidget id="up_img" label="ACTIVITY IMAGE" value={upcomingImageUrl} onChange={setUpcomingImageUrl} />
+             <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Description</label><textarea rows={4} value={upcomingDescription} onChange={(e) => setUpcomingDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
+             <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Registration URL</label><input type="text" value={upcomingRegUrl} onChange={(e) => setUpcomingRegUrl(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-mono" /></div>
+           </div>
+           <button type="submit" className="w-full bg-brand-ink text-brand-neutral py-4 font-mono text-xs font-bold uppercase flex items-center justify-center gap-2 hover:bg-brand-pink">
+             <Save size={16} /> SAVE UPCOMING ACTIVITY
+           </button>
+         </form>
+       </div>
+     </div>
+   );
+
 
  case"settings":
  return (
  <div className="space-y-12">
  <div className="space-y-6">
- <h2 className="font-display text-lg font-bold uppercase tracking-wider text-[#121212] flex items-center gap-2 border-b border-[#121212]/10 pb-2">
- <Type size={20} className="text-[#da5f8e]"/> SITE CONTENT & SETTINGS
+ <h2 className="font-display text-lg font-bold uppercase tracking-wider text-brand-ink flex items-center gap-2 border-b border-brand-ink/10 pb-2">
+ <Type size={20} className="text-brand-pink"/> SITE CONTENT & SETTINGS
  </h2>
  
  {/* Note: In a full production system, we would render the massive labels form here. 
  Since it's extremely long, I am providing the basic settings toggles and a placeholder for the labels form 
  that was fully visible in the previous iteration. We will add the main toggles back. */}
  <form onSubmit={handleUpdateSiteSettings} className="space-y-6">
- <h3 className="font-mono text-[11px] font-black text-[#ec4899] uppercase tracking-[0.2em] border-b border-[#ec4899]/20 pb-2">GLOBAL ANNOUNCEMENTS</h3>
+ <h3 className="font-mono text-[11px] font-black text-brand-pink uppercase tracking-[0.2em] border-b border-brand-pink/20 pb-2">GLOBAL ANNOUNCEMENTS</h3>
  <div className="space-y-4">
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">MOVING MARQUEE ANNOUNCEMENT TEXT</label><textarea rows={2} value={setsMarqueeText} onChange={(e) => setSetsMarqueeText(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">CONTACT TELEPHONE</label><input type="text"value={setsContactPhone} onChange={(e) => setSetsContactPhone(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs font-mono"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">CONTACT EMAIL</label><input type="email"value={setsContactEmail} onChange={(e) => setSetsContactEmail(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">HEADQUARTERS ADDRESS</label><textarea rows={2} value={setsContactAddress} onChange={(e) => setSetsContactAddress(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">ACADEMIC AFFILIATION</label><input type="text"value={setsAcademicAffiliation} onChange={(e) => setSetsAcademicAffiliation(e.target.value)} className="w-full bg-[#fcfbf9] border border-[#121212]/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">MOVING MARQUEE ANNOUNCEMENT TEXT</label><textarea rows={2} value={setsMarqueeText} onChange={(e) => setSetsMarqueeText(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">CONTACT TELEPHONE</label><input type="text"value={setsContactPhone} onChange={(e) => setSetsContactPhone(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-mono"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">CONTACT EMAIL</label><input type="email"value={setsContactEmail} onChange={(e) => setSetsContactEmail(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">HEADQUARTERS ADDRESS</label><textarea rows={2} value={setsContactAddress} onChange={(e) => setSetsContactAddress(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">ACADEMIC AFFILIATION</label><input type="text"value={setsAcademicAffiliation} onChange={(e) => setSetsAcademicAffiliation(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
  </div>
 
- <h3 className="font-mono text-[11px] font-black text-[#ec4899] uppercase tracking-[0.2em] border-b border-[#ec4899]/20 pb-2 pt-6">FEATURE VISIBILITY TOGGLES</h3>
+ <h3 className="font-mono text-[11px] font-black text-brand-pink uppercase tracking-[0.2em] border-b border-brand-pink/20 pb-2 pt-6">FEATURE VISIBILITY TOGGLES</h3>
  <div className="grid grid-cols-2 gap-4">
- <div className="flex items-center justify-between p-3 bg-stone-50 border border-stone-200"><span className="font-mono text-[9px] font-bold uppercase">Show Marquee</span><input type="checkbox"checked={setsShowMarquee} onChange={(e) => setSetsShowMarquee(e.target.checked)} className="accent-black"/></div>
- <div className="flex items-center justify-between p-3 bg-stone-50 border border-stone-200"><span className="font-mono text-[9px] font-bold uppercase">Show Home Blog</span><input type="checkbox"checked={setsShowHomeBlog} onChange={(e) => setSetsShowHomeBlog(e.target.checked)} className="accent-black"/></div>
- <div className="flex items-center justify-between p-3 bg-stone-50 border border-stone-200"><span className="font-mono text-[9px] font-bold uppercase">Show Home Welcome</span><input type="checkbox"checked={setsShowHomeWelcome} onChange={(e) => setSetsShowHomeWelcome(e.target.checked)} className="accent-black"/></div>
- <div className="flex items-center justify-between p-3 bg-stone-50 border border-stone-200"><span className="font-mono text-[9px] font-bold uppercase">Show Home Scores</span><input type="checkbox"checked={setsShowHomeScores} onChange={(e) => setSetsShowHomeScores(e.target.checked)} className="accent-black"/></div>
- <div className="flex items-center justify-between p-3 bg-stone-50 border border-stone-200"><span className="font-mono text-[9px] font-bold uppercase">Show Home Sponsors</span><input type="checkbox"checked={setsShowHomeSponsors} onChange={(e) => setSetsShowHomeSponsors(e.target.checked)} className="accent-black"/></div>
- <div className="flex items-center justify-between p-3 bg-stone-50 border border-stone-200"><span className="font-mono text-[9px] font-bold uppercase">Nav: Roster</span><input type="checkbox"checked={setsShowNavbarRoster} onChange={(e) => setSetsShowNavbarRoster(e.target.checked)} className="accent-black"/></div>
- <div className="flex items-center justify-between p-3 bg-stone-50 border border-stone-200"><span className="font-mono text-[9px] font-bold uppercase">Nav: Staff</span><input type="checkbox"checked={setsShowNavbarStaff} onChange={(e) => setSetsShowNavbarStaff(e.target.checked)} className="accent-black"/></div>
- <div className="flex items-center justify-between p-3 bg-stone-50 border border-stone-200"><span className="font-mono text-[9px] font-bold uppercase">Nav: Scores</span><input type="checkbox"checked={setsShowNavbarScores} onChange={(e) => setSetsShowNavbarScores(e.target.checked)} className="accent-black"/></div>
- <div className="flex items-center justify-between p-3 bg-stone-50 border border-stone-200"><span className="font-mono text-[9px] font-bold uppercase">Nav: Sponsors</span><input type="checkbox"checked={setsShowNavbarSponsors} onChange={(e) => setSetsShowNavbarSponsors(e.target.checked)} className="accent-black"/></div>
+ <div className="flex items-center justify-between p-3 bg-brand-stone border border-stone-200"><span className="font-mono text-[9px] font-bold uppercase">Show Marquee</span><input type="checkbox"checked={setsShowMarquee} onChange={(e) => setSetsShowMarquee(e.target.checked)} className="accent-brand-ink"/></div>
+ <div className="flex items-center justify-between p-3 bg-brand-stone border border-stone-200"><span className="font-mono text-[9px] font-bold uppercase">Show Home Blog</span><input type="checkbox"checked={setsShowHomeBlog} onChange={(e) => setSetsShowHomeBlog(e.target.checked)} className="accent-brand-ink"/></div>
+ <div className="flex items-center justify-between p-3 bg-brand-stone border border-stone-200"><span className="font-mono text-[9px] font-bold uppercase">Show Home Welcome</span><input type="checkbox"checked={setsShowHomeWelcome} onChange={(e) => setSetsShowHomeWelcome(e.target.checked)} className="accent-brand-ink"/></div>
+ <div className="flex items-center justify-between p-3 bg-brand-stone border border-stone-200"><span className="font-mono text-[9px] font-bold uppercase">Show Home Scores</span><input type="checkbox"checked={setsShowHomeScores} onChange={(e) => setSetsShowHomeScores(e.target.checked)} className="accent-brand-ink"/></div>
+ <div className="flex items-center justify-between p-3 bg-brand-stone border border-stone-200"><span className="font-mono text-[9px] font-bold uppercase">Show Home Sponsors</span><input type="checkbox"checked={setsShowHomeSponsors} onChange={(e) => setSetsShowHomeSponsors(e.target.checked)} className="accent-brand-ink"/></div>
+ <div className="flex items-center justify-between p-3 bg-brand-stone border border-stone-200"><span className="font-mono text-[9px] font-bold uppercase">Nav: Roster</span><input type="checkbox"checked={setsShowNavbarRoster} onChange={(e) => setSetsShowNavbarRoster(e.target.checked)} className="accent-brand-ink"/></div>
+ <div className="flex items-center justify-between p-3 bg-brand-stone border border-stone-200"><span className="font-mono text-[9px] font-bold uppercase">Nav: Staff</span><input type="checkbox"checked={setsShowNavbarStaff} onChange={(e) => setSetsShowNavbarStaff(e.target.checked)} className="accent-brand-ink"/></div>
+ <div className="flex items-center justify-between p-3 bg-brand-stone border border-stone-200"><span className="font-mono text-[9px] font-bold uppercase">Nav: Scores</span><input type="checkbox"checked={setsShowNavbarScores} onChange={(e) => setSetsShowNavbarScores(e.target.checked)} className="accent-brand-ink"/></div>
+ <div className="flex items-center justify-between p-3 bg-brand-stone border border-stone-200"><span className="font-mono text-[9px] font-bold uppercase">Nav: Sponsors</span><input type="checkbox"checked={setsShowNavbarSponsors} onChange={(e) => setSetsShowNavbarSponsors(e.target.checked)} className="accent-brand-ink"/></div>
  </div>
 
  <div className="pt-8">
- <button type="submit"className="w-full bg-[#121212] text-white hover:bg-[#ec4899] px-6 py-4 font-mono text-sm font-bold tracking-wider uppercase flex items-center justify-center gap-2 transition-colors">
- <Save size={16} /> SAVE GLOBAL SETTINGS
- </button>
+   <button type="submit" className="w-full bg-brand-ink text-brand-neutral hover:bg-brand-pink px-6 py-4 font-mono text-sm font-bold tracking-wider uppercase flex items-center justify-center gap-2 transition-colors">
+     <Save size={16} /> SAVE GLOBAL SETTINGS
+   </button>
  </div>
  </form>
+
+ <div className="pt-12 border-t-2 border-brand-ink/10">
+ <h3 className="font-mono text-[11px] font-black text-brand-pink uppercase tracking-[0.2em] border-b border-brand-pink/20 pb-2">SITE CONTENT LABELS</h3>
+ <p className="text-[10px] text-stone-500 font-mono uppercase mt-2 mb-6">Customize every text label across the platform for local context.</p>
+
+ <form onSubmit={handleUpdateSiteLabels} className="space-y-10">
+   {/* NAVIGATION */}
+   <div className="space-y-4">
+     <h4 className="font-mono text-[10px] font-black text-brand-ink uppercase bg-brand-stone p-2">NAVIGATION & BRANDING</h4>
+     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Nav: Home</label><input type="text" value={labelNavHome} onChange={(e) => setLabelNavHome(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Nav: Activities</label><input type="text" value={labelNavBlog} onChange={(e) => setLabelNavBlog(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Nav: Roster</label><input type="text" value={labelNavRoster} onChange={(e) => setLabelNavRoster(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Nav: Staff</label><input type="text" value={labelNavStaff} onChange={(e) => setLabelNavStaff(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Nav: Scores</label><input type="text" value={labelNavScores} onChange={(e) => setLabelNavScores(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Nav: Partners</label><input type="text" value={labelNavSponsors} onChange={(e) => setLabelNavSponsors(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Brand Title</label><input type="text" value={labelNavBrandTitle} onChange={(e) => setLabelNavBrandTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px] font-bold" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Brand Subtitle</label><input type="text" value={labelNavBrandSubtitle} onChange={(e) => setLabelNavBrandSubtitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+     </div>
+   </div>
+
+   {/* HOME PAGE */}
+   <div className="space-y-4">
+     <h4 className="font-mono text-[10px] font-black text-brand-ink uppercase bg-brand-stone p-2">HOMEPAGE CONTENT</h4>
+     <div className="space-y-4">
+       <div className="grid grid-cols-2 gap-4">
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Blog Title</label><input type="text" value={labelHomeBlogTitle} onChange={(e) => setLabelHomeBlogTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Blog Subtitle</label><input type="text" value={labelHomeBlogSubtitle} onChange={(e) => setLabelHomeBlogSubtitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       </div>
+       <div className="grid grid-cols-2 gap-4">
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Standings Title</label><input type="text" value={labelHomeLiveStandingsTitle} onChange={(e) => setLabelHomeLiveStandingsTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Full Leaderboard Btn</label><input type="text" value={labelHomeFullLeaderboardButton} onChange={(e) => setLabelHomeFullLeaderboardButton(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       </div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Membership Title</label><input type="text" value={labelHomeMembershipTitle} onChange={(e) => setLabelHomeMembershipTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Membership Desc</label><textarea rows={2} value={labelHomeMembershipDescription} onChange={(e) => setLabelHomeMembershipDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+     </div>
+   </div>
+
+   {/* ROSTER PAGE */}
+   <div className="space-y-4">
+     <h4 className="font-mono text-[10px] font-black text-brand-ink uppercase bg-brand-stone p-2">ROSTER & TEAM LABELS</h4>
+     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Roster Title</label><input type="text" value={labelRosterTitle} onChange={(e) => setLabelRosterTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Roster Subtitle</label><input type="text" value={labelRosterSubtitle} onChange={(e) => setLabelRosterSubtitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Verified Label</label><input type="text" value={labelRosterVerifiedLabel} onChange={(e) => setLabelRosterVerifiedLabel(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Search Placeholder</label><input type="text" value={labelRosterSearchPlaceholder} onChange={(e) => setLabelRosterSearchPlaceholder(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+     </div>
+   </div>
+
+   {/* STAFF & SCORES */}
+   <div className="space-y-4">
+     <h4 className="font-mono text-[10px] font-black text-brand-ink uppercase bg-brand-stone p-2">STAFF & SCORES LABELS</h4>
+     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Staff Title</label><input type="text" value={labelStaffTitle} onChange={(e) => setLabelStaffTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Staff Subtitle</label><input type="text" value={labelStaffSubtitle} onChange={(e) => setLabelStaffSubtitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Scores Title</label><input type="text" value={labelScoresTitle} onChange={(e) => setLabelScoresTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Scores Subtitle</label><input type="text" value={labelScoresSubtitle} onChange={(e) => setLabelScoresSubtitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+     </div>
+   </div>
+
+   {/* SPONSORS */}
+   <div className="space-y-4">
+     <h4 className="font-mono text-[10px] font-black text-brand-ink uppercase bg-brand-stone p-2">SPONSOR PAGE LABELS</h4>
+     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Sponsors Title</label><input type="text" value={labelSponsorsTitle} onChange={(e) => setLabelSponsorsTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Sponsors Subtitle</label><input type="text" value={labelSponsorsSubtitle} onChange={(e) => setLabelSponsorsSubtitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+     </div>
+   </div>
+
+   {/* FOOTER */}
+
+   <div className="space-y-4">
+     <h4 className="font-mono text-[10px] font-black text-brand-ink uppercase bg-brand-stone p-2">FOOTER & DISCLOSURES</h4>
+     <div className="space-y-4">
+       <div className="grid grid-cols-2 gap-4">
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Mission Title</label><input type="text" value={labelFooterMissionTitle} onChange={(e) => setLabelFooterMissionTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Legacy Title</label><input type="text" value={labelFooterLegacyTitle} onChange={(e) => setLabelFooterLegacyTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       </div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Rights Reserved</label><input type="text" value={labelFooterRightsReserved} onChange={(e) => setLabelFooterRightsReserved(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+     </div>
+   </div>
+
+   <div className="pt-4">
+     <button type="submit" className="w-full bg-brand-pink text-brand-neutral hover:bg-brand-ink px-6 py-4 font-mono text-sm font-bold tracking-wider uppercase flex items-center justify-center gap-2 transition-colors">
+       <Save size={16} /> SAVE ALL SITE LABELS
+     </button>
+   </div>
+ </form>
+ </div>
+
  </div>
  </div>
  );
@@ -2034,11 +2206,38 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  return (
  <ScoresView scores={dbState.scores || []} siteLabels={dbState.siteLabels} isAdmin={false} />
  );
- case"sponsors":
- return (
- <SponsorsView sponsors={dbState.sponsors || []} siteLabels={dbState.siteLabels} isAdmin={false} />
- );
+ case "sponsors":
+   return (
+     <SponsorsView sponsors={dbState.sponsors || []} siteLabels={dbState.siteLabels} isAdmin={false} />
+   );
+ case "gallery":
+ case "upcoming":
+   return (
+     <HomeView
+       news={dbState.news || []}
+       scores={dbState.scores || []}
+       roster={dbState.roster || []}
+       gallery={dbState.gallery || []}
+       welcomeSection={dbState.welcomeSection}
+       upcomingActivity={{
+         ...dbState.upcomingActivity,
+         title: upcomingTitle,
+         description: upcomingDescription,
+         imageUrl: upcomingImageUrl,
+         date: upcomingDate,
+         location: upcomingLocation,
+         registrationUrl: upcomingRegUrl,
+         showSection: upcomingShowSection
+       }}
+       sponsors={dbState.sponsors || []}
+       siteLabels={dbState.siteLabels}
+       siteSettings={dbState.siteSettings}
+       isAdmin={false}
+     />
+   );
+
  default:
+
  return (
  <div className="flex items-center justify-center h-full">
  <span className="font-mono text-xs text-stone-400">PREVIEW NOT AVAILABLE</span>
@@ -2048,16 +2247,16 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  };
 
  return (
- <div id="admin_dashboard"className="animate-fade-in bg-[#fcfbf9] min-h-screen flex flex-col overflow-hidden">
+ <div id="admin_dashboard"className="animate-fade-in bg-brand-neutral min-h-screen flex flex-col overflow-hidden">
  
  {/* CMS UPPER DASHBOARD PANEL HEADER */}
- <section className="bg-white border-b-2 border-neutral-950 px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 z-50 shrink-0">
+ <section className="bg-brand-neutral border-b-2 border-brand-ink px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 z-50 shrink-0">
  <div className="flex items-center gap-6">
  <div className="space-y-1">
- <span className="font-mono text-[9px] font-black text-[#da5f8e] tracking-[0.3em] uppercase block">
+ <span className="font-mono text-[9px] font-black text-brand-pink tracking-[0.3em] uppercase block">
  REGISTRY ACTIVE
  </span>
- <h1 className="font-thai text-3xl font-bold tracking-tight text-neutral-950 leading-none">
+ <h1 className="font-thai text-3xl font-bold tracking-tight text-brand-ink leading-none">
  ADMIN CMS
  </h1>
  </div>
@@ -2080,8 +2279,8 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  }}
  className={`px-4 py-2 font-mono text-[10px] font-black tracking-widest uppercase transition-all ${
  activeView === tab.id
- ?"bg-black text-white"
- :"text-stone-500 hover:text-black hover:bg-stone-100"
+ ?"bg-brand-ink text-brand-neutral"
+ :"text-stone-500 hover:text-brand-ink hover:bg-brand-stone"
  }`}
  >
  {tab.label}
@@ -2093,13 +2292,13 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  <div className="flex items-center gap-3">
  <button
  onClick={refreshState}
- className="border-2 border-neutral-950 hover:bg-neutral-50 px-3 py-1.5 text-[10px] font-mono font-black text-neutral-950 uppercase flex items-center gap-2 bg-white transition-colors cursor-pointer"
+ className="border-2 border-brand-ink hover:bg-neutral-50 px-3 py-1.5 text-[10px] font-mono font-black text-brand-ink uppercase flex items-center gap-2 bg-brand-neutral transition-colors cursor-pointer"
  >
  <RefreshCw size={12} /> SYNC
  </button>
  <button
  onClick={handleLogout}
- className="border-2 border-neutral-950 text-white bg-neutral-950 hover:bg-neutral-800 px-3 py-1.5 text-[10px] font-mono font-black uppercase flex items-center gap-2 transition-colors cursor-pointer"
+ className="border-2 border-brand-ink text-brand-neutral bg-brand-ink hover:bg-neutral-800 px-3 py-1.5 text-[10px] font-mono font-black uppercase flex items-center gap-2 transition-colors cursor-pointer"
  >
  <LogOut size={12} /> EXIT
  </button>
@@ -2119,7 +2318,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  </div>
  )}
  {isMutating && (
- <div className="bg-black text-white border-2 border-black px-4 py-3 text-[10px] flex items-center gap-2 animate-pulse uppercase font-black tracking-wider">
+ <div className="bg-brand-ink text-brand-neutral border-2 border-brand-ink px-4 py-3 text-[10px] flex items-center gap-2 animate-pulse uppercase font-black tracking-wider">
  <RefreshCw size={14} className="animate-spin"/> <span>SYNCING...</span>
  </div>
  )}
@@ -2129,14 +2328,14 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  <div className="flex-grow flex overflow-hidden">
  
  {/* FULL EDITOR PANEL (LEFT) */}
- <div className="w-full md:w-[45%] lg:w-[40%] bg-white border-r-2 border-neutral-950 overflow-y-auto custom-scrollbar flex-shrink-0 flex flex-col">
+ <div className="w-full md:w-[45%] lg:w-[40%] bg-brand-neutral border-r-2 border-brand-ink overflow-y-auto custom-scrollbar flex-shrink-0 flex flex-col">
  <div className="p-4 md:p-6 lg:p-8 flex-grow">
  {renderForms()}
  </div>
  </div>
 
  {/* LIVE PREVIEW CANVAS (RIGHT) */}
- <div className="hidden md:block w-full md:w-[55%] lg:w-[60%] bg-stone-100 overflow-y-auto relative custom-scrollbar flex-shrink-0">
+ <div className="hidden md:block w-full md:w-[55%] lg:w-[60%] bg-brand-stone overflow-y-auto relative custom-scrollbar flex-shrink-0">
  <div className="sticky top-0 z-50 bg-stone-200/90 backdrop-blur-sm border-b border-stone-300 p-2 text-center text-[10px] font-mono font-bold text-stone-600 tracking-widest flex items-center justify-center gap-2 uppercase">
  <Eye size={12} className="text-blue-500"/> LIVE PREVIEW FEEDBACK
  </div>
@@ -2144,6 +2343,28 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  {/* 
  Note on pointer-events-none: 
  We disable clicks inside the preview on the right panel so it acts purely as a visual reflection 
+ of the form data on the left, preventing accidental navigation away from the CMS context. 
+ */}
+ {renderPreview()}
+ </div>
+ </div>
+
+ </div>
+ </div>
+ );
+}
+icks inside the preview on the right panel so it acts purely as a visual reflection 
+ of the form data on the left, preventing accidental navigation away from the CMS context. 
+ */}
+ {renderPreview()}
+ </div>
+ </div>
+
+ </div>
+ </div>
+ );
+}
+the right panel so it acts purely as a visual reflection 
  of the form data on the left, preventing accidental navigation away from the CMS context. 
  */}
  {renderPreview()}

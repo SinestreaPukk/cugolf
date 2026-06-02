@@ -142,6 +142,7 @@ function AppContent() {
                 news={dbState.news || []}
                 scores={dbState.scores || []}
                 roster={dbState.roster || []}
+                gallery={dbState.gallery || []}
                 welcomeSection={dbState.welcomeSection}
                 upcomingActivity={dbState.upcomingActivity}
                 homeSponsorSection={dbState.homeSponsorSection}
@@ -175,6 +176,7 @@ function AppContent() {
                 news={dbState.news || []}
                 scores={dbState.scores || []}
                 roster={dbState.roster || []}
+                gallery={dbState.gallery || []}
                 welcomeSection={dbState.welcomeSection}
                 upcomingActivity={dbState.upcomingActivity}
                 homeSponsorSection={dbState.homeSponsorSection}

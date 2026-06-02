@@ -10,20 +10,20 @@ interface FooterProps {
 
 export default function Footer({ siteSettings, siteLabels }: FooterProps) {
  return (
- <footer className="border-t border-[#121212] bg-white text-stone-900 mt-24">
+ <footer className="border-t border-brand-ink bg-brand-neutral text-stone-900 mt-24">
  {/* Prime Editorial Banner */}
- <div className="grid grid-cols-1 border-b border-[#121212] md:grid-cols-2">
+ <div className="grid grid-cols-1 border-b border-brand-ink md:grid-cols-2">
  {(siteSettings?.showFooterMission ?? true) && (
- <div className="border-b border-[#121212] p-8 md:border-b-0 md:border-r md:border-[#121212] md:p-12 bg-white">
- <h4 className="font-display text-sm font-bold tracking-widest text-neutral-950 mb-4 uppercase">{siteLabels?.footerMissionTitle ||"OUR MISSION"}</h4>
+ <div className="border-b border-brand-ink p-8 md:border-b-0 md:border-r md:border-brand-ink md:p-12 bg-brand-neutral">
+ <h4 className="font-display text-sm font-bold tracking-widest text-brand-ink mb-4 uppercase">{siteLabels?.footerMissionTitle ||"OUR MISSION"}</h4>
  <p className="font-sans text-xs leading-relaxed text-stone-600">
  {siteLabels?.footerMissionDescription ||"Through rigorous practice, biomechanical assessment, and sporting integrity, the Chulalongkorn University Golf Club promotes elite varsity performance while instilling collegiate camaraderie and academic excellence."}
  </p>
  </div>
  )}
  {(siteSettings?.showFooterLegacy ?? true) && (
- <div className="border-b border-[#121212] p-8 md:border-b-0 md:p-12">
- <h4 className="font-display text-sm font-bold tracking-widest text-neutral-950 mb-4 uppercase">{siteLabels?.footerLegacyTitle ||"THE PINK BLAZER"}</h4>
+ <div className="border-b border-brand-ink p-8 md:border-b-0 md:p-12">
+ <h4 className="font-display text-sm font-bold tracking-widest text-brand-ink mb-4 uppercase">{siteLabels?.footerLegacyTitle ||"THE PINK BLAZER"}</h4>
  <p className="font-sans text-xs leading-relaxed text-stone-600">
  {siteLabels?.footerLegacyDescription ||"Since the early chapters of Thailand university golf sports, wearing Chulalongkorn's pale-pink athletic blazer represents high sporting distinction, absolute integrity, and competitive peak performance."}
  </p>
@@ -45,22 +45,22 @@ export default function Footer({ siteSettings, siteLabels }: FooterProps) {
  <h5 className="font-mono text-[10px] font-bold tracking-widest text-stone-400 uppercase mb-4">{siteLabels?.footerDirectoryTitle ||"DIRECTORY"}</h5>
  <ul className="flex flex-col gap-2.5 font-sans text-xs font-bold uppercase">
  <li>
- <Link to="/"className="text-stone-700 hover:text-neutral-950 hover:underline transition-all cursor-pointer">
+ <Link to="/"className="text-stone-700 hover:text-brand-ink hover:underline transition-all cursor-pointer">
  {siteLabels?.footerDirectoryNewsRoom ||"HOME"}
  </Link>
  </li>
  <li>
- <Link to="/activities"className="text-stone-700 hover:text-neutral-950 hover:underline transition-all cursor-pointer">
+ <Link to="/activities"className="text-stone-700 hover:text-brand-ink hover:underline transition-all cursor-pointer">
  ACTIVITIES
  </Link>
  </li>
  <li>
- <Link to="/roster"className="text-stone-700 hover:text-neutral-950 hover:underline transition-all cursor-pointer">
+ <Link to="/roster"className="text-stone-700 hover:text-brand-ink hover:underline transition-all cursor-pointer">
  {siteLabels?.footerDirectoryRoster ||"VARSITY ROSTER"}
  </Link>
  </li>
  <li>
- <Link to="/scores"className="text-stone-700 hover:text-neutral-950 hover:underline transition-all cursor-pointer">
+ <Link to="/scores"className="text-stone-700 hover:text-brand-ink hover:underline transition-all cursor-pointer">
  {siteLabels?.footerDirectoryScores ||"MATCH STATS"}
  </Link>
  </li>
@@ -92,13 +92,13 @@ export default function Footer({ siteSettings, siteLabels }: FooterProps) {
  <ul className="flex flex-col gap-2 text-xs text-stone-600 font-semibold">
  <li className="flex items-center gap-1 uppercase">
  <Globe size={13} className="text-stone-400"/>
- <a href="https://www.chula.ac.th"target="_blank"rel="noopener noreferrer"className="hover:underline hover:text-neutral-950 flex items-center gap-0.5 font-bold">
+ <a href="https://www.chula.ac.th"target="_blank"rel="noopener noreferrer"className="hover:underline hover:text-brand-ink flex items-center gap-0.5 font-bold">
  {siteLabels?.footerAffiliationsChulaMain ||"CHULA MAIN"} <ExternalLink size={10} />
  </a>
  </li>
  <li className="flex items-center gap-1 uppercase">
  <Globe size={13} className="text-stone-400"/>
- <a href="https://www.cusports.chula.ac.th"target="_blank"rel="noopener noreferrer"className="hover:underline hover:text-neutral-950 flex items-center gap-0.5 font-bold">
+ <a href="https://www.cusports.chula.ac.th"target="_blank"rel="noopener noreferrer"className="hover:underline hover:text-brand-ink flex items-center gap-0.5 font-bold">
  {siteLabels?.footerAffiliationsSportsOffice ||"CU SPORTS OFFICE"} <ExternalLink size={10} />
  </a>
  </li>
@@ -113,12 +113,12 @@ export default function Footer({ siteSettings, siteLabels }: FooterProps) {
 
  </div>
 
- <div className="border-t border-[#121212] mt-12 pt-6 flex flex-col items-center justify-between gap-4 md:flex-row">
+ <div className="border-t border-brand-ink mt-12 pt-6 flex flex-col items-center justify-between gap-4 md:flex-row">
  <p className="font-mono text-[9px] text-stone-400 font-bold uppercase">
  {(siteLabels?.footerRightsReserved ||"© {year} CHULALONGKORN UNIVERSITY GOLF CLUB. ALL RIGHTS RESERVED.").replace("{year}", new Date().getFullYear().toString())}
  </p>
  <div className="flex items-center gap-6 font-mono text-[9px] text-stone-400 font-bold uppercase">
- <Link to="/admin"className="hover:underline hover:text-neutral-950 font-bold cursor-pointer">
+ <Link to="/admin"className="hover:underline hover:text-brand-ink font-bold cursor-pointer">
  {siteLabels?.footerCmsLogin ||"CMS LOG-IN"}
  </Link>
  <span>•</span>

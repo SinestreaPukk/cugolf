@@ -73,7 +73,20 @@ export default function HomeView({ news, scores, roster, gallery, welcomeSection
 
  {/* 3. UPCOMING ACTIVITY SECTION */}
  {upcomingActivity?.showSection && (
-   <section className="mx-auto max-w-7xl animate-fade-in shadow-[8px_8px_0px_rgba(18,18,18,0.1)]">
+   <section 
+     className={`mx-auto max-w-7xl animate-fade-in shadow-[8px_8px_0px_rgba(18,18,18,0.1)] relative ${isAdmin ? 'transition-all duration-200 cursor-pointer' : ''} ${isAdmin && activeSectionId === 'home_upcoming' ? 'ring-4 ring-[#da5f8e] bg-brand-pink/5 z-40' : isAdmin ? 'hover:ring-4 hover:ring-[#da5f8e]/50 hover:bg-brand-pink/5' : ''}`}
+     onClick={(e) => {
+       if (isAdmin && onEditSection) {
+         e.stopPropagation();
+         onEditSection("home_upcoming");
+       }
+     }}
+   >
+     {isAdmin && (
+       <div className={`absolute top-4 right-4 z-50 bg-brand-pink text-brand-neutral px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${activeSectionId === 'home_upcoming' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+         <Edit size={12} /> EDIT UPCOMING ACTIVITY
+       </div>
+     )}
      <div className="flex flex-col md:flex-row bg-brand-neutral border border-brand-ink overflow-hidden">
        {/* Image Side */}
        <div className="md:w-1/2 h-64 md:h-auto relative overflow-hidden bg-brand-stone border-b md:border-b-0 md:border-r border-brand-ink">

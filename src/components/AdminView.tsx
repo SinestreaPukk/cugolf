@@ -194,7 +194,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
 
  // Visual CMS State
  const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
- const [activeView, setActiveView] = useState<"home"|"blog"|"club"|"roster"|"staff"|"scores"|"sponsors"|"settings">("home");
+ const [activeView, setActiveView] = useState<"home"|"blog"|"club"|"roster"|"staff"|"scores"|"sponsors"|"settings"|"gallery"|"upcoming">("home");
 
  // Read ?edit query param to auto-open sidebar
  React.useEffect(() => {
@@ -203,9 +203,11 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  if (editId) {
  setActiveSectionId(editId);
  // Derive activeView from editId prefix if needed
- if (editId.startsWith("home_")) setActiveView("home");
+ if (editId === "home_gallery") setActiveView("gallery");
+ else if (editId === "home_upcoming") setActiveView("upcoming");
+ else if (editId.startsWith("home_")) setActiveView("home");
  else if (editId.startsWith("ca_")) setActiveView("club");
- else if (editId ==="news_list"|| editId ==="news_edit") setActiveView("club"); // Or wherever blog lives in CMS nav
+ else if (editId ==="news_list"|| editId ==="news_edit") setActiveView("blog"); 
  else if (editId ==="roster_list"|| editId ==="roster_edit") setActiveView("roster");
  else if (editId ==="staff_list"|| editId ==="staff_edit") setActiveView("staff");
  else if (editId ==="scores_list"|| editId ==="scores_edit") setActiveView("scores");
@@ -2265,7 +2267,9 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  {[
  { id:"home", label:"HOMEPAGE"},
  { id:"blog", label:"ACTIVITIES & BLOG"},
- { id:"club", label:"CLUB INFO"},
+ { id:"club", label:"CLUB ACTIVITIES"},
+ { id:"upcoming", label:"UPCOMING"},
+ { id:"gallery", label:"GALLERY"},
  { id:"roster", label:"ROSTER"},
  { id:"staff", label:"STAFF"},
  { id:"scores", label:"SCORES"},

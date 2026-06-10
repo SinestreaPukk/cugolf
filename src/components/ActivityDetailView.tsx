@@ -36,13 +36,10 @@ export default function ActivityDetailView({ news, siteLabels }: ActivityDetailV
  <header className="space-y-8 mb-12">
  <div className="space-y-4">
  <div className="flex items-center gap-3">
- <span className="bg-brand-ink text-brand-neutral font-mono text-[9px] font-black px-2.5 py-1 tracking-widest uppercase">
- {siteLabels?.homeModalOfficialBadge ||"OFFICIAL EDITORIAL"}
- </span>
- <div className="flex items-center gap-1.5 font-mono text-[10px] text-stone-400 font-bold uppercase tracking-widest">
- <Calendar size={12} />
- <span>{article.publishDate}</span>
- </div>
+   <div className="flex items-center gap-1.5 font-mono text-[10px] text-stone-400 font-bold uppercase tracking-widest">
+     <Calendar size={12} />
+     <span>{article.publishDate}</span>
+   </div>
  </div>
  
  <h1 className="font-display text-4xl md:text-6xl font-black tracking-tight text-brand-ink uppercase leading-[0.9] md:leading-[0.85]">

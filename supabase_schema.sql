@@ -16,6 +16,7 @@ CREATE TABLE news (
   "publishDate" DATE,
   "imageUrl" TEXT,
   rank INTEGER DEFAULT 0,
+  "isVisible" BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -28,6 +29,7 @@ CREATE TABLE roster (
   faculty TEXT,
   "imageUrl" TEXT,
   "isFeatured" BOOLEAN DEFAULT FALSE,
+  "isVisible" BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -39,6 +41,7 @@ CREATE TABLE staff (
   year TEXT,
   "imageUrl" TEXT,
   "order" INTEGER,
+  "isVisible" BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -50,6 +53,7 @@ CREATE TABLE scores (
   result TEXT,
   "playersCount" INTEGER DEFAULT 0,
   "scoresList" JSONB DEFAULT '[]'::jsonb,
+  "isVisible" BOOLEAN DEFAULT TRUE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

@@ -35,12 +35,9 @@ export default function SponsorsView({ sponsors, siteLabels, isAdmin, onEditSect
  <section className="mx-auto max-w-7xl pt-6 text-center md:text-left space-y-4">
  <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-[#121212] pb-4 gap-4">
  <div className="space-y-2">
- <span className="inline-block bg-neutral-900 text-stone-100 font-mono text-[8.5px] px-2.5 py-1 tracking-widest uppercase font-bold">
- &nbsp;
- </span>
- <h1 className="font-display text-3xl font-extrabold tracking-tight text-neutral-950 uppercase leading-none">
- {siteLabels?.sponsorsTitle ||"OUR SPONSORS & PARTNERS"}
- </h1>
+   <h1 className="font-display text-3xl font-extrabold tracking-tight text-neutral-950 uppercase leading-none">
+     {siteLabels?.sponsorsTitle || "OUR SPONSORS & PARTNERS"}
+   </h1>
  </div>
  <span className="font-mono text-[9.5px] font-bold text-stone-400 tracking-wider uppercase">
  &nbsp;

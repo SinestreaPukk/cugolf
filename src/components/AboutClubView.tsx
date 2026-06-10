@@ -111,12 +111,9 @@ export default function AboutClubView({ clubActivity, scores, siteLabels, isAdmi
  
  <div className="md:col-span-8 space-y-8">
  <div className="space-y-2">
- <span className="font-mono text-[10px] font-black text-brand-pink tracking-widest uppercase">
- {new Date().getFullYear()} SEASON MANDATE
- </span>
- <h2 className="font-display text-4xl md:text-5xl font-black text-brand-ink uppercase leading-none">
- CAPTAIN'S <br /> PHILOSOPHY
- </h2>
+   <h2 className="font-display text-4xl md:text-5xl font-black text-brand-ink uppercase leading-none">
+     CAPTAIN'S <br /> PHILOSOPHY
+   </h2>
  </div>
  
  <div className="prose prose-stone prose-lg italic font-serif text-stone-700 leading-relaxed whitespace-pre-line">

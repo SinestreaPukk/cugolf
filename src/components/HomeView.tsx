@@ -95,9 +95,6 @@ export default function HomeView({ news, scores, roster, gallery, welcomeSection
            alt="Upcoming Activity"
            className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
          />
-         <div className="absolute top-4 left-4 bg-brand-ink text-brand-neutral font-mono text-[9px] font-bold px-3 py-1.5 uppercase tracking-widest">
-           Next Event
-         </div>
        </div>
 
        {/* Content Side */}

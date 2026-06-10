@@ -43,12 +43,9 @@ export default function BlogView({ news, siteLabels, siteSettings, isAdmin, onEd
  <section className="mx-auto max-w-7xl pt-10 text-center md:text-left">
  <div className="flex flex-col md:flex-row md:items-end justify-between border-b-2 border-neutral-950 pb-6 gap-6">
  <div className="space-y-2">
- <span className="inline-block bg-[#da5f8e] text-white font-mono text-[10px] px-3 py-1 tracking-[0.3em] uppercase font-black">
- {siteLabels?.homeBlogSubtitle ||"C.U.G.C. LATEST LOGS"}
- </span>
- <h1 className="font-display text-5xl md:text-6xl font-bold tracking-tight text-neutral-950 leading-none uppercase">
- {siteLabels?.homeBlogTitle ||"ACTIVITIES BLOG & STORIES"}
- </h1>
+   <h1 className="font-display text-5xl md:text-6xl font-bold tracking-tight text-neutral-950 leading-none uppercase">
+     {siteLabels?.homeBlogTitle || "ACTIVITIES BLOG & STORIES"}
+   </h1>
  </div>
  <span className="font-mono text-[10px] font-black text-neutral-400 tracking-[0.2em] uppercase">
  &nbsp;
@@ -69,16 +66,11 @@ export default function BlogView({ news, siteLabels, siteSettings, isAdmin, onEd
  {/* Image Showcase */}
  <div className="relative aspect-[16/9] border-b border-neutral-100 overflow-hidden bg-stone-50">
  <img
- src={blog.imageUrl}
- alt={blog.title}
- referrerPolicy="no-referrer"
- className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+   src={blog.imageUrl}
+   alt={blog.title}
+   referrerPolicy="no-referrer"
+   className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
  />
- <div className="absolute top-4 left-4">
- <span className="bg-neutral-900 text-stone-100 font-mono text-[9px] font-bold px-2.5 py-1 tracking-widest uppercase">
- {blog.rank && blog.rank > 0 ?"FEATURED":"ACTIVITY"}
- </span>
- </div>
  </div>
 
  {/* Info parameters */}

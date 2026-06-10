@@ -13,6 +13,8 @@ Migrating from local `data/db.json` and local file uploads to a managed Supabase
    - `content` (text)
    - `publishDate` (date)
    - `imageUrl` (text)
+   - `rank` (integer)
+   - `isVisible` (boolean)
    - `created_at` (timestamp)
 
 2. **roster**
@@ -23,6 +25,7 @@ Migrating from local `data/db.json` and local file uploads to a managed Supabase
    - `faculty` (text)
    - `imageUrl` (text)
    - `isFeatured` (boolean)
+   - `isVisible` (boolean)
    - `created_at` (timestamp)
 
 3. **staff**
@@ -32,6 +35,7 @@ Migrating from local `data/db.json` and local file uploads to a managed Supabase
    - `year` (text)
    - `imageUrl` (text)
    - `order` (integer)
+   - `isVisible` (boolean)
    - `created_at` (timestamp)
 
 4. **scores**
@@ -41,6 +45,7 @@ Migrating from local `data/db.json` and local file uploads to a managed Supabase
    - `result` (text)
    - `playersCount` (integer)
    - `scoresList` (jsonb)
+   - `isVisible` (boolean)
    - `created_at` (timestamp)
 
 5. **gallery**

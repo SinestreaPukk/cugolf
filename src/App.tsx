@@ -83,8 +83,26 @@ function AppContent() {
     );
   }
 
-  // Allow app to run if we have cached or initial state, otherwise we can optionally render nothing briefly
-  if (!dbState && loading) return null; // Avoids flashing the loading screen, just stays blank briefly until data loads
+  // Allow app to run if we have cached or initial state, otherwise show a "waking up" screen for Render sleep mitigation
+  if (!dbState && loading) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-brand-neutral p-6 text-brand-ink font-sans text-center">
+        <div className="space-y-6 max-w-xs animate-fade-in">
+          <div className="relative h-0.5 w-48 bg-brand-ink/10 mx-auto overflow-hidden">
+            <div className="absolute inset-y-0 left-0 bg-brand-pink animate-loading-bar w-1/4"></div>
+          </div>
+          <div className="space-y-3">
+            <h2 className="font-display text-xs font-bold uppercase tracking-[0.2em]">Waking Up Squad Registry</h2>
+            <p className="text-[9px] font-mono uppercase text-brand-ink/40 tracking-tight leading-relaxed">
+              Establishing secure datalink connection to archive...<br/>
+              Free-tier instances may require ~30s to initialize.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!dbState) return null;
 
   return (

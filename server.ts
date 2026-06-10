@@ -602,6 +602,18 @@ async function startServer() {
 
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running at http://localhost:${PORT}`);
+    
+    // Optional self-pinging to keep Render instance awake
+    const RENDER_EXTERNAL_URL = process.env.RENDER_EXTERNAL_URL;
+    if (RENDER_EXTERNAL_URL) {
+      console.log(`Self-pinging enabled for: ${RENDER_EXTERNAL_URL}`);
+      setInterval(() => {
+        fetch(`${RENDER_EXTERNAL_URL}/api/health`)
+          .then(res => res.json())
+          .then(data => console.log('Self-ping success:', data.timestamp))
+          .catch(err => console.error('Self-ping failed:', err.message));
+      }, 14 * 60 * 1000); // Ping every 14 minutes
+    }
   });
 }
 

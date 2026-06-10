@@ -67,10 +67,19 @@ body {
   100% { transform: translate3d(-50%, 0, 0); }
 }
 
+@keyframes loadingBar {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
+
 .animate-marquee {
   display: inline-flex;
   gap: 2rem;
   animation: marquee 25s linear infinite;
+}
+
+.animate-loading-bar {
+  animation: loadingBar 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 

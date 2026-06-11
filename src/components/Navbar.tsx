@@ -1,4 +1,4 @@
-import { ArrowRight, Menu, X, Instagram, ChevronDown } from"lucide-react";
+import { ArrowRight, Menu, X, Instagram, Facebook, ChevronDown } from "lucide-react";
 import { useState, useRef, useEffect } from"react";
 import { Link, useLocation } from"react-router-dom";
 import Logo from"./Logo";
@@ -141,6 +141,15 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  {/* Action button - Admin portal trigger */}
  <div className="hidden items-center gap-4 md:flex">
  <a
+ href="https://www.facebook.com/cugolfclub/"
+ target="_blank"
+ rel="noopener noreferrer"
+ className="text-stone-400 hover:text-brand-ink transition-colors p-1"
+ title="Follow us on Facebook"
+ >
+ <Facebook size={18} />
+ </a>
+ <a
  href="https://www.instagram.com/cugolfclub/"
  target="_blank"
  rel="noopener noreferrer"
@@ -222,6 +231,16 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  <hr className="border-brand-ink"/>
 
  <div className="flex flex-col gap-3">
+ <a
+ href="https://www.facebook.com/cugolfclub/"
+ target="_blank"
+ rel="noopener noreferrer"
+ className="flex items-center gap-2.5 font-sans text-[11px] font-bold tracking-widest text-stone-500 uppercase py-2"
+ >
+ <Facebook size={14} />
+ <span>FOLLOW @CUGOLFCLUB (FB)</span>
+ </a>
+
  <a
  href="https://www.instagram.com/cugolfclub/"
  target="_blank"

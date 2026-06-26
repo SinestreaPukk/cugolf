@@ -1,8 +1,32 @@
 import { ArrowRight, Menu, X, Instagram, Facebook, ChevronDown } from "lucide-react";
-import { useState, useRef, useEffect } from"react";
-import { Link, useLocation } from"react-router-dom";
-import Logo from"./Logo";
-import { SiteLabels, SiteSettings } from"../types";
+import { useState, useRef, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import Logo from "./Logo";
+import { SiteLabels, SiteSettings } from "../types";
+import { useLanguage } from "../utils/LanguageContext";
+
+const ThaiFlag = ({ size = 24 }: { size?: number }) => (
+  <svg width={size} height={Math.round(size * 2/3)} viewBox="0 0 90 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="select-none pointer-events-none">
+    <rect width="90" height="10" fill="#A51931" />
+    <rect y="10" width="90" height="10" fill="#F4F5F8" />
+    <rect y="20" width="90" height="20" fill="#2D2A4A" />
+    <rect y="40" width="90" height="10" fill="#F4F5F8" />
+    <rect y="50" width="90" height="10" fill="#A51931" />
+  </svg>
+);
+
+const UKFlag = ({ size = 24 }: { size?: number }) => (
+  <svg width={size} height={Math.round(size * 2/3)} viewBox="0 0 60 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="select-none pointer-events-none">
+    <rect width="60" height="40" fill="#012169" />
+    <path d="M0,0 L60,40 M60,0 L0,40" stroke="#FFFFFF" strokeWidth="6" />
+    <path d="M0,0 L30,20" stroke="#C8102E" strokeWidth="2.5" />
+    <path d="M60,40 L30,20" stroke="#C8102E" strokeWidth="2.5" />
+    <path d="M60,0 L30,20" stroke="#C8102E" strokeWidth="2.5" />
+    <path d="M0,40 L30,20" stroke="#C8102E" strokeWidth="2.5" />
+    <path d="M30,0 v40 M0,20 h60" stroke="#FFFFFF" strokeWidth="10" />
+    <path d="M30,0 v40 M0,20 h60" stroke="#C8102E" strokeWidth="6" />
+  </svg>
+);
 
 const TikTokIcon = ({ size = 24, className =""}: { size?: number, className?: string }) => (
  <svg 
@@ -26,6 +50,7 @@ interface NavbarProps {
 }
 
 export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSettings }: NavbarProps) {
+ const { language, setLanguage } = useLanguage();
  const [isOpen, setIsOpen] = useState(false);
  const [isActivitiesOpen, setIsActivitiesOpen] = useState(false);
  const [isMobileActivitiesOpen, setIsMobileActivitiesOpen] = useState(false);
@@ -50,8 +75,8 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  path:"/activities", 
  show: true,
  dropdown: [
- { label:"BLOG", path:"/activities/blog"},
- { label:"CLUB ACTIVITIES", path:"/activities/club"},
+ { label: siteLabels?.navBlogSubBlog || "BLOG", path:"/activities/blog"},
+ { label: siteLabels?.navBlogSubClub || "CLUB ACTIVITIES", path:"/activities/club"},
  ]
  },
  { id:"roster", label: siteLabels?.navRoster ||"TEAM ROSTER", path:"/roster", show: siteSettings?.showNavbarRoster ?? true },
@@ -138,45 +163,67 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  </nav>
 
 
- {/* Action button - Admin portal trigger */}
- <div className="hidden items-center gap-4 md:flex">
- <a
- href="https://www.facebook.com/cugolfclub/"
- target="_blank"
- rel="noopener noreferrer"
- className="text-stone-400 hover:text-brand-ink transition-colors p-1"
- title="Follow us on Facebook"
- >
- <Facebook size={18} />
- </a>
- <a
- href="https://www.instagram.com/cugolfclub/"
- target="_blank"
- rel="noopener noreferrer"
- className="text-stone-400 hover:text-brand-ink transition-colors p-1"
- title="Follow us on Instagram"
- >
- <Instagram size={18} />
- </a>
- <a
- href="https://www.tiktok.com/@cugolfclub"
- target="_blank"
- rel="noopener noreferrer"
- className="text-stone-400 hover:text-brand-ink transition-colors p-1"
- title="Follow us on TikTok"
- >
- <TikTokIcon size={18} />
- </a>
- </div>
+  {/* Action button - Admin portal trigger */}
+  <div className="hidden items-center gap-6 md:flex">
+    <div className="flex items-center gap-4">
+      <a
+      href="https://www.facebook.com/cugolfclub/"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-stone-400 hover:text-brand-ink transition-colors p-1"
+      title="Follow us on Facebook"
+      >
+      <Facebook size={18} />
+      </a>
+      <a
+      href="https://www.instagram.com/cugolfclub/"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-stone-400 hover:text-brand-ink transition-colors p-1"
+      title="Follow us on Instagram"
+      >
+      <Instagram size={18} />
+      </a>
+      <a
+      href="https://www.tiktok.com/@cugolfclub"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-stone-400 hover:text-brand-ink transition-colors p-1"
+      title="Follow us on TikTok"
+      >
+      <TikTokIcon size={18} />
+      </a>
+    </div>
 
- {/* Mobile menu panel trigger */}
- <button
- onClick={() => setIsOpen(!isOpen)}
- className="p-1.5 text-neutral-800 md:hidden cursor-pointer"
- aria-label="Toggle menu"
- >
- {isOpen ? <X size={22} /> : <Menu size={22} />}
- </button>
+    {/* Desktop Language Switch Toggle */}
+    <button
+      onClick={() => setLanguage(language === "en" ? "th" : "en")}
+      className="transition-all duration-300 hover:opacity-85 hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center bg-transparent outline-none focus:outline-none select-none"
+      title={language === "en" ? "Translate to Thai" : "Translate to English"}
+    >
+      {language === "en" ? <ThaiFlag size={24} /> : <UKFlag size={24} />}
+    </button>
+  </div>
+
+  <div className="flex items-center gap-4 md:hidden">
+    {/* Mobile Language Switch Toggle */}
+    <button
+      onClick={() => setLanguage(language === "en" ? "th" : "en")}
+      className="transition-all duration-300 hover:opacity-85 hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center bg-transparent outline-none focus:outline-none select-none"
+      title={language === "en" ? "Translate to Thai" : "Translate to English"}
+    >
+      {language === "en" ? <ThaiFlag size={20} /> : <UKFlag size={20} />}
+    </button>
+
+    {/* Mobile menu panel trigger */}
+    <button
+    onClick={() => setIsOpen(!isOpen)}
+    className="p-1.5 text-neutral-800 cursor-pointer"
+    aria-label="Toggle menu"
+    >
+    {isOpen ? <X size={22} /> : <Menu size={22} />}
+    </button>
+  </div>
  </div>
 
  {/* Mobile Menu Panel */}
@@ -238,7 +285,7 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  className="flex items-center gap-2.5 font-sans text-[11px] font-bold tracking-widest text-stone-500 uppercase py-2"
  >
  <Facebook size={14} />
- <span>FOLLOW @CUGOLFCLUB (FB)</span>
+ <span>{siteLabels?.navFollowFb || "FOLLOW @CUGOLFCLUB (FB)"}</span>
  </a>
 
  <a
@@ -248,7 +295,7 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  className="flex items-center gap-2.5 font-sans text-[11px] font-bold tracking-widest text-stone-500 uppercase py-2"
  >
  <Instagram size={14} />
- <span>FOLLOW @CUGOLFCLUB (IG)</span>
+ <span>{siteLabels?.navFollowIg || "FOLLOW @CUGOLFCLUB (IG)"}</span>
  </a>
 
  <a
@@ -258,7 +305,7 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  className="flex items-center gap-2.5 font-sans text-[11px] font-bold tracking-widest text-stone-500 uppercase py-2"
  >
  <TikTokIcon size={14} />
- <span>FOLLOW @CUGOLFCLUB (TIKTOK)</span>
+ <span>{siteLabels?.navFollowTiktok || "FOLLOW @CUGOLFCLUB (TIKTOK)"}</span>
  </a>
  </div>
  </div>
@@ -267,5 +314,3 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  </header>
  );
 }
-
-

@@ -1,5 +1,6 @@
 import { Staff, SiteLabels, AdminEditProps } from"../types";
 import { Award, ShieldAlert, GraduationCap, Star, Edit } from"lucide-react";
+import { useLanguage } from "../utils/LanguageContext";
 
 interface StaffViewProps extends AdminEditProps {
  staff: Staff[];
@@ -7,6 +8,7 @@ interface StaffViewProps extends AdminEditProps {
 }
 
 export default function StaffView({ staff, siteLabels, isAdmin, onEditSection, activeSectionId }: StaffViewProps) {
+ const { language } = useLanguage();
  // Sort staff by order
  const sortedStaff = [...(staff || [])].filter(s => s.isVisible !== false).sort((a, b) => a.order - b.order);
 
@@ -65,16 +67,16 @@ export default function StaffView({ staff, siteLabels, isAdmin, onEditSection, a
 
  <div className="space-y-2">
  <span className="font-mono text-[9px] text-stone-400 font-bold uppercase tracking-wider block">
- {person.role}
+ {language === "th" && person.roleThai ? person.roleThai : person.role}
  </span>
  <h3 className="font-display text-base font-bold text-brand-ink uppercase leading-snug hover:underline">
- {person.name}
+ {language === "th" && person.nameThai ? person.nameThai : person.name}
  </h3>
  </div>
  </div>
 
  <div className="mt-8 pt-4 border-t border-brand-ink/10 flex justify-between items-center text-[10px] font-mono tracking-wider text-stone-450 uppercase font-bold">
- <span>{person.year}</span>
+ <span>{language === "th" && person.yearThai ? person.yearThai : person.year}</span>
  </div>
  </div>
  );

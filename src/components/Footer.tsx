@@ -2,6 +2,7 @@ import { Mail, Phone, MapPin, Globe, ExternalLink } from"lucide-react";
 import { Link } from"react-router-dom";
 import { SiteSettings, SiteLabels } from"../types";
 import Logo from"./Logo";
+import { useLanguage } from "../utils/LanguageContext";
 
 interface FooterProps {
  siteSettings?: SiteSettings;
@@ -9,6 +10,7 @@ interface FooterProps {
 }
 
 export default function Footer({ siteSettings, siteLabels }: FooterProps) {
+ const { language } = useLanguage();
  return (
  <footer className="border-t border-brand-ink bg-brand-neutral text-stone-900 mt-24">
  {/* Prime Editorial Banner */}
@@ -23,7 +25,7 @@ export default function Footer({ siteSettings, siteLabels }: FooterProps) {
  )}
  {(siteSettings?.showFooterLegacy ?? true) && (
  <div className="border-b border-brand-ink p-8 md:border-b-0 md:p-12">
- <h4 className="font-display text-sm font-bold tracking-widest text-brand-ink mb-4 uppercase">{siteLabels?.footerLegacyTitle ||"THE PINK BLAZER"}</h4>
+ <h4 className="font-display text-sm font-bold tracking-widest text-[#000000] mb-4 uppercase">{siteLabels?.footerLegacyTitle ||"THE PINK BLAZER"}</h4>
  <p className="font-sans text-xs leading-relaxed text-stone-600">
  {siteLabels?.footerLegacyDescription ||"Since the early chapters of Thailand university golf sports, wearing Chulalongkorn's pale-pink athletic blazer represents high sporting distinction, absolute integrity, and competitive peak performance."}
  </p>
@@ -51,7 +53,7 @@ export default function Footer({ siteSettings, siteLabels }: FooterProps) {
  </li>
  <li>
  <Link to="/activities"className="text-stone-700 hover:text-brand-ink hover:underline transition-all cursor-pointer">
- ACTIVITIES
+ {siteLabels?.navBlog || "ACTIVITIES"}
  </Link>
  </li>
  <li>
@@ -73,7 +75,7 @@ export default function Footer({ siteSettings, siteLabels }: FooterProps) {
  <div className="flex items-start gap-2">
  <MapPin size={14} className="text-stone-400 shrink-0 mt-0.5"/>
  <span className="normal-case text-stone-650">
- {siteSettings?.contactAddress ||"Chula Sports Complex, Phayathai Rd, Pathum Wan, Bangkok 10330, Thailand"}
+ {language === "th" && siteSettings?.contactAddressThai ? siteSettings.contactAddressThai : (siteSettings?.contactAddress || "Chula Sports Complex, Phayathai Rd, Pathum Wan, Bangkok 10330, Thailand")}
  </span>
  </div>
  <div className="flex items-center gap-2">
@@ -105,7 +107,7 @@ export default function Footer({ siteSettings, siteLabels }: FooterProps) {
  <li className="flex items-center gap-1 uppercase">
  <Globe size={13} className="text-stone-400"/>
  <span className="normal-case font-medium">
- {siteSettings?.academicAffiliation ||"Thailand University Golf Association (TUGA)"}
+ {language === "th" && siteSettings?.academicAffiliationThai ? siteSettings.academicAffiliationThai : (siteSettings?.academicAffiliation || "Thailand University Golf Association (TUGA)")}
  </span>
  </li>
  </ul>

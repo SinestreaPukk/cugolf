@@ -1,8 +1,11 @@
 export interface NewsItem {
   id: string;
   title: string;
+  titleThai?: string;
   excerpt: string;
+  excerptThai?: string;
   content: string;
+  contentThai?: string;
   publishDate: string;
   imageUrl: string;
   rank?: number;
@@ -12,9 +15,12 @@ export interface NewsItem {
 export interface Player {
   id: string;
   name: string;
+  nameThai?: string;
   handicap: number;
   year: string;
+  yearThai?: string;
   faculty: string;
+  facultyThai?: string;
   imageUrl: string;
   isFeatured?: boolean;
   isVisible?: boolean;
@@ -23,8 +29,11 @@ export interface Player {
 export interface Staff {
   id: string;
   name: string;
+  nameThai?: string;
   role: string;
+  roleThai?: string;
   year: string;
+  yearThai?: string;
   imageUrl: string;
   order: number;
   isVisible?: boolean;
@@ -32,15 +41,19 @@ export interface Staff {
 
 export interface PlayerScore {
   playerName: string;
+  playerNameThai?: string;
   score: number;
   position: string;
+  positionThai?: string;
 }
 
 export interface TournamentScore {
   id: string;
   tournamentName: string;
+  tournamentNameThai?: string;
   date: string;
   result: string;
+  resultThai?: string;
   playersCount: number;
   scoresList: PlayerScore[];
   isVisible?: boolean;
@@ -49,9 +62,11 @@ export interface TournamentScore {
 export interface GalleryImage {
   id: string;
   title: string;
+  titleThai?: string;
   imageUrl: string;
   date: string;
   category: string;
+  categoryThai?: string;
 }
 
 export interface AdminEditProps {
@@ -65,14 +80,19 @@ export interface WelcomeSection {
   titleThai: string;
   titleEnglish: string;
   legacyQuote: string;
+  legacyQuoteThai?: string;
   legacyQuoteAuthor: string;
+  legacyQuoteAuthorThai?: string;
   description: string;
+  descriptionThai?: string;
 }
 
 export interface Sponsor {
   id: string;
   name: string;
+  nameThai?: string;
   description: string;
+  descriptionThai?: string;
   websiteUrl: string;
   imageUrl: string;
   isActive: boolean;
@@ -80,10 +100,13 @@ export interface Sponsor {
 
 export interface SiteSettings {
   marqueeText: string;
+  marqueeTextThai?: string;
   contactPhone: string;
   contactEmail: string;
   contactAddress: string;
+  contactAddressThai?: string;
   academicAffiliation: string;
+  academicAffiliationThai?: string;
   // Visibility toggles
   showMarquee: boolean;
   showHomeBlog: boolean;
@@ -100,11 +123,16 @@ export interface SiteSettings {
 
 export interface HomeSponsorSection {
   title: string;
+  titleThai?: string;
   subtitle: string;
+  subtitleThai?: string;
   description: string;
+  descriptionThai?: string;
   marqueeText: string;
+  marqueeTextThai?: string;
   imageUrl: string;
   buttonText: string;
+  buttonTextThai?: string;
   buttonUrl: string;
   showSection: boolean;
 }
@@ -213,14 +241,37 @@ export interface SiteLabels {
   welcomeHeroTitle: string;
   welcomeHeroSubtitle: string;
   welcomeHeroSocial: string;
+  navBlogSubBlog?: string;
+  navBlogSubClub?: string;
+  navFollowFb?: string;
+  navFollowIg?: string;
+  navFollowTiktok?: string;
+  aboutClubHeroTitlePart1?: string;
+  aboutClubHeroTitlePart2?: string;
+  aboutClubHeroSubtitle?: string;
+  aboutClubNoActivitiesTitle?: string;
+  aboutClubNoActivitiesDesc?: string;
+  blogBackToBlog?: string;
+  blogPublishedBy?: string;
+  blogLocation?: string;
+  rosterYearAll?: string;
+  rosterYearFreshman?: string;
+  rosterYearSophomore?: string;
+  rosterYearJunior?: string;
+  rosterYearSenior?: string;
+  homeViewAllStoriesButton?: string;
 }
 
 export interface UpcomingActivity {
   title: string;
+  titleThai?: string;
   description: string;
+  descriptionThai?: string;
   imageUrl: string;
   date: string;
+  dateThai?: string;
   location: string;
+  locationThai?: string;
   registrationUrl: string;
   showSection: boolean;
 }
@@ -228,8 +279,11 @@ export interface UpcomingActivity {
 export interface Competition {
   id: string;
   title: string;
+  titleThai?: string;
   description: string;
+  descriptionThai?: string;
   difficulty: string;
+  difficultyThai?: string;
   imageUrl?: string;
   date?: string;
 }
@@ -237,18 +291,28 @@ export interface Competition {
 export interface ClubActivityContent {
   heroImageUrl: string;
   philosophyTitle: string;
+  philosophyTitleThai?: string;
   philosophyQuote: string;
+  philosophyQuoteThai?: string;
   philosophyDescription: string;
+  philosophyDescriptionThai?: string;
   technicalExcellenceDescription: string;
+  technicalExcellenceDescriptionThai?: string;
   captainName: string;
+  captainNameThai?: string;
   captainRole: string;
+  captainRoleThai?: string;
   captainImageUrl: string;
   captainPhilosophy: string;
+  captainPhilosophyThai?: string;
   competitions: Competition[];
   trainingDescription: string;
+  trainingDescriptionThai?: string;
   legacyDescription: string;
+  legacyDescriptionThai?: string;
   foundedYear: string;
   activeYears: string;
+  activeYearsThai?: string;
   // Visibility toggles
   showPhilosophy: boolean;
   showCaptainMandate: boolean;
@@ -270,4 +334,5 @@ export interface DatabaseState {
   sponsors: Sponsor[];
   siteSettings: SiteSettings;
   siteLabels: SiteLabels;
+  siteLabelsThai?: SiteLabels;
 }

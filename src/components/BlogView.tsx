@@ -1,6 +1,7 @@
 import { NewsItem, SiteLabels, SiteSettings, AdminEditProps } from"../types";
 import { ArrowRight, Calendar, Clock, BookOpen, ChevronRight, Edit } from"lucide-react";
 import { Link } from"react-router-dom";
+import { useLanguage } from "../utils/LanguageContext";
 
 interface BlogViewProps extends AdminEditProps {
  news: NewsItem[];
@@ -9,6 +10,7 @@ interface BlogViewProps extends AdminEditProps {
 }
 
 export default function BlogView({ news, siteLabels, siteSettings, isAdmin, onEditSection, activeSectionId }: BlogViewProps) {
+ const { language } = useLanguage();
  // Sort by rank (descending) and then by date (descending)
  const sortedNews = [...news].filter(n => n.isVisible !== false).sort((a, b) => {
  const rankA = a.rank || 0;
@@ -61,13 +63,13 @@ export default function BlogView({ news, siteLabels, siteSettings, isAdmin, onEd
  <Link
  key={blog.id}
  to={`/activities/${blog.id}`}
- className="group relative border border-[#121212] bg-white overflow-hidden transition-all duration-300 flex flex-col justify-between hover:"
+ className="group relative border border-[#121212] bg-white overflow-hidden transition-all duration-300 flex flex-col justify-between"
  >
  {/* Image Showcase */}
  <div className="relative aspect-[16/9] border-b border-neutral-100 overflow-hidden bg-stone-50">
  <img
    src={blog.imageUrl}
-   alt={blog.title}
+   alt={language === "th" && blog.titleThai ? blog.titleThai : blog.title}
    referrerPolicy="no-referrer"
    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
  />
@@ -81,10 +83,10 @@ export default function BlogView({ news, siteLabels, siteSettings, isAdmin, onEd
  <span>{blog.publishDate}</span>
  </div>
  <h3 className="font-display text-lg font-bold text-neutral-950 tracking-tight hover:underline transition-colors uppercase leading-tight line-clamp-2">
- {blog.title}
+ {language === "th" && blog.titleThai ? blog.titleThai : blog.title}
  </h3>
  <p className="font-sans text-xs text-stone-600 leading-relaxed line-clamp-3">
- {blog.excerpt}
+ {language === "th" && blog.excerptThai ? blog.excerptThai : blog.excerpt}
  </p>
  </div>
 
@@ -92,7 +94,7 @@ export default function BlogView({ news, siteLabels, siteSettings, isAdmin, onEd
  <span
  className="group inline-flex items-center gap-2 font-mono text-[10px] font-bold tracking-widest text-[#da5f8e] uppercase cursor-pointer hover:underline"
  >
- READ STORY <ChevronRight size={14} className="transition-transform group-hover:translate-x-1"/>
+ {siteLabels?.homeReadStoryButton || "READ STORY"} <ChevronRight size={14} className="transition-transform group-hover:translate-x-1"/>
  </span>
  </div>
  </div>
@@ -113,4 +115,3 @@ export default function BlogView({ news, siteLabels, siteSettings, isAdmin, onEd
  </div>
  );
 }
-

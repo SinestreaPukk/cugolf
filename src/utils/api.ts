@@ -213,6 +213,16 @@ export async function updateSiteLabels(item: Partial<SiteLabels>): Promise<{ suc
   return res.json();
 }
 
+export async function updateSiteLabelsThai(item: Partial<SiteLabels>): Promise<{ success: boolean; siteLabelsThai: SiteLabels }> {
+  const res = await fetch("/api/site-labels-thai", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(item)
+  });
+  if (!res.ok) throw new Error("Failed to update Thai site labels");
+  return res.json();
+}
+
 export async function updateHomeSponsorSection(item: HomeSponsorSection): Promise<{ success: boolean }> {
   const res = await fetch("/api/home-sponsor-section", {
     method: "PUT",

@@ -3,6 +3,7 @@ import { WelcomeSection, SiteLabels, AdminEditProps } from"../types";
 import golfersSilhouette from"../assets/images/golfers_silhouette.png";
 import defaultBanner from"../assets/images/regenerated_image_1779791459213.jpg";
 import { Edit } from"lucide-react";
+import { useLanguage } from "../utils/LanguageContext";
 
 interface WelcomeSectionViewProps extends AdminEditProps {
  welcomeSection: WelcomeSection;
@@ -11,6 +12,7 @@ interface WelcomeSectionViewProps extends AdminEditProps {
 
 export default function WelcomeSectionView({ welcomeSection, siteLabels, isAdmin, onEditSection, activeSectionId }: WelcomeSectionViewProps) {
  const navigate = useNavigate();
+ const { language } = useLanguage();
  if (!welcomeSection) return null;
 
  const isActive = activeSectionId ==="home_welcome";
@@ -50,9 +52,9 @@ export default function WelcomeSectionView({ welcomeSection, siteLabels, isAdmin
  <div className="absolute inset-0 flex items-end">
  <div className="mx-auto max-w-7xl px-4 md:px-6 w-full pb-8 text-brand-neutral space-y-2 z-10 drop-shadow-none">
  <p className="font-sans text-5xl sm:text-6xl md:text-7xl font-black leading-[0.9] uppercase tracking-tighter border-0 border-[#000000]">
- {siteLabels?.welcomeHeroTitle ||"Longstanding"}
+ {siteLabels?.welcomeHeroTitle || "Longstanding"}
  <br />
- <span className="text-brand-pink text-[78px] italic font-['Georgia',serif] font-black">{siteLabels?.welcomeHeroSubtitle ||"Legacy"}</span>
+ <span className="text-brand-pink text-[78px] italic font-['Georgia',serif] font-black">{siteLabels?.welcomeHeroSubtitle || "Legacy"}</span>
  </p>
  <p className="text-[9px] md:text-[10px] text-stone-200 font-['Verdana',sans-serif] tracking-[0.25em] font-bold pt-0">
  {siteLabels?.welcomeHeroSocial ||"cugolfclub @Student Government of Chulalongkorn University"}
@@ -79,7 +81,7 @@ export default function WelcomeSectionView({ welcomeSection, siteLabels, isAdmin
 
  {/* Secondary explanation of Chula golf legacy */}
  <p className="font-sans text-[12px] md:text-[13px] font-medium text-stone-600 leading-relaxed text-justify whitespace-pre-line">
- {welcomeSection.description || `With a legacy of excellence on campus, the Chulalongkorn University Golf Club is actively expanding.\n\nWe are actively looking for new members to help shape the future of the club. Join us on the course to build lasting memories, enjoy your time at Chula University`}
+ {language === "th" && welcomeSection.descriptionThai ? welcomeSection.descriptionThai : (welcomeSection.description || `With a legacy of excellence on campus, the Chulalongkorn University Golf Club is actively expanding.\n\nWe are actively looking for new members to help shape the future of the club. Join us on the course to build lasting memories, enjoy your time at Chula University`)}
  </p>
  </div>
 

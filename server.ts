@@ -300,7 +300,26 @@ app.get("/api/db", async (req, res) => {
         footerAffiliationsSportsOffice: "CU SPORTS OFFICE",
         welcomeHeroTitle: "Longstanding",
         welcomeHeroSubtitle: "Legacy",
-        welcomeHeroSocial: "cugolfclub @Student Government of Chulalongkorn University"
+        welcomeHeroSocial: "cugolfclub @Student Government of Chulalongkorn University",
+        navBlogSubBlog: "BLOG",
+        navBlogSubClub: "CLUB ACTIVITIES",
+        navFollowFb: "FOLLOW @CUGOLFCLUB (FB)",
+        navFollowIg: "FOLLOW @CUGOLFCLUB (IG)",
+        navFollowTiktok: "FOLLOW @CUGOLFCLUB (TIKTOK)",
+        aboutClubHeroTitlePart1: "UPCOMING",
+        aboutClubHeroTitlePart2: "ACTIVITIES",
+        aboutClubHeroSubtitle: "SCHEDULE & TOUR DATES FOR THE CHULALONGKORN SQUAD",
+        aboutClubNoActivitiesTitle: "No upcoming activities scheduled",
+        aboutClubNoActivitiesDesc: "Check back later for newly added tournaments and club matches.",
+        blogBackToBlog: "BACK TO BLOG",
+        blogPublishedBy: "PUBLISHED BY",
+        blogLocation: "LOCATION",
+        rosterYearAll: "ALL",
+        rosterYearFreshman: "FRESHMAN",
+        rosterYearSophomore: "SOPHOMORE",
+        rosterYearJunior: "JUNIOR",
+        rosterYearSenior: "SENIOR",
+        homeViewAllStoriesButton: "VIEW ALL STORIES"
       };
     }
 
@@ -556,6 +575,16 @@ app.put("/api/site-settings", async (req, res) => {
 app.put("/api/site-labels", async (req, res) => {
   const { error } = await supabase.from("site_config").upsert({
     key: "site_labels",
+    data: req.body
+  });
+  if (error) return res.status(500).json({ success: false, message: error.message });
+  res.json({ success: true });
+});
+
+// SITE LABELS THAI UPDATE
+app.put("/api/site-labels-thai", async (req, res) => {
+  const { error } = await supabase.from("site_config").upsert({
+    key: "site_labels_thai",
     data: req.body
   });
   if (error) return res.status(500).json({ success: false, message: error.message });

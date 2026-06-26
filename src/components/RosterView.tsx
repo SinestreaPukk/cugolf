@@ -1,6 +1,7 @@
 import { Player, SiteLabels, AdminEditProps } from"../types";
 import { useState } from"react";
 import { User, Search, Filter, ShieldCheck, ChevronRight, Edit } from"lucide-react";
+import { useLanguage } from "../utils/LanguageContext";
 
 interface RosterViewProps extends AdminEditProps {
  roster: Player[];
@@ -8,6 +9,7 @@ interface RosterViewProps extends AdminEditProps {
 }
 
 export default function RosterView({ roster, siteLabels, isAdmin, onEditSection, activeSectionId }: RosterViewProps) {
+ const { language } = useLanguage();
  const [searchQuery, setSearchQuery] = useState("");
  const [selectedYear, setSelectedYear] = useState("All");
 
@@ -15,9 +17,11 @@ export default function RosterView({ roster, siteLabels, isAdmin, onEditSection,
 
  const filteredPlayers = (roster || []).filter((player) => {
  if (player.isVisible === false) return false;
- const matchesSearch = player.name.toLowerCase().includes(searchQuery.toLowerCase());
+ const nameToMatch = (language === "th" && player.nameThai ? player.nameThai : player.name).toLowerCase();
+ const matchesSearch = nameToMatch.includes(searchQuery.toLowerCase()) || player.name.toLowerCase().includes(searchQuery.toLowerCase());
  const matchesYear = selectedYear ==="All"|| player.year.toLowerCase() === selectedYear.toLowerCase();
  return matchesSearch && matchesYear;
+
  });
 
  const isActive = activeSectionId ==="roster_list";
@@ -71,25 +75,35 @@ export default function RosterView({ roster, siteLabels, isAdmin, onEditSection,
  </div>
 
  {/* Filter items */}
- <div className="md:col-span-6 flex flex-wrap gap-2 justify-start md:justify-end">
- <div className="flex items-center gap-1.5 mr-2 text-stone-400 font-mono text-[9px] uppercase font-bold tracking-widest">
- <Filter size={11} className="text-stone-400"/>
- <span>{siteLabels?.rosterFilterLabel ||"CLASS YEAR:"}</span>
- </div>
- {yearsList.map((year) => (
- <button
- key={year}
- onClick={() => setSelectedYear(year)}
- className={`px-3 py-1.5 font-mono text-[9px] uppercase font-bold tracking-wider border transition-all duration-200 cursor-pointer ${
- selectedYear.toLowerCase() === year.toLowerCase()
- ?"border-neutral-900 bg-neutral-900 text-stone-100"
- :"border-[#121212] bg-white text-stone-500 hover:bg-stone-50 hover:text-neutral-950"
- }`}
- >
- {year}
- </button>
- ))}
- </div>
+  <div className="md:col-span-6 flex flex-wrap gap-2 justify-start md:justify-end">
+  <div className="flex items-center gap-1.5 mr-2 text-stone-400 font-mono text-[9px] uppercase font-bold tracking-widest">
+  <Filter size={11} className="text-stone-400"/>
+  <span>{siteLabels?.rosterFilterLabel ||"CLASS YEAR:"}</span>
+  </div>
+  {yearsList.map((year) => {
+    const getYearLabel = (yr: string) => {
+      if (yr === "All") return siteLabels?.rosterYearAll || "ALL";
+      if (yr === "Freshman") return siteLabels?.rosterYearFreshman || "FRESHMAN";
+      if (yr === "Sophomore") return siteLabels?.rosterYearSophomore || "SOPHOMORE";
+      if (yr === "Junior") return siteLabels?.rosterYearJunior || "JUNIOR";
+      if (yr === "Senior") return siteLabels?.rosterYearSenior || "SENIOR";
+      return yr;
+    };
+    return (
+      <button
+      key={year}
+      onClick={() => setSelectedYear(year)}
+      className={`px-3 py-1.5 font-mono text-[9px] uppercase font-bold tracking-wider border transition-all duration-200 cursor-pointer ${
+      selectedYear.toLowerCase() === year.toLowerCase()
+      ?"border-neutral-900 bg-neutral-900 text-stone-100"
+      :"border-[#121212] bg-white text-stone-500 hover:bg-stone-50 hover:text-neutral-950"
+      }`}
+      >
+      {getYearLabel(year)}
+      </button>
+    );
+  })}
+  </div>
 
  </section>
 
@@ -124,11 +138,11 @@ export default function RosterView({ roster, siteLabels, isAdmin, onEditSection,
  <div className="p-5 flex-grow flex flex-col justify-between bg-brand-neutral">
  <div className="space-y-1.5">
  <h3 className="font-display text-sm font-bold text-brand-ink tracking-tight hover:underline transition-colors uppercase leading-tight">
- {player.name}
+ {language === "th" && player.nameThai ? player.nameThai : player.name}
  </h3>
  <div className="flex justify-between items-center text-[9.5px] font-mono font-bold text-stone-500 uppercase">
- <span>{player.year} class</span>
- <span className="text-right truncate max-w-[120px]">{player.faculty ||"Faculty of Sports Science"}</span>
+ <span>{language === "th" && player.yearThai ? player.yearThai : `${player.year} class`}</span>
+ <span className="text-right truncate max-w-[120px]">{language === "th" && player.facultyThai ? player.facultyThai : (player.faculty || "Faculty of Sports Science")}</span>
  </div>
  </div>
 

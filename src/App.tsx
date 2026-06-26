@@ -14,6 +14,7 @@ import AboutClubView from "./components/AboutClubView";
 import ActivityDetailView from "./components/ActivityDetailView";
 import AdminView from "./components/AdminView";
 import { ShieldCheck, RefreshCw, AlertCircle } from "lucide-react";
+import { LanguageProvider, useLanguage } from "./utils/LanguageContext";
 
 function AppContent() {
   const navigate = useNavigate();
@@ -105,12 +106,24 @@ function AppContent() {
 
   if (!dbState) return null;
 
+  const { language } = useLanguage();
+
+  // Resolve labels based on language, merging with siteLabels as fallback
+  const labels = (language === "th" && dbState.siteLabelsThai && Object.keys(dbState.siteLabelsThai).length > 0)
+    ? { ...dbState.siteLabels, ...dbState.siteLabelsThai }
+    : dbState.siteLabels;
+
+  // Resolve marqueeText based on language
+  const marqueeText = (language === "th" && dbState.siteSettings?.marqueeTextThai)
+    ? dbState.siteSettings.marqueeTextThai
+    : dbState.siteSettings?.marqueeText;
+
   return (
     <div className="flex min-h-screen flex-col bg-brand-stone text-neutral-900">
       <Navbar
         currentTab={location.pathname.substring(1) || "home"}
         isAdminLoggedIn={!!adminToken}
-        siteLabels={dbState?.siteLabels}
+        siteLabels={labels}
         siteSettings={dbState?.siteSettings}
       />
 
@@ -119,7 +132,7 @@ function AppContent() {
           <div className="w-full overflow-hidden whitespace-nowrap flex items-center">
             <div className="animate-marquee inline-flex shrink-0 font-sans text-2xl md:text-3xl uppercase font-black tracking-tighter gap-6 leading-none" style={{ animationDuration: '45s' }}>
               {Array(10).fill(null).map((_, index) => {
-                const text = dbState?.siteSettings?.marqueeText || "Chulalongkorn University Golf Club • Drive to Excellence";
+                const text = marqueeText || "Chulalongkorn University Golf Club • Drive to Excellence";
                 const parts = text.includes("•") ? text.split("•") : text.includes("-") ? text.split("-") : [text];
                 return (
                   <span key={index} className="inline-flex items-center gap-6">
@@ -166,21 +179,21 @@ function AppContent() {
                 clubActivity={dbState.clubActivity}
                 homeSponsorSection={dbState.homeSponsorSection}
                 sponsors={dbState.sponsors || []}
-                siteLabels={dbState.siteLabels}
+                siteLabels={labels}
                 siteSettings={dbState.siteSettings}
                 isAdmin={!!adminToken}
                 onEditSection={(id) => navigate(`/admin?edit=${id}`)}
               />
             } />
-            <Route path="/blog" element={<BlogView news={dbState.news || []} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
-            <Route path="/activities" element={<BlogView news={dbState.news || []} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
-            <Route path="/activities/blog" element={<BlogView news={dbState.news || []} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
-            <Route path="/activities/club" element={<AboutClubView clubActivity={dbState.clubActivity} scores={dbState.scores || []} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
-            <Route path="/activities/:id" element={<ActivityDetailView news={dbState.news || []} siteLabels={dbState.siteLabels} siteSettings={dbState.siteSettings} isAdmin={!!adminToken} />} />
-            <Route path="/roster" element={<RosterView roster={dbState.roster || []} siteLabels={dbState.siteLabels} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
-            <Route path="/staff" element={<StaffView staff={dbState.staff || []} siteLabels={dbState.siteLabels} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
-            <Route path="/scores" element={<ScoresView scores={dbState.scores || []} siteLabels={dbState.siteLabels} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
-            <Route path="/sponsors" element={<SponsorsView sponsors={dbState.sponsors || []} siteLabels={dbState.siteLabels} isAdmin={!!adminToken} />} />
+            <Route path="/blog" element={<BlogView news={dbState.news || []} siteLabels={labels} siteSettings={dbState.siteSettings} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
+            <Route path="/activities" element={<BlogView news={dbState.news || []} siteLabels={labels} siteSettings={dbState.siteSettings} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
+            <Route path="/activities/blog" element={<BlogView news={dbState.news || []} siteLabels={labels} siteSettings={dbState.siteSettings} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
+            <Route path="/activities/club" element={<AboutClubView clubActivity={dbState.clubActivity} scores={dbState.scores || []} siteLabels={labels} siteSettings={dbState.siteSettings} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
+            <Route path="/activities/:id" element={<ActivityDetailView news={dbState.news || []} siteLabels={labels} siteSettings={dbState.siteSettings} isAdmin={!!adminToken} />} />
+            <Route path="/roster" element={<RosterView roster={dbState.roster || []} siteLabels={labels} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
+            <Route path="/staff" element={<StaffView staff={dbState.staff || []} siteLabels={labels} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
+            <Route path="/scores" element={<ScoresView scores={dbState.scores || []} siteLabels={labels} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
+            <Route path="/sponsors" element={<SponsorsView sponsors={dbState.sponsors || []} siteLabels={labels} isAdmin={!!adminToken} />} />
             <Route path="/admin" element={
               <AdminView
                 dbState={dbState}
@@ -201,7 +214,7 @@ function AppContent() {
                 clubActivity={dbState.clubActivity}
                 homeSponsorSection={dbState.homeSponsorSection}
                 sponsors={dbState.sponsors || []}
-                siteLabels={dbState.siteLabels}
+                siteLabels={labels}
                 siteSettings={dbState.siteSettings}
                 isAdmin={!!adminToken}
                 onEditSection={(id) => navigate(`/admin?edit=${id}`)}
@@ -211,15 +224,18 @@ function AppContent() {
         </div>
       </main>
 
-      <Footer siteSettings={dbState?.siteSettings} siteLabels={dbState?.siteLabels} />
+      <Footer siteSettings={dbState?.siteSettings} siteLabels={labels} />
     </div>
   );
 }
 
 export default function App() {
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <LanguageProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </LanguageProvider>
   );
 }
+

@@ -32,6 +32,7 @@ import {
  deleteSponsor,
  updateSiteSettings,
  updateSiteLabels,
+ updateSiteLabelsThai,
  updateHomeSponsorSection,
  updateClubActivity,
  uploadPhoto
@@ -229,8 +230,11 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  // Active Edit Forms state
  const [editingNewsId, setEditingNewsId] = useState<string | null>(null);
  const [newsTitle, setNewsTitle] = useState("");
+ const [newsTitleThai, setNewsTitleThai] = useState("");
  const [newsExcerpt, setNewsExcerpt] = useState("");
+ const [newsExcerptThai, setNewsExcerptThai] = useState("");
  const [newsContent, setNewsContent] = useState("");
+ const [newsContentThai, setNewsContentThai] = useState("");
  const [newsImage, setNewsImage] = useState("");
  const [newsDate, setNewsDate] = useState("");
  const [newsRank, setNewsRank] = useState<number>(0);
@@ -238,66 +242,86 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
 
  const [editingPlayerId, setEditingPlayerId] = useState<string | null>(null);
  const [playerName, setPlayerName] = useState("");
+ const [playerNameThai, setPlayerNameThai] = useState("");
  const [playerHandicap, setPlayerHandicap] = useState<number>(1.5);
  const [playerYear, setPlayerYear] = useState("Freshman");
+ const [playerYearThai, setPlayerYearThai] = useState("Freshman");
  const [playerFaculty, setPlayerFaculty] = useState("");
+ const [playerFacultyThai, setPlayerFacultyThai] = useState("");
  const [playerImage, setPlayerImage] = useState("");
  const [playerIsFeatured, setPlayerIsFeatured] = useState(false);
  const [playerIsVisible, setPlayerIsVisible] = useState(true);
 
  const [editingStaffId, setEditingStaffId] = useState<string | null>(null);
  const [staffName, setStaffName] = useState("");
+ const [staffNameThai, setStaffNameThai] = useState("");
  const [staffRole, setStaffRole] = useState("");
+ const [staffRoleThai, setStaffRoleThai] = useState("");
  const [staffFaculty, setStaffFaculty] = useState("");
+ const [staffFacultyThai, setStaffFacultyThai] = useState("");
  const [staffImage, setStaffImage] = useState("");
  const [staffOrder, setStaffOrder] = useState<number>(1);
  const [staffIsVisible, setStaffIsVisible] = useState(true);
 
  const [editingScoreId, setEditingScoreId] = useState<string | null>(null);
- const [scoreTournamentName, setScoreTournamentName] = useState("");
- const [scoreDate, setScoreDate] = useState("");
- const [scoreResult, setScoreResult] = useState("");
- const [scoreList, setScoreList] = useState<PlayerScore[]>([
- { playerName:"Methas 'Pete' Srisai", score: 71, position:"3rd"}
- ]);
- const [scoreIsVisible, setScoreIsVisible] = useState(true);
+  const [scoreTournamentName, setScoreTournamentName] = useState("");
+  const [scoreTournamentNameThai, setScoreTournamentNameThai] = useState("");
+  const [scoreDate, setScoreDate] = useState("");
+  const [scoreResult, setScoreResult] = useState("");
+  const [scoreResultThai, setScoreResultThai] = useState("");
+  const [scoreList, setScoreList] = useState<PlayerScore[]>([
+    { playerName: "Methas 'Pete' Srisai", score: 71, position: "3rd" }
+  ]);
+  const [scoreIsVisible, setScoreIsVisible] = useState(true);
 
- // Gallery quick add variables
- const [galTitle, setGalTitle] = useState("");
- const [galUrl, setGalUrl] = useState("");
- const [galCategory, setGalCategory] = useState("Tournament");
+  // Gallery quick add variables
+  const [galTitle, setGalTitle] = useState("");
+  const [galUrl, setGalUrl] = useState("");
+  const [galCategory, setGalCategory] = useState("Tournament");
 
- // Welcome page CMS states
- const [welcomeImageUrl, setWelcomeImageUrl] = useState(dbState.welcomeSection?.imageUrl ||"");
- const [welcomeTitleThai, setWelcomeTitleThai] = useState(dbState.welcomeSection?.titleThai ||"");
- const [welcomeTitleEnglish, setWelcomeTitleEnglish] = useState(dbState.welcomeSection?.titleEnglish ||"");
- const [welcomeLegacyQuote, setWelcomeLegacyQuote] = useState(dbState.welcomeSection?.legacyQuote ||"");
- const [welcomeLegacyQuoteAuthor, setWelcomeLegacyQuoteAuthor] = useState(dbState.welcomeSection?.legacyQuoteAuthor ||"");
- const [welcomeDescription, setWelcomeDescription] = useState(dbState.welcomeSection?.description ||"");
+  // Welcome page CMS states
+  const [welcomeImageUrl, setWelcomeImageUrl] = useState(dbState.welcomeSection?.imageUrl || "");
+  const [welcomeTitleThai, setWelcomeTitleThai] = useState(dbState.welcomeSection?.titleThai || "");
+  const [welcomeTitleEnglish, setWelcomeTitleEnglish] = useState(dbState.welcomeSection?.titleEnglish || "");
+  const [welcomeLegacyQuote, setWelcomeLegacyQuote] = useState(dbState.welcomeSection?.legacyQuote || "");
+  const [welcomeLegacyQuoteThai, setWelcomeLegacyQuoteThai] = useState(dbState.welcomeSection?.legacyQuoteThai || "");
+  const [welcomeLegacyQuoteAuthor, setWelcomeLegacyQuoteAuthor] = useState(dbState.welcomeSection?.legacyQuoteAuthor || "");
+  const [welcomeLegacyQuoteAuthorThai, setWelcomeLegacyQuoteAuthorThai] = useState(dbState.welcomeSection?.legacyQuoteAuthorThai || "");
+  const [welcomeDescription, setWelcomeDescription] = useState(dbState.welcomeSection?.description || "");
+  const [welcomeDescriptionThai, setWelcomeDescriptionThai] = useState(dbState.welcomeSection?.descriptionThai || "");
 
- // Upcoming Activity CMS states
- const [upcomingTitle, setUpcomingTitle] = useState(dbState.upcomingActivity?.title ||"");
- const [upcomingDescription, setUpcomingDescription] = useState(dbState.upcomingActivity?.description ||"");
- const [upcomingImageUrl, setUpcomingImageUrl] = useState(dbState.upcomingActivity?.imageUrl ||"");
- const [upcomingDate, setUpcomingDate] = useState(dbState.upcomingActivity?.date ||"");
- const [upcomingLocation, setUpcomingLocation] = useState(dbState.upcomingActivity?.location ||"");
- const [upcomingRegUrl, setUpcomingRegUrl] = useState(dbState.upcomingActivity?.registrationUrl ||"");
- const [upcomingShowSection, setUpcomingShowSection] = useState(dbState.upcomingActivity?.showSection ?? true);
+  // Upcoming Activity CMS states
+  const [upcomingTitle, setUpcomingTitle] = useState(dbState.upcomingActivity?.title || "");
+  const [upcomingTitleThai, setUpcomingTitleThai] = useState(dbState.upcomingActivity?.titleThai || "");
+  const [upcomingDescription, setUpcomingDescription] = useState(dbState.upcomingActivity?.description || "");
+  const [upcomingDescriptionThai, setUpcomingDescriptionThai] = useState(dbState.upcomingActivity?.descriptionThai || "");
+  const [upcomingImageUrl, setUpcomingImageUrl] = useState(dbState.upcomingActivity?.imageUrl || "");
+  const [upcomingDate, setUpcomingDate] = useState(dbState.upcomingActivity?.date || "");
+  const [upcomingDateThai, setUpcomingDateThai] = useState(dbState.upcomingActivity?.dateThai || "");
+  const [upcomingLocation, setUpcomingLocation] = useState(dbState.upcomingActivity?.location || "");
+  const [upcomingLocationThai, setUpcomingLocationThai] = useState(dbState.upcomingActivity?.locationThai || "");
+  const [upcomingRegUrl, setUpcomingRegUrl] = useState(dbState.upcomingActivity?.registrationUrl || "");
+  const [upcomingShowSection, setUpcomingShowSection] = useState(dbState.upcomingActivity?.showSection ?? true);
 
- // Sponsors page CMS states
- const [editingSponsorId, setEditingSponsorId] = useState<string | null>(null);
- const [sponName, setSponName] = useState("");
- const [sponDescription, setSponDescription] = useState("");
- const [sponWebsiteUrl, setSponWebsiteUrl] = useState("");
- const [sponImageUrl, setSponImageUrl] = useState("");
- const [sponIsActive, setSponIsActive] = useState(true);
+  // Sponsors page CMS states
+  const [editingSponsorId, setEditingSponsorId] = useState<string | null>(null);
+  const [sponName, setSponName] = useState("");
+  const [sponNameThai, setSponNameThai] = useState("");
+  const [sponDescription, setSponDescription] = useState("");
+  const [sponDescriptionThai, setSponDescriptionThai] = useState("");
+  const [sponWebsiteUrl, setSponWebsiteUrl] = useState("");
+  const [sponImageUrl, setSponImageUrl] = useState("");
+  const [sponIsActive, setSponIsActive] = useState(true);
 
  // Site general settings CMS states (Marquee, contact phone, contact email, addresses)
  const [setsMarqueeText, setSetsMarqueeText] = useState(dbState.siteSettings?.marqueeText ||"Chulalongkorn University Golf Club • Drive to Excellence");
+ const [setsMarqueeTextThai, setSetsMarqueeTextThai] = useState(dbState.siteSettings?.marqueeTextThai ||"");
  const [setsContactPhone, setSetsContactPhone] = useState(dbState.siteSettings?.contactPhone ||"+66 (0) 2218-1916");
  const [setsContactEmail, setSetsContactEmail] = useState(dbState.siteSettings?.contactEmail ||"golf@chula.ac.th");
  const [setsContactAddress, setSetsContactAddress] = useState(dbState.siteSettings?.contactAddress ||"Chula Sports Complex, Phayathai Rd, Pathum Wan, Bangkok 10330, Thailand");
+ const [setsContactAddressThai, setSetsContactAddressThai] = useState(dbState.siteSettings?.contactAddressThai ||"");
  const [setsAcademicAffiliation, setSetsAcademicAffiliation] = useState(dbState.siteSettings?.academicAffiliation ||"Thailand University Golf Association (TUGA)");
+ const [setsAcademicAffiliationThai, setSetsAcademicAffiliationThai] = useState(dbState.siteSettings?.academicAffiliationThai ||"");
 
  // Visibility States
  const [setsShowMarquee, setSetsShowMarquee] = useState(dbState.siteSettings?.showMarquee ?? true);
@@ -314,36 +338,52 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
 
  // Home Sponsor Section states
  const [homeSponTitle, setHomeSponTitle] = useState(dbState.homeSponsorSection?.title ||"SUPPORTING EXCELLENCE");
+ const [homeSponTitleThai, setHomeSponTitleThai] = useState(dbState.homeSponsorSection?.titleThai ||"");
  const [homeSponSubtitle, setHomeSponSubtitle] = useState(dbState.homeSponsorSection?.subtitle ||"CORPORATE PARTNERSHIP");
+ const [homeSponSubtitleThai, setHomeSponSubtitleThai] = useState(dbState.homeSponsorSection?.subtitleThai ||"");
  const [homeSponDescription, setHomeSponDescription] = useState(dbState.homeSponsorSection?.description ||"Our sponsors provide the essential resources and infrastructure that empower our student athletes to compete at the highest collegiate level.");
+ const [homeSponDescriptionThai, setHomeSponDescriptionThai] = useState(dbState.homeSponsorSection?.descriptionThai ||"");
  const [homeSponMarqueeText, setHomeSponMarqueeText] = useState(dbState.homeSponsorSection?.marqueeText ||"");
+ const [homeSponMarqueeTextThai, setHomeSponMarqueeTextThai] = useState(dbState.homeSponsorSection?.marqueeTextThai ||"");
  const [homeSponImageUrl, setHomeSponImageUrl] = useState(dbState.homeSponsorSection?.imageUrl ||"");
  const [homeSponButtonText, setHomeSponButtonText] = useState(dbState.homeSponsorSection?.buttonText ||"LEARN MORE");
+ const [homeSponButtonTextThai, setHomeSponButtonTextThai] = useState(dbState.homeSponsorSection?.buttonTextThai ||"");
  const [homeSponButtonUrl, setHomeSponButtonUrl] = useState(dbState.homeSponsorSection?.buttonUrl ||"/sponsors");
  const [homeSponShowSection, setHomeSponShowSection] = useState(dbState.homeSponsorSection?.showSection ?? true);
 
  // Club Activity CMS states
  const [caHeroImageUrl, setCaHeroImageUrl] = useState(dbState.clubActivity?.heroImageUrl ||"");
  const [caPhilosophyTitle, setCaPhilosophyTitle] = useState(dbState.clubActivity?.philosophyTitle ||"OUR PHILOSOPHY");
+ const [caPhilosophyTitleThai, setCaPhilosophyTitleThai] = useState(dbState.clubActivity?.philosophyTitleThai ||"");
  const [caPhilosophyQuote, setCaPhilosophyQuote] = useState(dbState.clubActivity?.philosophyQuote ||"");
+ const [caPhilosophyQuoteThai, setCaPhilosophyQuoteThai] = useState(dbState.clubActivity?.philosophyQuoteThai ||"");
  const [caPhilosophyDescription, setCaPhilosophyDescription] = useState(dbState.clubActivity?.philosophyDescription ||"");
+ const [caPhilosophyDescriptionThai, setCaPhilosophyDescriptionThai] = useState(dbState.clubActivity?.philosophyDescriptionThai ||"");
  const [caTechnicalExcellenceDescription, setCaTechnicalExcellenceDescription] = useState(dbState.clubActivity?.technicalExcellenceDescription ||"");
+ const [caTechnicalExcellenceDescriptionThai, setCaTechnicalExcellenceDescriptionThai] = useState(dbState.clubActivity?.technicalExcellenceDescriptionThai ||"");
  const [caCaptainName, setCaCaptainName] = useState(dbState.clubActivity?.captainName ||"");
+ const [caCaptainNameThai, setCaCaptainNameThai] = useState(dbState.clubActivity?.captainNameThai ||"");
  const [caCaptainRole, setCaCaptainRole] = useState(dbState.clubActivity?.captainRole ||"");
+ const [caCaptainRoleThai, setCaCaptainRoleThai] = useState(dbState.clubActivity?.captainRoleThai ||"");
  const [caCaptainImageUrl, setCaCaptainImageUrl] = useState(dbState.clubActivity?.captainImageUrl ||"");
  const [caCaptainPhilosophy, setCaCaptainPhilosophy] = useState(dbState.clubActivity?.captainPhilosophy ||"");
+ const [caCaptainPhilosophyThai, setCaCaptainPhilosophyThai] = useState(dbState.clubActivity?.captainPhilosophyThai ||"");
  const [caCompetitions, setCaCompetitions] = useState<Competition[]>(dbState.clubActivity?.competitions || []);
  const [caTrainingDescription, setCaTrainingDescription] = useState(dbState.clubActivity?.trainingDescription ||"");
+ const [caTrainingDescriptionThai, setCaTrainingDescriptionThai] = useState(dbState.clubActivity?.trainingDescriptionThai ||"");
  const [caLegacyDescription, setCaLegacyDescription] = useState(dbState.clubActivity?.legacyDescription ||"");
+ const [caLegacyDescriptionThai, setCaLegacyDescriptionThai] = useState(dbState.clubActivity?.legacyDescriptionThai ||"");
  const [caFoundedYear, setCaFoundedYear] = useState(dbState.clubActivity?.foundedYear ||"1916");
  const [caActiveYears, setCaActiveYears] = useState(dbState.clubActivity?.activeYears ||"100+");
+ const [caActiveYearsThai, setCaActiveYearsThai] = useState(dbState.clubActivity?.activeYearsThai ||"");
  const [caShowPhilosophy, setCaShowPhilosophy] = useState(dbState.clubActivity?.showPhilosophy ?? true);
  const [caShowCaptainMandate, setCaShowCaptainMandate] = useState(dbState.clubActivity?.showCaptainMandate ?? true);
  const [caShowCompetitions, setCaShowCompetitions] = useState(dbState.clubActivity?.showCompetitions ?? true);
  const [caShowTraining, setCaShowTraining] = useState(dbState.clubActivity?.showTraining ?? true);
  const [caShowLegacy, setCaShowLegacy] = useState(dbState.clubActivity?.showLegacy ?? true);
 
- // Site Labels states
+  // Site Labels states
+ const [editLabelsLanguage, setEditLabelsLanguage] = useState<"en" | "th">("en");
  const [labelNavHome, setLabelNavHome] = useState(dbState.siteLabels?.navHome ||"HOME");
  const [labelNavBlog, setLabelNavBlog] = useState(dbState.siteLabels?.navBlog ||"ACTIVITIES");
  const [labelNavRoster, setLabelNavRoster] = useState(dbState.siteLabels?.navRoster ||"TEAM ROSTER");
@@ -437,170 +477,239 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  const [labelWelcomeHeroTitle, setLabelWelcomeHeroTitle] = useState(dbState.siteLabels?.welcomeHeroTitle ||"Longstanding");
  const [labelWelcomeHeroSubtitle, setLabelWelcomeHeroSubtitle] = useState(dbState.siteLabels?.welcomeHeroSubtitle ||"Legacy");
  const [labelWelcomeHeroSocial, setLabelWelcomeHeroSocial] = useState(dbState.siteLabels?.welcomeHeroSocial ||"cugolfclub @Student Government of Chulalongkorn University");
+ const [labelNavBlogSubBlog, setLabelNavBlogSubBlog] = useState(dbState.siteLabels?.navBlogSubBlog || "BLOG");
+ const [labelNavBlogSubClub, setLabelNavBlogSubClub] = useState(dbState.siteLabels?.navBlogSubClub || "CLUB ACTIVITIES");
+ const [labelNavFollowFb, setLabelNavFollowFb] = useState(dbState.siteLabels?.navFollowFb || "FOLLOW @CUGOLFCLUB (FB)");
+ const [labelNavFollowIg, setLabelNavFollowIg] = useState(dbState.siteLabels?.navFollowIg || "FOLLOW @CUGOLFCLUB (IG)");
+ const [labelNavFollowTiktok, setLabelNavFollowTiktok] = useState(dbState.siteLabels?.navFollowTiktok || "FOLLOW @CUGOLFCLUB (TIKTOK)");
+ const [labelAboutClubHeroTitlePart1, setLabelAboutClubHeroTitlePart1] = useState(dbState.siteLabels?.aboutClubHeroTitlePart1 || "UPCOMING");
+ const [labelAboutClubHeroTitlePart2, setLabelAboutClubHeroTitlePart2] = useState(dbState.siteLabels?.aboutClubHeroTitlePart2 || "ACTIVITIES");
+ const [labelAboutClubHeroSubtitle, setLabelAboutClubHeroSubtitle] = useState(dbState.siteLabels?.aboutClubHeroSubtitle || "SCHEDULE & TOUR DATES FOR THE CHULALONGKORN SQUAD");
+ const [labelAboutClubNoActivitiesTitle, setLabelAboutClubNoActivitiesTitle] = useState(dbState.siteLabels?.aboutClubNoActivitiesTitle || "No upcoming activities scheduled");
+ const [labelAboutClubNoActivitiesDesc, setLabelAboutClubNoActivitiesDesc] = useState(dbState.siteLabels?.aboutClubNoActivitiesDesc || "Check back later for newly added tournaments and club matches.");
+ const [labelBlogBackToBlog, setLabelBlogBackToBlog] = useState(dbState.siteLabels?.blogBackToBlog || "BACK TO BLOG");
+ const [labelBlogPublishedBy, setLabelBlogPublishedBy] = useState(dbState.siteLabels?.blogPublishedBy || "PUBLISHED BY");
+ const [labelBlogLocation, setLabelBlogLocation] = useState(dbState.siteLabels?.blogLocation || "LOCATION");
+ const [labelRosterYearAll, setLabelRosterYearAll] = useState(dbState.siteLabels?.rosterYearAll || "ALL");
+ const [labelRosterYearFreshman, setLabelRosterYearFreshman] = useState(dbState.siteLabels?.rosterYearFreshman || "FRESHMAN");
+ const [labelRosterYearSophomore, setLabelRosterYearSophomore] = useState(dbState.siteLabels?.rosterYearSophomore || "SOPHOMORE");
+ const [labelRosterYearJunior, setLabelRosterYearJunior] = useState(dbState.siteLabels?.rosterYearJunior || "JUNIOR");
+ const [labelRosterYearSenior, setLabelRosterYearSenior] = useState(dbState.siteLabels?.rosterYearSenior || "SENIOR");
+ const [labelHomeViewAllStoriesButton, setLabelHomeViewAllStoriesButton] = useState(dbState.siteLabels?.homeViewAllStoriesButton || "VIEW ALL STORIES");
 
  // Clear sync with outer state updates
- React.useEffect(() => {
- if (dbState?.welcomeSection) {
- setWelcomeImageUrl(dbState.welcomeSection?.imageUrl ||"");
- setWelcomeTitleThai(dbState.welcomeSection?.titleThai ||"");
- setWelcomeTitleEnglish(dbState.welcomeSection?.titleEnglish ||"");
- setWelcomeLegacyQuote(dbState.welcomeSection?.legacyQuote ||"");
- setWelcomeLegacyQuoteAuthor(dbState.welcomeSection?.legacyQuoteAuthor ||"");
- setWelcomeDescription(dbState.welcomeSection?.description ||"");
- }
- if (dbState?.siteSettings) {
- setSetsMarqueeText(dbState.siteSettings?.marqueeText ||"Chulalongkorn University Golf Club • Drive to Excellence");
- setSetsContactPhone(dbState.siteSettings?.contactPhone ||"+66 (0) 2218-1916");
- setSetsContactEmail(dbState.siteSettings?.contactEmail ||"golf@chula.ac.th");
- setSetsContactAddress(dbState.siteSettings?.contactAddress ||"Chula Sports Complex, Phayathai Rd, Pathum Wan, Bangkok 10330, Thailand");
- setSetsAcademicAffiliation(dbState.siteSettings?.academicAffiliation ||"Thailand University Golf Association (TUGA)");
- 
- setSetsShowMarquee(dbState.siteSettings?.showMarquee ?? true);
- setSetsShowHomeBlog(dbState.siteSettings?.showHomeBlog ?? true);
- setSetsShowHomeWelcome(dbState.siteSettings?.showHomeWelcome ?? true);
- setSetsShowHomeScores(dbState.siteSettings?.showHomeScores ?? true);
- setSetsShowFooterMission(dbState.siteSettings?.showFooterMission ?? true);
- setSetsShowFooterLegacy(dbState.siteSettings?.showFooterLegacy ?? true);
- setSetsShowNavbarRoster(dbState.siteSettings?.showNavbarRoster ?? true);
- setSetsShowNavbarStaff(dbState.siteSettings?.showNavbarStaff ?? true);
- setSetsShowNavbarScores(dbState.siteSettings?.showNavbarScores ?? true);
- setSetsShowNavbarSponsors(dbState.siteSettings?.showNavbarSponsors ?? true);
- setSetsShowHomeSponsors(dbState.siteSettings?.showHomeSponsors ?? true);
- }
- if (dbState?.homeSponsorSection) {
- setHomeSponTitle(dbState.homeSponsorSection?.title ||"");
- setHomeSponSubtitle(dbState.homeSponsorSection?.subtitle ||"");
- setHomeSponDescription(dbState.homeSponsorSection?.description ||"");
- setHomeSponMarqueeText(dbState.homeSponsorSection?.marqueeText ||"");
- setHomeSponImageUrl(dbState.homeSponsorSection?.imageUrl ||"");
- setHomeSponButtonText(dbState.homeSponsorSection?.buttonText ||"");
- setHomeSponButtonUrl(dbState.homeSponsorSection?.buttonUrl ||"");
- setHomeSponShowSection(dbState.homeSponsorSection?.showSection ?? true);
- }
- if (dbState?.upcomingActivity) {
- setUpcomingTitle(dbState.upcomingActivity?.title ||"");
- setUpcomingDescription(dbState.upcomingActivity?.description ||"");
- setUpcomingImageUrl(dbState.upcomingActivity?.imageUrl ||"");
- setUpcomingDate(dbState.upcomingActivity?.date ||"");
- setUpcomingLocation(dbState.upcomingActivity?.location ||"");
- setUpcomingRegUrl(dbState.upcomingActivity?.registrationUrl ||"");
- setUpcomingShowSection(dbState.upcomingActivity?.showSection ?? true);
- }
- if (dbState?.clubActivity) {
- setCaHeroImageUrl(dbState.clubActivity.heroImageUrl ||"");
- setCaPhilosophyTitle(dbState.clubActivity.philosophyTitle ||"");
- setCaPhilosophyQuote(dbState.clubActivity.philosophyQuote ||"");
- setCaPhilosophyDescription(dbState.clubActivity.philosophyDescription ||"");
- setCaTechnicalExcellenceDescription(dbState.clubActivity.technicalExcellenceDescription ||"");
- setCaCaptainName(dbState.clubActivity.captainName ||"");
- setCaCaptainRole(dbState.clubActivity.captainRole ||"");
- setCaCaptainImageUrl(dbState.clubActivity.captainImageUrl ||"");
- setCaCaptainPhilosophy(dbState.clubActivity.captainPhilosophy ||"");
- setCaCompetitions(dbState.clubActivity.competitions || []);
- setCaTrainingDescription(dbState.clubActivity.trainingDescription ||"");
- setCaLegacyDescription(dbState.clubActivity.legacyDescription ||"");
- setCaFoundedYear(dbState.clubActivity.foundedYear ||"");
- setCaActiveYears(dbState.clubActivity.activeYears ||"");
- setCaShowPhilosophy(dbState.clubActivity.showPhilosophy ?? true);
- setCaShowCaptainMandate(dbState.clubActivity.showCaptainMandate ?? true);
- setCaShowCompetitions(dbState.clubActivity.showCompetitions ?? true);
- setCaShowTraining(dbState.clubActivity.showTraining ?? true);
- setCaShowLegacy(dbState.clubActivity.showLegacy ?? true);
- }
- if (dbState?.siteLabels) {
- setLabelNavHome(dbState.siteLabels?.navHome ||"HOME");
- setLabelNavRoster(dbState.siteLabels?.navRoster ||"TEAM ROSTER");
- setLabelNavStaff(dbState.siteLabels?.navStaff ||"STAFF & BOARD");
- setLabelNavScores(dbState.siteLabels?.navScores ||"SCORES & STATS");
- setLabelNavSponsors(dbState.siteLabels?.navSponsors ||"PARTNERS");
- setLabelNavAdmin(dbState.siteLabels?.navAdmin ||"ADMIN CMS");
- setLabelNavBrandTitle(dbState.siteLabels?.navBrandTitle ||"cugolfclub.");
- setLabelNavBrandSubtitle(dbState.siteLabels?.navBrandSubtitle ||"[Official] Chulalongkorn University Golf Club");
- setLabelNavAdminActive(dbState.siteLabels?.navAdminActive ||"REGISTRY ACTIVE");
- setLabelNavAdminCms(dbState.siteLabels?.navAdminCms ||"ADMIN CMS");
-
- setLabelHomeBlogTitle(dbState.siteLabels?.homeBlogTitle ||"");
- setLabelHomeBlogSubtitle(dbState.siteLabels?.homeBlogSubtitle ||"");
- setLabelHomeWelcomeHeroTitle(dbState.siteLabels?.homeWelcomeHeroTitle ||"");
- setLabelHomeWelcomeHeroSubtitle(dbState.siteLabels?.homeWelcomeHeroSubtitle ||"Legacy");
- setLabelHomeWelcomeHeroSocial(dbState.siteLabels?.homeWelcomeHeroSocial ||"cugolfclub @Student Government of Chulalongkorn University");
- setLabelHomeFeaturedActivityBadge(dbState.siteLabels?.homeFeaturedActivityBadge ||"FEATURED ACTIVITY");
- setLabelHomeRecentUpdatesLabel(dbState.siteLabels?.homeRecentUpdatesLabel ||"RECENT UPDATES");
- setLabelHomeReadCoverageButton(dbState.siteLabels?.homeReadCoverageButton ||"READ COVERAGE");
- setLabelHomeReadStoryButton(dbState.siteLabels?.homeReadStoryButton ||"READ STORY");
- setLabelHomeLiveStandingsTitle(dbState.siteLabels?.homeLiveStandingsTitle ||"LIVE STANDINGS");
- setLabelHomeFullLeaderboardButton(dbState.siteLabels?.homeFullLeaderboardButton ||"FULL LEADERBOARD");
- setLabelHomeNoBlogs(dbState.siteLabels?.homeNoBlogs ||"No activities blogs published yet.");
- setLabelHomeActivityLabel(dbState.siteLabels?.homeActivityLabel ||"ACTIVITY");
- setLabelHomeNoScores(dbState.siteLabels?.homeNoScores ||"No tournament scores listed yet.");
- setLabelHomeModalOfficialBadge(dbState.siteLabels?.homeModalOfficialBadge ||"OFFICIAL EDITORIAL");
- setLabelHomeModalEditorialBoard(dbState.siteLabels?.homeModalEditorialBoard ||"CU GOLF CLUB SPORTS EDITORIAL BOARD");
- setLabelHomeModalLocation(dbState.siteLabels?.homeModalLocation ||"BANGKOK, THAILAND");
-
- setLabelHomeMembershipTitle(dbState.siteLabels?.homeMembershipTitle ||"Become a member of the CU GOLF CLUB.");
- setLabelHomeMembershipDescription(dbState.siteLabels?.homeMembershipDescription ||"Expand your network and elevate your game.");
- setLabelHomeMembershipButtonText(dbState.siteLabels?.homeMembershipButtonText ||"REGISTER NOW");
-
- setLabelRosterTitle(dbState.siteLabels?.rosterTitle ||"");
- setLabelRosterSubtitle(dbState.siteLabels?.rosterSubtitle ||"");
- setLabelRosterVerifiedLabel(dbState.siteLabels?.rosterVerifiedLabel ||"");
- setLabelRosterSearchPlaceholder(dbState.siteLabels?.rosterSearchPlaceholder ||"Search roster registry...");
- setLabelRosterFilterLabel(dbState.siteLabels?.rosterFilterLabel ||"CLASS YEAR:");
- setLabelRosterStatusLabel(dbState.siteLabels?.rosterStatusLabel ||"STATUS:");
- setLabelRosterNoResultsTitle(dbState.siteLabels?.rosterNoResultsTitle ||"No registrants found");
- setLabelRosterNoResultsDesc(dbState.siteLabels?.rosterNoResultsDesc ||"There are no players currently recorded matching your search parameters or select class year filters.");
- setLabelRosterSquadLeadBadge(dbState.siteLabels?.rosterSquadLeadBadge ||"SQUAD LEAD");
- setLabelRosterIndexLabel(dbState.siteLabels?.rosterIndexLabel ||"INDEX");
- setLabelRosterAthleteLabel(dbState.siteLabels?.rosterAthleteLabel ||"CU ATHLETE");
- setLabelRosterStatusActive(dbState.siteLabels?.rosterStatusActive ||"STATUS: ACTIVE SQUAD");
-
- setLabelStaffTitle(dbState.siteLabels?.staffTitle ||"");
- setLabelStaffSubtitle(dbState.siteLabels?.staffSubtitle ||"");
- setLabelStaffVerifiedLabel(dbState.siteLabels?.staffVerifiedLabel ||"");
- setLabelScoresTitle(dbState.siteLabels?.scoresTitle ||"");
- setLabelScoresSubtitle(dbState.siteLabels?.scoresSubtitle ||"");
- setLabelScoresVerifiedLabel(dbState.siteLabels?.scoresVerifiedLabel ||"");
- setLabelScoresRecapTitle(dbState.siteLabels?.scoresRecapTitle ||"");
- setLabelScoresRecapSubtitle(dbState.siteLabels?.scoresRecapSubtitle ||"");
- setLabelScoresOfficialStatsBadge(dbState.siteLabels?.scoresOfficialStatsBadge ||"UNOFFICIAL STATS");
- setLabelScoresViewStandingsButton(dbState.siteLabels?.scoresViewStandingsButton ||"VIEW STANDINGS");
- setLabelScoresHideStandingsButton(dbState.siteLabels?.scoresHideStandingsButton ||"HIDE STANDINGS");
- setLabelScoresTablePlayerHeader(dbState.siteLabels?.scoresTablePlayerHeader ||"PLAYER NAME");
- setLabelScoresTableScoreHeader(dbState.siteLabels?.scoresTableScoreHeader ||"STROKE SCORE");
- setLabelScoresTablePositionHeader(dbState.siteLabels?.scoresTablePositionHeader ||"POSITION");
- setLabelScoresAttestationLabel(dbState.siteLabels?.scoresAttestationLabel ||"CU UNOFFICIAL GOLF SCORECARD ATTESTATION");
- setLabelScoresVerifiedDirectoryLabel(dbState.siteLabels?.scoresVerifiedDirectoryLabel ||"COACH VERIFIED DIRECTORY");
- setLabelScoresDetailedLeaderboardTitle(dbState.siteLabels?.scoresDetailedLeaderboardTitle ||"DETAILED COMPETITIVE LEADERBOARD");
-
- setLabelSponsorsTitle(dbState.siteLabels?.sponsorsTitle ||"");
- setLabelSponsorsSubtitle(dbState.siteLabels?.sponsorsSubtitle ||"");
- setLabelSponsorsVerifiedLabel(dbState.siteLabels?.sponsorsVerifiedLabel ||"");
- setLabelSponsorsContactTitle(dbState.siteLabels?.sponsorsContactTitle ||"");
- setLabelSponsorsContactDescription(dbState.siteLabels?.sponsorsContactDescription ||"");
- setLabelSponsorsOfficiallyAssociatedLabel(dbState.siteLabels?.sponsorsOfficiallyAssociatedLabel ||"OFFICIALLY ASSOCIATED 2026");
-
- setLabelFooterMissionTitle(dbState.siteLabels?.footerMissionTitle ||"");
- setLabelFooterMissionDescription(dbState.siteLabels?.footerMissionDescription ||"");
- setLabelFooterLegacyTitle(dbState.siteLabels?.footerLegacyTitle ||"");
- setLabelFooterLegacyDescription(dbState.siteLabels?.footerLegacyDescription ||"");
- setLabelFooterDirectoryTitle(dbState.siteLabels?.footerDirectoryTitle ||"DIRECTORY");
- setLabelFooterHeadquartersTitle(dbState.siteLabels?.footerHeadquartersTitle ||"HEADQUARTERS");
- setLabelFooterAffiliationsTitle(dbState.siteLabels?.footerAffiliationsTitle ||"AFFILIATIONS");
- setLabelFooterRightsReserved(dbState.siteLabels?.footerRightsReserved ||"© {year} CHULALONGKORN UNIVERSITY GOLF CLUB. ALL RIGHTS RESERVED.");
- setLabelFooterCmsLogin(dbState.siteLabels?.footerCmsLogin ||"CMS LOG-IN");
- setLabelFooterPrivacyDisclosure(dbState.siteLabels?.footerPrivacyDisclosure ||"PRIVACY DISCLOSURE");
- setLabelFooterTermsOfTradition(dbState.siteLabels?.footerTermsOfTradition ||"TERMS OF TRADITION");
- setLabelFooterDirectoryNewsRoom(dbState.siteLabels?.footerDirectoryNewsRoom ||"NEWS ROOM");
- setLabelFooterDirectoryRoster(dbState.siteLabels?.footerDirectoryRoster ||"VARSITY ROSTER");
- setLabelFooterDirectoryScores(dbState.siteLabels?.footerDirectoryScores ||"MATCH STATS");
- setLabelFooterAffiliationsChulaMain(dbState.siteLabels?.footerAffiliationsChulaMain ||"CHULA MAIN");
- setLabelFooterAffiliationsSportsOffice(dbState.siteLabels?.footerAffiliationsSportsOffice ||"CU SPORTS OFFICE");
-
- setLabelWelcomeHeroTitle(dbState.siteLabels?.welcomeHeroTitle ||"Longstanding");
- setLabelWelcomeHeroSubtitle(dbState.siteLabels?.welcomeHeroSubtitle ||"Legacy");
- setLabelWelcomeHeroSocial(dbState.siteLabels?.welcomeHeroSocial ||"cugolfclub @Student Government of Chulalongkorn University");
- }
+  React.useEffect(() => {
+  if (dbState?.welcomeSection) {
+  setWelcomeImageUrl(dbState.welcomeSection?.imageUrl ||"");
+  setWelcomeTitleThai(dbState.welcomeSection?.titleThai ||"");
+  setWelcomeTitleEnglish(dbState.welcomeSection?.titleEnglish ||"");
+  setWelcomeLegacyQuote(dbState.welcomeSection?.legacyQuote ||"");
+  setWelcomeLegacyQuoteThai(dbState.welcomeSection?.legacyQuoteThai ||"");
+  setWelcomeLegacyQuoteAuthor(dbState.welcomeSection?.legacyQuoteAuthor ||"");
+  setWelcomeLegacyQuoteAuthorThai(dbState.welcomeSection?.legacyQuoteAuthorThai ||"");
+  setWelcomeDescription(dbState.welcomeSection?.description ||"");
+  setWelcomeDescriptionThai(dbState.welcomeSection?.descriptionThai ||"");
+  }
+  if (dbState?.siteSettings) {
+  setSetsMarqueeText(dbState.siteSettings?.marqueeText ||"Chulalongkorn University Golf Club • Drive to Excellence");
+  setSetsMarqueeTextThai(dbState.siteSettings?.marqueeTextThai ||"");
+  setSetsContactPhone(dbState.siteSettings?.contactPhone ||"+66 (0) 2218-1916");
+  setSetsContactEmail(dbState.siteSettings?.contactEmail ||"golf@chula.ac.th");
+  setSetsContactAddress(dbState.siteSettings?.contactAddress ||"Chula Sports Complex, Phayathai Rd, Pathum Wan, Bangkok 10330, Thailand");
+  setSetsContactAddressThai(dbState.siteSettings?.contactAddressThai ||"");
+  setSetsAcademicAffiliation(dbState.siteSettings?.academicAffiliation ||"Thailand University Golf Association (TUGA)");
+  setSetsAcademicAffiliationThai(dbState.siteSettings?.academicAffiliationThai ||"");
+  
+  setSetsShowMarquee(dbState.siteSettings?.showMarquee ?? true);
+  setSetsShowHomeBlog(dbState.siteSettings?.showHomeBlog ?? true);
+  setSetsShowHomeWelcome(dbState.siteSettings?.showHomeWelcome ?? true);
+  setSetsShowHomeScores(dbState.siteSettings?.showHomeScores ?? true);
+  setSetsShowFooterMission(dbState.siteSettings?.showFooterMission ?? true);
+  setSetsShowFooterLegacy(dbState.siteSettings?.showFooterLegacy ?? true);
+  setSetsShowNavbarRoster(dbState.siteSettings?.showNavbarRoster ?? true);
+  setSetsShowNavbarStaff(dbState.siteSettings?.showNavbarStaff ?? true);
+  setSetsShowNavbarScores(dbState.siteSettings?.showNavbarScores ?? true);
+  setSetsShowNavbarSponsors(dbState.siteSettings?.showNavbarSponsors ?? true);
+  setSetsShowHomeSponsors(dbState.siteSettings?.showHomeSponsors ?? true);
+  }
+  if (dbState?.homeSponsorSection) {
+  setHomeSponTitle(dbState.homeSponsorSection?.title ||"");
+  setHomeSponTitleThai(dbState.homeSponsorSection?.titleThai ||"");
+  setHomeSponSubtitle(dbState.homeSponsorSection?.subtitle ||"");
+  setHomeSponSubtitleThai(dbState.homeSponsorSection?.subtitleThai ||"");
+  setHomeSponDescription(dbState.homeSponsorSection?.description ||"");
+  setHomeSponDescriptionThai(dbState.homeSponsorSection?.descriptionThai ||"");
+  setHomeSponMarqueeText(dbState.homeSponsorSection?.marqueeText ||"");
+  setHomeSponMarqueeTextThai(dbState.homeSponsorSection?.marqueeTextThai ||"");
+  setHomeSponImageUrl(dbState.homeSponsorSection?.imageUrl ||"");
+  setHomeSponButtonText(dbState.homeSponsorSection?.buttonText ||"");
+  setHomeSponButtonTextThai(dbState.homeSponsorSection?.buttonTextThai ||"");
+  setHomeSponButtonUrl(dbState.homeSponsorSection?.buttonUrl ||"");
+  setHomeSponShowSection(dbState.homeSponsorSection?.showSection ?? true);
+  }
+  if (dbState?.upcomingActivity) {
+  setUpcomingTitle(dbState.upcomingActivity?.title ||"");
+  setUpcomingTitleThai(dbState.upcomingActivity?.titleThai ||"");
+  setUpcomingDescription(dbState.upcomingActivity?.description ||"");
+  setUpcomingDescriptionThai(dbState.upcomingActivity?.descriptionThai ||"");
+  setUpcomingImageUrl(dbState.upcomingActivity?.imageUrl ||"");
+  setUpcomingDate(dbState.upcomingActivity?.date ||"");
+  setUpcomingDateThai(dbState.upcomingActivity?.dateThai ||"");
+  setUpcomingLocation(dbState.upcomingActivity?.location ||"");
+  setUpcomingLocationThai(dbState.upcomingActivity?.locationThai ||"");
+  setUpcomingRegUrl(dbState.upcomingActivity?.registrationUrl ||"");
+  setUpcomingShowSection(dbState.upcomingActivity?.showSection ?? true);
+  }
+  if (dbState?.clubActivity) {
+  setCaHeroImageUrl(dbState.clubActivity.heroImageUrl ||"");
+  setCaPhilosophyTitle(dbState.clubActivity.philosophyTitle ||"");
+  setCaPhilosophyTitleThai(dbState.clubActivity.philosophyTitleThai ||"");
+  setCaPhilosophyQuote(dbState.clubActivity.philosophyQuote ||"");
+  setCaPhilosophyQuoteThai(dbState.clubActivity.philosophyQuoteThai ||"");
+  setCaPhilosophyDescription(dbState.clubActivity.philosophyDescription ||"");
+  setCaPhilosophyDescriptionThai(dbState.clubActivity.philosophyDescriptionThai ||"");
+  setCaTechnicalExcellenceDescription(dbState.clubActivity.technicalExcellenceDescription ||"");
+  setCaTechnicalExcellenceDescriptionThai(dbState.clubActivity.technicalExcellenceDescriptionThai ||"");
+  setCaCaptainName(dbState.clubActivity.captainName ||"");
+  setCaCaptainNameThai(dbState.clubActivity.captainNameThai ||"");
+  setCaCaptainRole(dbState.clubActivity.captainRole ||"");
+  setCaCaptainRoleThai(dbState.clubActivity.captainRoleThai ||"");
+  setCaCaptainImageUrl(dbState.clubActivity.captainImageUrl ||"");
+  setCaCaptainPhilosophy(dbState.clubActivity.captainPhilosophy ||"");
+  setCaCaptainPhilosophyThai(dbState.clubActivity.captainPhilosophyThai ||"");
+  setCaCompetitions(dbState.clubActivity.competitions || []);
+  setCaTrainingDescription(dbState.clubActivity.trainingDescription ||"");
+  setCaTrainingDescriptionThai(dbState.clubActivity.trainingDescriptionThai ||"");
+  setCaLegacyDescription(dbState.clubActivity.legacyDescription ||"");
+  setCaLegacyDescriptionThai(dbState.clubActivity.legacyDescriptionThai ||"");
+  setCaFoundedYear(dbState.clubActivity.foundedYear ||"");
+  setCaActiveYears(dbState.clubActivity.activeYears ||"");
+  setCaActiveYearsThai(dbState.clubActivity.activeYearsThai ||"");
+  setCaShowPhilosophy(dbState.clubActivity.showPhilosophy ?? true);
+  setCaShowCaptainMandate(dbState.clubActivity.showCaptainMandate ?? true);
+  setCaShowCompetitions(dbState.clubActivity.showCompetitions ?? true);
+  setCaShowTraining(dbState.clubActivity.showTraining ?? true);
+  setCaShowLegacy(dbState.clubActivity.showLegacy ?? true);
+  }
  }, [dbState]);
+
+ React.useEffect(() => {
+ const labelsSource = editLabelsLanguage === "th" 
+ ? (dbState.siteLabelsThai || {}) 
+ : (dbState.siteLabels || {});
+ 
+ setLabelNavHome(labelsSource.navHome ||"HOME");
+ setLabelNavBlog(labelsSource.navBlog ||"ACTIVITIES");
+ setLabelNavRoster(labelsSource.navRoster ||"TEAM ROSTER");
+ setLabelNavStaff(labelsSource.navStaff ||"STAFF & BOARD");
+ setLabelNavScores(labelsSource.navScores ||"SCORES & STATS");
+ setLabelNavSponsors(labelsSource.navSponsors ||"PARTNERS");
+ setLabelNavAdmin(labelsSource.navAdmin ||"ADMIN CMS");
+ setLabelNavBrandTitle(labelsSource.navBrandTitle ||"cugolfclub.");
+ setLabelNavBrandSubtitle(labelsSource.navBrandSubtitle ||"[Official] Chulalongkorn University Golf Club");
+ setLabelNavAdminActive(labelsSource.navAdminActive ||"REGISTRY ACTIVE");
+ setLabelNavAdminCms(labelsSource.navAdminCms ||"ADMIN CMS");
+
+ setLabelHomeBlogTitle(labelsSource.homeBlogTitle ||"");
+ setLabelHomeBlogSubtitle(labelsSource.homeBlogSubtitle ||"");
+ setLabelHomeWelcomeHeroTitle(labelsSource.homeWelcomeHeroTitle ||"");
+ setLabelHomeWelcomeHeroSubtitle(labelsSource.homeWelcomeHeroSubtitle ||"Legacy");
+ setLabelHomeWelcomeHeroSocial(labelsSource.homeWelcomeHeroSocial ||"cugolfclub @Student Government of Chulalongkorn University");
+ setLabelHomeFeaturedActivityBadge(labelsSource.homeFeaturedActivityBadge ||"FEATURED ACTIVITY");
+ setLabelHomeRecentUpdatesLabel(labelsSource.homeRecentUpdatesLabel ||"RECENT UPDATES");
+ setLabelHomeReadCoverageButton(labelsSource.homeReadCoverageButton ||"READ COVERAGE");
+ setLabelHomeReadStoryButton(labelsSource.homeReadStoryButton ||"READ STORY");
+ setLabelHomeLiveStandingsTitle(labelsSource.homeLiveStandingsTitle ||"LIVE STANDINGS");
+ setLabelHomeFullLeaderboardButton(labelsSource.homeFullLeaderboardButton ||"FULL LEADERBOARD");
+ setLabelHomeNoBlogs(labelsSource.homeNoBlogs ||"No activities blogs published yet.");
+ setLabelHomeActivityLabel(labelsSource.homeActivityLabel ||"ACTIVITY");
+ setLabelHomeNoScores(labelsSource.homeNoScores ||"No tournament scores listed yet.");
+ setLabelHomeModalOfficialBadge(labelsSource.homeModalOfficialBadge ||"OFFICIAL EDITORIAL");
+ setLabelHomeModalEditorialBoard(labelsSource.homeModalEditorialBoard ||"CU GOLF CLUB SPORTS EDITORIAL BOARD");
+ setLabelHomeModalLocation(labelsSource.homeModalLocation ||"BANGKOK, THAILAND");
+
+ setLabelHomeMembershipTitle(labelsSource.homeMembershipTitle ||"Become a member of the CU GOLF CLUB.");
+ setLabelHomeMembershipDescription(labelsSource.homeMembershipDescription ||"Expand your network and elevate your game.");
+ setLabelHomeMembershipButtonText(labelsSource.homeMembershipButtonText ||"REGISTER NOW");
+
+ setLabelRosterTitle(labelsSource.rosterTitle ||"");
+ setLabelRosterSubtitle(labelsSource.rosterSubtitle ||"");
+ setLabelRosterVerifiedLabel(labelsSource.rosterVerifiedLabel ||"");
+ setLabelRosterSearchPlaceholder(labelsSource.rosterSearchPlaceholder ||"Search roster registry...");
+ setLabelRosterFilterLabel(labelsSource.rosterFilterLabel ||"CLASS YEAR:");
+ setLabelRosterStatusLabel(labelsSource.rosterStatusLabel ||"STATUS:");
+ setLabelRosterNoResultsTitle(labelsSource.rosterNoResultsTitle ||"No registrants found");
+ setLabelRosterNoResultsDesc(labelsSource.rosterNoResultsDesc ||"There are no players currently recorded matching your search parameters or select class year filters.");
+ setLabelRosterSquadLeadBadge(labelsSource.rosterSquadLeadBadge ||"SQUAD LEAD");
+ setLabelRosterIndexLabel(labelsSource.rosterIndexLabel ||"INDEX");
+ setLabelRosterAthleteLabel(labelsSource.rosterAthleteLabel ||"CU ATHLETE");
+ setLabelRosterStatusActive(labelsSource.rosterStatusActive ||"STATUS: ACTIVE SQUAD");
+
+ setLabelStaffTitle(labelsSource.staffTitle ||"");
+ setLabelStaffSubtitle(labelsSource.staffSubtitle ||"");
+ setLabelStaffVerifiedLabel(labelsSource.staffVerifiedLabel ||"");
+ setLabelScoresTitle(labelsSource.scoresTitle ||"");
+ setLabelScoresSubtitle(labelsSource.scoresSubtitle ||"");
+ setLabelScoresVerifiedLabel(labelsSource.scoresVerifiedLabel ||"");
+ setLabelScoresRecapTitle(labelsSource.scoresRecapTitle ||"");
+ setLabelScoresRecapSubtitle(labelsSource.scoresRecapSubtitle ||"");
+ setLabelScoresOfficialStatsBadge(labelsSource.scoresOfficialStatsBadge ||"UNOFFICIAL STATS");
+ setLabelScoresViewStandingsButton(labelsSource.scoresViewStandingsButton ||"VIEW STANDINGS");
+ setLabelScoresHideStandingsButton(labelsSource.scoresHideStandingsButton ||"HIDE STANDINGS");
+ setLabelScoresTablePlayerHeader(labelsSource.scoresTablePlayerHeader ||"PLAYER NAME");
+ setLabelScoresTableScoreHeader(labelsSource.scoresTableScoreHeader ||"STROKE SCORE");
+ setLabelScoresTablePositionHeader(labelsSource.scoresTablePositionHeader ||"POSITION");
+ setLabelScoresAttestationLabel(labelsSource.scoresAttestationLabel ||"CU UNOFFICIAL GOLF SCORECARD ATTESTATION");
+ setLabelScoresVerifiedDirectoryLabel(labelsSource.scoresVerifiedDirectoryLabel ||"COACH VERIFIED DIRECTORY");
+ setLabelScoresDetailedLeaderboardTitle(labelsSource.scoresDetailedLeaderboardTitle ||"DETAILED COMPETITIVE LEADERBOARD");
+
+ setLabelSponsorsTitle(labelsSource.sponsorsTitle ||"");
+ setLabelSponsorsSubtitle(labelsSource.sponsorsSubtitle ||"");
+ setLabelSponsorsVerifiedLabel(labelsSource.sponsorsVerifiedLabel ||"");
+ setLabelSponsorsContactTitle(labelsSource.sponsorsContactTitle ||"");
+ setLabelSponsorsContactDescription(labelsSource.sponsorsContactDescription ||"");
+ setLabelSponsorsOfficiallyAssociatedLabel(labelsSource.sponsorsOfficiallyAssociatedLabel ||"OFFICIALLY ASSOCIATED 2026");
+
+ setLabelFooterMissionTitle(labelsSource.footerMissionTitle ||"");
+ setLabelFooterMissionDescription(labelsSource.footerMissionDescription ||"");
+ setLabelFooterLegacyTitle(labelsSource.footerLegacyTitle ||"");
+ setLabelFooterLegacyDescription(labelsSource.footerLegacyDescription ||"");
+ setLabelFooterDirectoryTitle(labelsSource.footerDirectoryTitle ||"DIRECTORY");
+ setLabelFooterHeadquartersTitle(labelsSource.footerHeadquartersTitle ||"HEADQUARTERS");
+ setLabelFooterAffiliationsTitle(labelsSource.footerAffiliationsTitle ||"AFFILIATIONS");
+ setLabelFooterRightsReserved(labelsSource.footerRightsReserved ||"© {year} CHULALONGKORN UNIVERSITY GOLF CLUB. ALL RIGHTS RESERVED.");
+ setLabelFooterCmsLogin(labelsSource.footerCmsLogin ||"CMS LOG-IN");
+ setLabelFooterPrivacyDisclosure(labelsSource.footerPrivacyDisclosure ||"PRIVACY DISCLOSURE");
+ setLabelFooterTermsOfTradition(labelsSource.footerTermsOfTradition ||"TERMS OF TRADITION");
+ setLabelFooterDirectoryNewsRoom(labelsSource.footerDirectoryNewsRoom ||"NEWS ROOM");
+ setLabelFooterDirectoryRoster(labelsSource.footerDirectoryRoster ||"VARSITY ROSTER");
+ setLabelFooterDirectoryScores(labelsSource.footerDirectoryScores ||"MATCH STATS");
+ setLabelFooterAffiliationsChulaMain(labelsSource.footerAffiliationsChulaMain ||"CHULA MAIN");
+ setLabelFooterAffiliationsSportsOffice(labelsSource.footerAffiliationsSportsOffice ||"CU SPORTS OFFICE");
+
+ setLabelWelcomeHeroTitle(labelsSource.welcomeHeroTitle || "Longstanding");
+ setLabelWelcomeHeroSubtitle(labelsSource.welcomeHeroSubtitle || "Legacy");
+ setLabelWelcomeHeroSocial(labelsSource.welcomeHeroSocial ||"cugolfclub @Student Government of Chulalongkorn University");
+ setLabelNavBlogSubBlog(labelsSource.navBlogSubBlog || "BLOG");
+ setLabelNavBlogSubClub(labelsSource.navBlogSubClub || "CLUB ACTIVITIES");
+ setLabelNavFollowFb(labelsSource.navFollowFb || "FOLLOW @CUGOLFCLUB (FB)");
+ setLabelNavFollowIg(labelsSource.navFollowIg || "FOLLOW @CUGOLFCLUB (IG)");
+ setLabelNavFollowTiktok(labelsSource.navFollowTiktok || "FOLLOW @CUGOLFCLUB (TIKTOK)");
+ setLabelAboutClubHeroTitlePart1(labelsSource.aboutClubHeroTitlePart1 || "UPCOMING");
+ setLabelAboutClubHeroTitlePart2(labelsSource.aboutClubHeroTitlePart2 || "ACTIVITIES");
+ setLabelAboutClubHeroSubtitle(labelsSource.aboutClubHeroSubtitle || "SCHEDULE & TOUR DATES FOR THE CHULALONGKORN SQUAD");
+ setLabelAboutClubNoActivitiesTitle(labelsSource.aboutClubNoActivitiesTitle || "No upcoming activities scheduled");
+ setLabelAboutClubNoActivitiesDesc(labelsSource.aboutClubNoActivitiesDesc || "Check back later for newly added tournaments and club matches.");
+ setLabelBlogBackToBlog(labelsSource.blogBackToBlog || "BACK TO BLOG");
+ setLabelBlogPublishedBy(labelsSource.blogPublishedBy || "PUBLISHED BY");
+ setLabelBlogLocation(labelsSource.blogLocation || "LOCATION");
+ setLabelRosterYearAll(labelsSource.rosterYearAll || "ALL");
+ setLabelRosterYearFreshman(labelsSource.rosterYearFreshman || "FRESHMAN");
+ setLabelRosterYearSophomore(labelsSource.rosterYearSophomore || "SOPHOMORE");
+ setLabelRosterYearJunior(labelsSource.rosterYearJunior || "JUNIOR");
+ setLabelRosterYearSenior(labelsSource.rosterYearSenior || "SENIOR");
+ setLabelHomeViewAllStoriesButton(labelsSource.homeViewAllStoriesButton || "VIEW ALL STORIES");
+ }, [editLabelsLanguage, dbState]);
 
  // Helpers to show notifications brief
  const triggerSuccessMsg = (msg: string) => {
@@ -649,8 +758,11 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  try {
  const payload = {
  title: newsTitle,
+ titleThai: newsTitleThai,
  excerpt: newsExcerpt,
+ excerptThai: newsExcerptThai,
  content: newsContent,
+ contentThai: newsContentThai,
  imageUrl: newsImage ||"https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&q=80&w=1200",
  publishDate: newsDate || new Date().toISOString().split("T")[0],
  rank: newsRank,
@@ -668,8 +780,11 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  // Reset
  setEditingNewsId(null);
  setNewsTitle("");
+ setNewsTitleThai("");
  setNewsExcerpt("");
+ setNewsExcerptThai("");
  setNewsContent("");
+ setNewsContentThai("");
  setNewsImage("");
  setNewsDate("");
  setNewsRank(0);
@@ -685,8 +800,11 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  const handleEditNewsTrigger = (item: NewsItem) => {
  setEditingNewsId(item.id);
  setNewsTitle(item.title);
+ setNewsTitleThai(item.titleThai || "");
  setNewsExcerpt(item.excerpt);
+ setNewsExcerptThai(item.excerptThai || "");
  setNewsContent(item.content);
+ setNewsContentThai(item.contentThai || "");
  setNewsImage(item.imageUrl);
  setNewsDate(item.publishDate);
  setNewsRank(item.rank || 0);
@@ -718,9 +836,12 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  try {
  const payload = {
  name: playerName,
+ nameThai: playerNameThai,
  handicap: playerHandicap,
  year: playerYear,
+ yearThai: playerYearThai,
  faculty: playerFaculty ||"Faculty of Sports Science",
+ facultyThai: playerFacultyThai,
  imageUrl: playerImage ||"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400",
  isFeatured: playerIsFeatured,
  isVisible: playerIsVisible
@@ -736,9 +857,12 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
 
  setEditingPlayerId(null);
  setPlayerName("");
+ setPlayerNameThai("");
  setPlayerHandicap(1.5);
  setPlayerYear("Freshman");
+ setPlayerYearThai("Freshman");
  setPlayerFaculty("");
+ setPlayerFacultyThai("");
  setPlayerImage("");
  setPlayerIsFeatured(false);
  setPlayerIsVisible(true);
@@ -753,9 +877,12 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  const handleEditPlayerTrigger = (item: Player) => {
  setEditingPlayerId(item.id);
  setPlayerName(item.name);
+ setPlayerNameThai(item.nameThai || "");
  setPlayerHandicap(item.handicap);
  setPlayerYear(item.year);
+ setPlayerYearThai(item.yearThai || "Freshman");
  setPlayerFaculty(item.faculty ||"");
+ setPlayerFacultyThai(item.facultyThai || "");
  setPlayerImage(item.imageUrl);
  setPlayerIsFeatured(!!item.isFeatured);
  setPlayerIsVisible(item.isVisible ?? true);
@@ -786,8 +913,11 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  try {
  const payload = {
  name: staffName,
+ nameThai: staffNameThai,
  role: staffRole,
+ roleThai: staffRoleThai,
  year: staffFaculty ||"Faculty of Sports Science",
+ yearThai: staffFacultyThai,
  imageUrl: staffImage ||"https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400",
  order: staffOrder,
  isVisible: staffIsVisible
@@ -803,8 +933,11 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
 
  setEditingStaffId(null);
  setStaffName("");
+ setStaffNameThai("");
  setStaffRole("");
+ setStaffRoleThai("");
  setStaffFaculty("");
+ setStaffFacultyThai("");
  setStaffImage("");
  setStaffOrder(1);
  setStaffIsVisible(true);
@@ -819,8 +952,11 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  const handleEditStaffTrigger = (item: Staff) => {
  setEditingStaffId(item.id);
  setStaffName(item.name);
+ setStaffNameThai(item.nameThai || "");
  setStaffRole(item.role);
+ setStaffRoleThai(item.roleThai || "");
  setStaffFaculty(item.year);
+ setStaffFacultyThai(item.yearThai || "");
  setStaffImage(item.imageUrl);
  setStaffOrder(item.order);
  setStaffIsVisible(item.isVisible ?? true);
@@ -851,8 +987,10 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  try {
  const payload = {
  tournamentName: scoreTournamentName,
+ tournamentNameThai: scoreTournamentNameThai,
  date: scoreDate,
  result: scoreResult,
+ resultThai: scoreResultThai,
  scoresList: scoreList,
  isVisible: scoreIsVisible
  };
@@ -867,8 +1005,10 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
 
  setEditingScoreId(null);
  setScoreTournamentName("");
+ setScoreTournamentNameThai("");
  setScoreDate("");
  setScoreResult("");
+ setScoreResultThai("");
  setScoreList([{ playerName:"Methas 'Pete' Srisai", score: 71, position:"3rd"}]);
  setScoreIsVisible(true);
  refreshState();
@@ -897,8 +1037,10 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  const handleEditScoreTrigger = (item: TournamentScore) => {
  setEditingScoreId(item.id);
  setScoreTournamentName(item.tournamentName);
+ setScoreTournamentNameThai(item.tournamentNameThai || "");
  setScoreDate(item.date);
  setScoreResult(item.result);
+ setScoreResultThai(item.resultThai || "");
  setScoreList(item.scoresList);
  setScoreIsVisible(item.isVisible ?? true);
  window.scrollTo({ top: 0, behavior:"smooth"});
@@ -967,8 +1109,11 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  titleThai: welcomeTitleThai,
  titleEnglish: welcomeTitleEnglish,
  legacyQuote: welcomeLegacyQuote,
+ legacyQuoteThai: welcomeLegacyQuoteThai,
  legacyQuoteAuthor: welcomeLegacyQuoteAuthor,
- description: welcomeDescription
+ legacyQuoteAuthorThai: welcomeLegacyQuoteAuthorThai,
+ description: welcomeDescription,
+ descriptionThai: welcomeDescriptionThai
  });
  if (data.success) {
  triggerSuccessMsg("STATIC WELCOME PHOTOS & LEGACY QUOTE SETTINGS SUCCESSFULLY UPDATED.");
@@ -990,10 +1135,14 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  try {
  const resVal = await updateUpcomingActivity({
  title: upcomingTitle,
+ titleThai: upcomingTitleThai,
  description: upcomingDescription,
+ descriptionThai: upcomingDescriptionThai,
  imageUrl: upcomingImageUrl,
  date: upcomingDate,
+ dateThai: upcomingDateThai,
  location: upcomingLocation,
+ locationThai: upcomingLocationThai,
  registrationUrl: upcomingRegUrl,
  showSection: upcomingShowSection
  });
@@ -1021,7 +1170,9 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  try {
  const payload = {
  name: sponName,
+ nameThai: sponNameThai,
  description: sponDescription,
+ descriptionThai: sponDescriptionThai,
  websiteUrl: sponWebsiteUrl,
  imageUrl: sponImageUrl,
  isActive: sponIsActive
@@ -1037,7 +1188,9 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
 
  setEditingSponsorId(null);
  setSponName("");
+ setSponNameThai("");
  setSponDescription("");
+ setSponDescriptionThai("");
  setSponWebsiteUrl("");
  setSponImageUrl("");
  setSponIsActive(true);
@@ -1054,7 +1207,9 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
    setEditingSponsorId(item.id);
 
  setSponName(item.name);
+ setSponNameThai(item.nameThai || "");
  setSponDescription(item.description);
+ setSponDescriptionThai(item.descriptionThai || "");
  setSponWebsiteUrl(item.websiteUrl ||"");
  setSponImageUrl(item.imageUrl ||"");
  setSponIsActive(!!item.isActive);
@@ -1080,7 +1235,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  e.preventDefault();
  setIsMutating(true);
  try {
- const resVal = await updateSiteLabels({
+ const payload = {
  navHome: labelNavHome,
  navBlog: labelNavBlog,
  navRoster: labelNavRoster,
@@ -1159,7 +1314,31 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  welcomeHeroTitle: labelWelcomeHeroTitle,
  welcomeHeroSubtitle: labelWelcomeHeroSubtitle,
  welcomeHeroSocial: labelWelcomeHeroSocial,
- });
+ navBlogSubBlog: labelNavBlogSubBlog,
+ navBlogSubClub: labelNavBlogSubClub,
+ navFollowFb: labelNavFollowFb,
+ navFollowIg: labelNavFollowIg,
+ navFollowTiktok: labelNavFollowTiktok,
+ aboutClubHeroTitlePart1: labelAboutClubHeroTitlePart1,
+ aboutClubHeroTitlePart2: labelAboutClubHeroTitlePart2,
+ aboutClubHeroSubtitle: labelAboutClubHeroSubtitle,
+ aboutClubNoActivitiesTitle: labelAboutClubNoActivitiesTitle,
+ aboutClubNoActivitiesDesc: labelAboutClubNoActivitiesDesc,
+ blogBackToBlog: labelBlogBackToBlog,
+ blogPublishedBy: labelBlogPublishedBy,
+ blogLocation: labelBlogLocation,
+ rosterYearAll: labelRosterYearAll,
+ rosterYearFreshman: labelRosterYearFreshman,
+ rosterYearSophomore: labelRosterYearSophomore,
+ rosterYearJunior: labelRosterYearJunior,
+ rosterYearSenior: labelRosterYearSenior,
+ homeViewAllStoriesButton: labelHomeViewAllStoriesButton,
+ };
+
+ const resVal = editLabelsLanguage === "th" 
+   ? await updateSiteLabelsThai(payload)
+   : await updateSiteLabels(payload);
+
  if (resVal.success) {
  triggerSuccessMsg("SITE CONTENT LABELS & EDITORIAL TEXT UPDATED SUCCESSFULLY.");
  refreshState();
@@ -1178,11 +1357,16 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  try {
  const res = await updateHomeSponsorSection({
  title: homeSponTitle,
+ titleThai: homeSponTitleThai,
  subtitle: homeSponSubtitle,
+ subtitleThai: homeSponSubtitleThai,
  description: homeSponDescription,
+ descriptionThai: homeSponDescriptionThai,
  marqueeText: homeSponMarqueeText,
+ marqueeTextThai: homeSponMarqueeTextThai,
  imageUrl: homeSponImageUrl,
  buttonText: homeSponButtonText,
+ buttonTextThai: homeSponButtonTextThai,
  buttonUrl: homeSponButtonUrl,
  showSection: homeSponShowSection
  });
@@ -1204,18 +1388,28 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  const { success } = await updateClubActivity({
  heroImageUrl: caHeroImageUrl,
  philosophyTitle: caPhilosophyTitle,
+ philosophyTitleThai: caPhilosophyTitleThai,
  philosophyQuote: caPhilosophyQuote,
+ philosophyQuoteThai: caPhilosophyQuoteThai,
  philosophyDescription: caPhilosophyDescription,
+ philosophyDescriptionThai: caPhilosophyDescriptionThai,
  technicalExcellenceDescription: caTechnicalExcellenceDescription,
+ technicalExcellenceDescriptionThai: caTechnicalExcellenceDescriptionThai,
  captainName: caCaptainName,
+ captainNameThai: caCaptainNameThai,
  captainRole: caCaptainRole,
+ captainRoleThai: caCaptainRoleThai,
  captainImageUrl: caCaptainImageUrl,
  captainPhilosophy: caCaptainPhilosophy,
+ captainPhilosophyThai: caCaptainPhilosophyThai,
  competitions: caCompetitions,
  trainingDescription: caTrainingDescription,
+ trainingDescriptionThai: caTrainingDescriptionThai,
  legacyDescription: caLegacyDescription,
+ legacyDescriptionThai: caLegacyDescriptionThai,
  foundedYear: caFoundedYear,
  activeYears: caActiveYears,
+ activeYearsThai: caActiveYearsThai,
  showPhilosophy: caShowPhilosophy,
  showCaptainMandate: caShowCaptainMandate,
  showCompetitions: caShowCompetitions,
@@ -1259,10 +1453,13 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  try {
  const resVal = await updateSiteSettings({
  marqueeText: setsMarqueeText,
+ marqueeTextThai: setsMarqueeTextThai,
  contactPhone: setsContactPhone,
  contactEmail: setsContactEmail,
  contactAddress: setsContactAddress,
+ contactAddressThai: setsContactAddressThai,
  academicAffiliation: setsAcademicAffiliation,
+ academicAffiliationThai: setsAcademicAffiliationThai,
  showMarquee: setsShowMarquee,
  showHomeBlog: setsShowHomeBlog,
  showHomeWelcome: setsShowHomeWelcome,
@@ -1389,13 +1586,60 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  />
  </div>
  <div className="space-y-1.5">
- <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">WELCOME DESCRIPTION PARAGRAPH</label>
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">WELCOME DESCRIPTION PARAGRAPH (EN)</label>
  <textarea
  rows={5}
  value={welcomeDescription}
  onChange={(e) => setWelcomeDescription(e.target.value)}
  className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none leading-relaxed text-brand-ink"
  />
+ </div>
+ <div className="space-y-1.5">
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">WELCOME DESCRIPTION PARAGRAPH (TH)</label>
+ <textarea
+ rows={5}
+ value={welcomeDescriptionThai}
+ onChange={(e) => setWelcomeDescriptionThai(e.target.value)}
+ className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none leading-relaxed text-brand-ink"
+ />
+ </div>
+ <div className="space-y-1.5">
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">LEGACY QUOTE (EN)</label>
+ <textarea
+ rows={3}
+ value={welcomeLegacyQuote}
+ onChange={(e) => setWelcomeLegacyQuote(e.target.value)}
+ className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none leading-relaxed text-brand-ink"
+ />
+ </div>
+ <div className="space-y-1.5">
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">LEGACY QUOTE (TH)</label>
+ <textarea
+ rows={3}
+ value={welcomeLegacyQuoteThai}
+ onChange={(e) => setWelcomeLegacyQuoteThai(e.target.value)}
+ className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none leading-relaxed text-brand-ink"
+ />
+ </div>
+ <div className="grid grid-cols-2 gap-4">
+ <div className="space-y-1.5">
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">LEGACY QUOTE AUTHOR (EN)</label>
+ <input
+ type="text"
+ value={welcomeLegacyQuoteAuthor}
+ onChange={(e) => setWelcomeLegacyQuoteAuthor(e.target.value)}
+ className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none focus:border-brand-pink text-brand-ink"
+ />
+ </div>
+ <div className="space-y-1.5">
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">LEGACY QUOTE AUTHOR (TH)</label>
+ <input
+ type="text"
+ value={welcomeLegacyQuoteAuthorThai}
+ onChange={(e) => setWelcomeLegacyQuoteAuthorThai(e.target.value)}
+ className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none focus:border-brand-pink text-brand-ink"
+ />
+ </div>
  </div>
  <div className="pt-4 border-t border-brand-ink/10">
  <button
@@ -1427,7 +1671,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  </label>
  </div>
  <div className="space-y-1.5">
- <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">TITLE</label>
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">TITLE (EN)</label>
  <input
  type="text"
  value={homeSponTitle}
@@ -1436,7 +1680,16 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  />
  </div>
  <div className="space-y-1.5">
- <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">SUBTITLE</label>
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">TITLE (TH)</label>
+ <input
+ type="text"
+ value={homeSponTitleThai}
+ onChange={(e) => setHomeSponTitleThai(e.target.value)}
+ className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"
+ />
+ </div>
+ <div className="space-y-1.5">
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">SUBTITLE (EN)</label>
  <input
  type="text"
  value={homeSponSubtitle}
@@ -1445,7 +1698,16 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  />
  </div>
  <div className="space-y-1.5">
- <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">DESCRIPTION</label>
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">SUBTITLE (TH)</label>
+ <input
+ type="text"
+ value={homeSponSubtitleThai}
+ onChange={(e) => setHomeSponSubtitleThai(e.target.value)}
+ className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"
+ />
+ </div>
+ <div className="space-y-1.5">
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">DESCRIPTION (EN)</label>
  <textarea
  rows={4}
  value={homeSponDescription}
@@ -1454,13 +1716,51 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  />
  </div>
  <div className="space-y-1.5">
- <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">MARQUEE RUNNING TEXT</label>
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">DESCRIPTION (TH)</label>
+ <textarea
+ rows={4}
+ value={homeSponDescriptionThai}
+ onChange={(e) => setHomeSponDescriptionThai(e.target.value)}
+ className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none leading-relaxed"
+ />
+ </div>
+ <div className="space-y-1.5">
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">MARQUEE RUNNING TEXT (EN)</label>
  <input
  type="text"
  value={homeSponMarqueeText}
  onChange={(e) => setHomeSponMarqueeText(e.target.value)}
  className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none font-mono"
  />
+ </div>
+ <div className="space-y-1.5">
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">MARQUEE RUNNING TEXT (TH)</label>
+ <input
+ type="text"
+ value={homeSponMarqueeTextThai}
+ onChange={(e) => setHomeSponMarqueeTextThai(e.target.value)}
+ className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none font-mono"
+ />
+ </div>
+ <div className="grid grid-cols-2 gap-4">
+ <div className="space-y-1.5">
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">BUTTON TEXT (EN)</label>
+ <input
+ type="text"
+ value={homeSponButtonText}
+ onChange={(e) => setHomeSponButtonText(e.target.value)}
+ className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"
+ />
+ </div>
+ <div className="space-y-1.5">
+ <label className="font-mono text-[9px] font-bold text-brand-ink/60 uppercase block">BUTTON TEXT (TH)</label>
+ <input
+ type="text"
+ value={homeSponButtonTextThai}
+ onChange={(e) => setHomeSponButtonTextThai(e.target.value)}
+ className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"
+ />
+ </div>
  </div>
  <ImageUploadWidget
  id="home_spon_image"
@@ -1492,7 +1792,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  
  <button 
  onClick={() => { 
- setEditingNewsId(null); setNewsTitle(""); setNewsExcerpt(""); setNewsContent(""); setNewsImage(""); setNewsDate(""); setNewsRank(0); setNewsIsVisible(true);
+ setEditingNewsId(null); setNewsTitle(""); setNewsTitleThai(""); setNewsExcerpt(""); setNewsExcerptThai(""); setNewsContent(""); setNewsContentThai(""); setNewsImage(""); setNewsDate(""); setNewsRank(0); setNewsIsVisible(true);
  window.scrollTo({ top: 0, behavior:"smooth"});
  }}
  className="w-full bg-brand-ink text-brand-neutral py-3 font-mono text-[10px] font-bold uppercase flex items-center justify-center gap-2 hover:bg-brand-pink"
@@ -1506,16 +1806,22 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  </h3>
  
  <div className="space-y-4">
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Title</label><input type="text"value={newsTitle} onChange={(e) => setNewsTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Excerpt</label><textarea rows={3} value={newsExcerpt} onChange={(e) => setNewsExcerpt(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Title (EN)</label><input type="text"value={newsTitle} onChange={(e) => setNewsTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Title (TH)</label><input type="text"value={newsTitleThai} onChange={(e) => setNewsTitleThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Excerpt (EN)</label><textarea rows={3} value={newsExcerpt} onChange={(e) => setNewsExcerpt(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Excerpt (TH)</label><textarea rows={3} value={newsExcerptThai} onChange={(e) => setNewsExcerptThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
  <div className="grid grid-cols-2 gap-4">
  <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Date (YYYY-MM-DD)</label><input type="text"value={newsDate} onChange={(e) => setNewsDate(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-mono"/></div>
  <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Rank (Higher = First)</label><input type="number"value={newsRank} onChange={(e) => setNewsRank(parseInt(e.target.value) || 0)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-mono"/></div>
  </div>
  <ImageUploadWidget id="news_img"label="COVER IMAGE"value={newsImage} onChange={setNewsImage} />
  <div className="space-y-1.5">
- <label className="font-mono text-[9px] font-bold uppercase">Content (Markdown)</label>
+ <label className="font-mono text-[9px] font-bold uppercase">Content (Markdown - EN)</label>
  <textarea rows={10} value={newsContent} onChange={(e) => setNewsContent(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-mono leading-relaxed"/>
+ </div>
+ <div className="space-y-1.5">
+ <label className="font-mono text-[9px] font-bold uppercase">Content (Markdown - TH)</label>
+ <textarea rows={10} value={newsContentThai} onChange={(e) => setNewsContentThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-mono leading-relaxed"/>
  </div>
  <div className="flex items-center gap-2 py-2">
  <input type="checkbox"id="news_vis"checked={newsIsVisible} onChange={(e) => setNewsIsVisible(e.target.checked)} className="h-4 w-4 accent-brand-pink"/>
@@ -1523,7 +1829,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  </div>
  </div>
  <div className="flex gap-4 pt-4 border-t border-brand-ink/10">
- <button onClick={() => { setEditingNewsId(null); setNewsTitle(""); setNewsExcerpt(""); setNewsContent(""); setNewsImage(""); setNewsDate(""); setNewsRank(0); setNewsIsVisible(true); }} className="flex-1 bg-brand-stone py-3 font-mono text-[10px] font-bold uppercase hover:bg-stone-200">CLEAR FORM</button>
+ <button onClick={() => { setEditingNewsId(null); setNewsTitle(""); setNewsTitleThai(""); setNewsExcerpt(""); setNewsExcerptThai(""); setNewsContent(""); setNewsContentThai(""); setNewsImage(""); setNewsDate(""); setNewsRank(0); setNewsIsVisible(true); }} className="flex-1 bg-brand-stone py-3 font-mono text-[10px] font-bold uppercase hover:bg-stone-200">CLEAR FORM</button>
  <button onClick={handleSaveNews} className="flex-1 bg-brand-ink text-brand-neutral py-3 font-mono text-[10px] font-bold uppercase hover:bg-brand-pink flex justify-center items-center gap-1.5"><Save size={12} /> SAVE STORY</button>
  </div>
  </div>
@@ -1577,22 +1883,31 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  </div>
  
  <div className="space-y-4">
- <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2">Philosophy Section</h3>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Title</label><input type="text"value={caPhilosophyTitle} onChange={(e) => setCaPhilosophyTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Quote</label><textarea rows={3} value={caPhilosophyQuote} onChange={(e) => setCaPhilosophyQuote(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none italic"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Description</label><textarea rows={6} value={caPhilosophyDescription} onChange={(e) => setCaPhilosophyDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Technical Excellence</label><textarea rows={6} value={caTechnicalExcellenceDescription} onChange={(e) => setCaTechnicalExcellenceDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
- </div>
+  <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2">Philosophy Section</h3>
+  <div className="grid grid-cols-2 gap-4">
+    <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Title (EN)</label><input type="text"value={caPhilosophyTitle} onChange={(e) => setCaPhilosophyTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
+    <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Title (TH)</label><input type="text"value={caPhilosophyTitleThai} onChange={(e) => setCaPhilosophyTitleThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
+  </div>
+  <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Quote (EN)</label><textarea rows={2} value={caPhilosophyQuote} onChange={(e) => setCaPhilosophyQuote(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none italic"/></div>
+  <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Quote (TH)</label><textarea rows={2} value={caPhilosophyQuoteThai} onChange={(e) => setCaPhilosophyQuoteThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none italic"/></div>
+  <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Description (EN)</label><textarea rows={4} value={caPhilosophyDescription} onChange={(e) => setCaPhilosophyDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
+  <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Description (TH)</label><textarea rows={4} value={caPhilosophyDescriptionThai} onChange={(e) => setCaPhilosophyDescriptionThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
+  <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Technical Excellence (EN)</label><textarea rows={4} value={caTechnicalExcellenceDescription} onChange={(e) => setCaTechnicalExcellenceDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
+  <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Technical Excellence (TH)</label><textarea rows={4} value={caTechnicalExcellenceDescriptionThai} onChange={(e) => setCaTechnicalExcellenceDescriptionThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
+  </div>
 
- <div className="space-y-4">
- <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2">Captain's Mandate</h3>
- <div className="grid grid-cols-2 gap-4">
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Name</label><input type="text"value={caCaptainName} onChange={(e) => setCaCaptainName(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Role</label><input type="text"value={caCaptainRole} onChange={(e) => setCaCaptainRole(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
- </div>
- <ImageUploadWidget id="ca_captain_img"label="CAPTAIN IMAGE"value={caCaptainImageUrl} onChange={setCaCaptainImageUrl} />
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Philosophy</label><textarea rows={6} value={caCaptainPhilosophy} onChange={(e) => setCaCaptainPhilosophy(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
- </div>
+  <div className="space-y-4">
+  <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2">Captain's Mandate</h3>
+  <div className="grid grid-cols-2 gap-4">
+  <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Name (EN)</label><input type="text"value={caCaptainName} onChange={(e) => setCaCaptainName(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
+  <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Name (TH)</label><input type="text"value={caCaptainNameThai} onChange={(e) => setCaCaptainNameThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
+  <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Role (EN)</label><input type="text"value={caCaptainRole} onChange={(e) => setCaCaptainRole(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
+  <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Role (TH)</label><input type="text"value={caCaptainRoleThai} onChange={(e) => setCaCaptainRoleThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
+  </div>
+  <ImageUploadWidget id="ca_captain_img"label="CAPTAIN IMAGE"value={caCaptainImageUrl} onChange={setCaCaptainImageUrl} />
+  <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Philosophy (EN)</label><textarea rows={4} value={caCaptainPhilosophy} onChange={(e) => setCaCaptainPhilosophy(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
+  <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Philosophy (TH)</label><textarea rows={4} value={caCaptainPhilosophyThai} onChange={(e) => setCaCaptainPhilosophyThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
+  </div>
 
  <div className="space-y-4">
  <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2 flex justify-between items-center">
@@ -1603,14 +1918,24 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  {caCompetitions.map((comp) => (
  <div key={comp.id} className="border border-stone-200 p-4 space-y-3 bg-brand-stone relative text-left">
  <button onClick={() => handleDeleteCompetition(comp.id)} className="absolute top-2 right-2 text-red-500 hover:text-red-700 transition-colors cursor-pointer"><Trash2 size={12} /></button>
- <div className="space-y-1.5">
- <label className="font-mono text-[9px] font-bold uppercase">Activity Title</label>
- <input type="text"value={comp.title} onChange={(e) => handleUpdateCompetition(comp.id, { title: e.target.value })} placeholder="Title"className="w-full bg-brand-neutral border border-brand-ink/10 p-2 text-xs focus:outline-none font-bold"/>
- </div>
  <div className="grid grid-cols-2 gap-4">
  <div className="space-y-1.5">
- <label className="font-mono text-[9px] font-bold uppercase">Difficulty/Level</label>
+ <label className="font-mono text-[9px] font-bold uppercase">Activity Title (EN)</label>
+ <input type="text"value={comp.title} onChange={(e) => handleUpdateCompetition(comp.id, { title: e.target.value })} placeholder="Title"className="w-full bg-brand-neutral border border-brand-ink/10 p-2 text-xs focus:outline-none font-bold"/>
+ </div>
+ <div className="space-y-1.5">
+ <label className="font-mono text-[9px] font-bold uppercase">Activity Title (TH)</label>
+ <input type="text"value={comp.titleThai || ""} onChange={(e) => handleUpdateCompetition(comp.id, { titleThai: e.target.value })} placeholder="ชื่อภาษาไทย"className="w-full bg-brand-neutral border border-brand-ink/10 p-2 text-xs focus:outline-none font-bold"/>
+ </div>
+ </div>
+ <div className="grid grid-cols-3 gap-4">
+ <div className="space-y-1.5">
+ <label className="font-mono text-[9px] font-bold uppercase">Difficulty (EN)</label>
  <input type="text"value={comp.difficulty} onChange={(e) => handleUpdateCompetition(comp.id, { difficulty: e.target.value })} placeholder="Difficulty/Level"className="w-full bg-brand-neutral border border-brand-ink/10 p-2 text-xs focus:outline-none font-mono"/>
+ </div>
+ <div className="space-y-1.5">
+ <label className="font-mono text-[9px] font-bold uppercase">Difficulty (TH)</label>
+ <input type="text"value={comp.difficultyThai || ""} onChange={(e) => handleUpdateCompetition(comp.id, { difficultyThai: e.target.value })} placeholder="ความยากภาษาไทย"className="w-full bg-brand-neutral border border-brand-ink/10 p-2 text-xs focus:outline-none font-mono"/>
  </div>
  <div className="space-y-1.5">
  <label className="font-mono text-[9px] font-bold uppercase">Activity Date</label>
@@ -1619,8 +1944,12 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  </div>
  <ImageUploadWidget id={`comp_img_${comp.id}`}label="Activity Photo"value={comp.imageUrl || ""} onChange={(url) => handleUpdateCompetition(comp.id, { imageUrl: url })} />
  <div className="space-y-1.5">
- <label className="font-mono text-[9px] font-bold uppercase">Description</label>
- <textarea rows={3} value={comp.description} onChange={(e) => handleUpdateCompetition(comp.id, { description: e.target.value })} placeholder="Description"className="w-full bg-brand-neutral border border-brand-ink/10 p-2 text-xs focus:outline-none"/>
+ <label className="font-mono text-[9px] font-bold uppercase">Description (EN)</label>
+ <textarea rows={2} value={comp.description} onChange={(e) => handleUpdateCompetition(comp.id, { description: e.target.value })} placeholder="Description"className="w-full bg-brand-neutral border border-brand-ink/10 p-2 text-xs focus:outline-none"/>
+ </div>
+ <div className="space-y-1.5">
+ <label className="font-mono text-[9px] font-bold uppercase">Description (TH)</label>
+ <textarea rows={2} value={comp.descriptionThai || ""} onChange={(e) => handleUpdateCompetition(comp.id, { descriptionThai: e.target.value })} placeholder="คำอธิบายภาษาไทย"className="w-full bg-brand-neutral border border-brand-ink/10 p-2 text-xs focus:outline-none"/>
  </div>
  </div>
  ))}
@@ -1629,11 +1958,14 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
 
  <div className="space-y-4">
  <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2">Training & Legacy</h3>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Training Description</label><textarea rows={6} value={caTrainingDescription} onChange={(e) => setCaTrainingDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
- <div className="space-y-1.5 mt-4"><label className="font-mono text-[9px] font-bold uppercase">Legacy Description</label><textarea rows={4} value={caLegacyDescription} onChange={(e) => setCaLegacyDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
- <div className="grid grid-cols-2 gap-4">
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Training Description (EN)</label><textarea rows={4} value={caTrainingDescription} onChange={(e) => setCaTrainingDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Training Description (TH)</label><textarea rows={4} value={caTrainingDescriptionThai} onChange={(e) => setCaTrainingDescriptionThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
+ <div className="space-y-1.5 mt-4"><label className="font-mono text-[9px] font-bold uppercase">Legacy Description (EN)</label><textarea rows={3} value={caLegacyDescription} onChange={(e) => setCaLegacyDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Legacy Description (TH)</label><textarea rows={3} value={caLegacyDescriptionThai} onChange={(e) => setCaLegacyDescriptionThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none"/></div>
+ <div className="grid grid-cols-3 gap-4">
  <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Founded Year</label><input type="text"value={caFoundedYear} onChange={(e) => setCaFoundedYear(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none font-mono"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Active Years</label><input type="text"value={caActiveYears} onChange={(e) => setCaActiveYears(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none font-mono"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Active Years (EN)</label><input type="text"value={caActiveYears} onChange={(e) => setCaActiveYears(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none font-mono"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Active Years (TH)</label><input type="text"value={caActiveYearsThai} onChange={(e) => setCaActiveYearsThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none font-mono"/></div>
  </div>
  </div>
 
@@ -1668,17 +2000,24 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  {editingPlayerId ?"EDITING PLAYER":"NEW PLAYER FORM"}
  </h3>
  <div className="space-y-4">
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Name</label><input type="text"value={playerName} onChange={(e) => setPlayerName(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
  <div className="grid grid-cols-2 gap-4">
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Name (EN)</label><input type="text"value={playerName} onChange={(e) => setPlayerName(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Name (TH)</label><input type="text"value={playerNameThai} onChange={(e) => setPlayerNameThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ </div>
+ <div className="grid grid-cols-3 gap-4">
  <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Handicap</label><input type="number"step="0.1"value={playerHandicap} onChange={(e) => setPlayerHandicap(parseFloat(e.target.value) || 0)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-mono"/></div>
  <div className="space-y-1.5">
- <label className="font-mono text-[9px] font-bold uppercase">Year</label>
+ <label className="font-mono text-[9px] font-bold uppercase">Year (EN)</label>
  <select value={playerYear} onChange={(e) => setPlayerYear(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs">
  <option value="Freshman">Freshman</option><option value="Sophomore">Sophomore</option><option value="Junior">Junior</option><option value="Senior">Senior</option><option value="Alumni">Alumni</option>
  </select>
  </div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Year (TH)</label><input type="text"value={playerYearThai} onChange={(e) => setPlayerYearThai(e.target.value)} placeholder="e.g. ปี 1" className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
  </div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Faculty</label><input type="text"value={playerFaculty} onChange={(e) => setPlayerFaculty(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="grid grid-cols-2 gap-4">
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Faculty (EN)</label><input type="text"value={playerFaculty} onChange={(e) => setPlayerFaculty(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Faculty (TH)</label><input type="text"value={playerFacultyThai} onChange={(e) => setPlayerFacultyThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ </div>
  <ImageUploadWidget id="player_img"label="HEADSHOT IMAGE"value={playerImage} onChange={setPlayerImage} />
  <div className="flex items-center gap-4 py-2">
  <div className="flex items-center gap-2"><input type="checkbox"id="p_feat"checked={playerIsFeatured} onChange={(e) => setPlayerIsFeatured(e.target.checked)} className="h-4 w-4 accent-brand-pink"/><label htmlFor="p_feat"className="font-mono text-[9px] font-bold uppercase">FEATURED (LEAD)</label></div>
@@ -1734,10 +2073,17 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  {editingStaffId ?"EDITING STAFF":"NEW STAFF FORM"}
  </h3>
  <div className="space-y-4">
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Name</label><input type="text"value={staffName} onChange={(e) => setStaffName(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Role (Title)</label><input type="text"value={staffRole} onChange={(e) => setStaffRole(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
  <div className="grid grid-cols-2 gap-4">
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Year / Faculty</label><input type="text"value={staffFaculty} onChange={(e) => setStaffFaculty(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Name (EN)</label><input type="text"value={staffName} onChange={(e) => setStaffName(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Name (TH)</label><input type="text"value={staffNameThai} onChange={(e) => setStaffNameThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ </div>
+ <div className="grid grid-cols-2 gap-4">
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Role (EN)</label><input type="text"value={staffRole} onChange={(e) => setStaffRole(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Role (TH)</label><input type="text"value={staffRoleThai} onChange={(e) => setStaffRoleThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ </div>
+ <div className="grid grid-cols-3 gap-4">
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Year / Faculty (EN)</label><input type="text"value={staffFaculty} onChange={(e) => setStaffFaculty(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Year / Faculty (TH)</label><input type="text"value={staffFacultyThai} onChange={(e) => setStaffFacultyThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
  <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Order (1=First)</label><input type="number"value={staffOrder} onChange={(e) => setStaffOrder(parseInt(e.target.value) || 1)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-mono"/></div>
  </div>
  <ImageUploadWidget id="staff_img"label="HEADSHOT IMAGE"value={staffImage} onChange={setStaffImage} />
@@ -1795,10 +2141,14 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  {editingScoreId ?"EDITING TOURNAMENT":"NEW TOURNAMENT FORM"}
  </h3>
  <div className="space-y-4">
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Tournament Name</label><input type="text"value={scoreTournamentName} onChange={(e) => setScoreTournamentName(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
  <div className="grid grid-cols-2 gap-4">
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Tournament Name (EN)</label><input type="text"value={scoreTournamentName} onChange={(e) => setScoreTournamentName(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Tournament Name (TH)</label><input type="text"value={scoreTournamentNameThai} onChange={(e) => setScoreTournamentNameThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ </div>
+ <div className="grid grid-cols-3 gap-4">
  <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Date (YYYY-MM-DD)</label><input type="text"value={scoreDate} onChange={(e) => setScoreDate(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-mono"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Overall Result</label><input type="text"value={scoreResult} onChange={(e) => setScoreResult(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Overall Result (EN)</label><input type="text"value={scoreResult} onChange={(e) => setScoreResult(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Overall Result (TH)</label><input type="text"value={scoreResultThai} onChange={(e) => setScoreResultThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
  </div>
  <div className="flex items-center gap-2 py-1">
  <input type="checkbox"id="score_vis"checked={scoreIsVisible} onChange={(e) => setScoreIsVisible(e.target.checked)} className="h-4 w-4 accent-brand-pink"/>
@@ -1811,13 +2161,19 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  <button onClick={handleAddPlayerScoreRow} className="bg-brand-ink text-brand-neutral px-2 py-1 font-mono text-[8px] flex items-center gap-1"><Plus size={10}/> ADD ROW</button>
  </div>
  {scoreList.map((row, idx) => (
- <div key={idx} className="flex gap-2 items-center bg-brand-neutral p-2 border border-stone-200">
- <input type="text"value={row.playerName} placeholder="Player Name"onChange={(e) => handleUpdatePlayerScoreRow(idx,"playerName", e.target.value)} className="flex-[2] bg-transparent text-xs p-1 focus:outline-none font-bold"/>
- <input type="number"value={row.score} placeholder="Score"onChange={(e) => handleUpdatePlayerScoreRow(idx,"score", parseInt(e.target.value)||72)} className="flex-1 bg-transparent text-xs p-1 font-mono text-center focus:outline-none"/>
- <input type="text"value={row.position} placeholder="Pos (e.g. 1st)"onChange={(e) => handleUpdatePlayerScoreRow(idx,"position", e.target.value)} className="flex-1 bg-transparent text-xs p-1 text-center text-brand-pink font-bold focus:outline-none"/>
- <button onClick={() => handleRemovePlayerScoreRow(idx)} className="text-red-500 p-1 hover:bg-red-50 rounded"><X size={12}/></button>
- </div>
- ))}
+  <div key={idx} className="flex flex-col md:flex-row gap-2 items-start md:items-center bg-brand-neutral p-2 border border-stone-200 w-full">
+  <div className="flex flex-1 gap-2 w-full">
+  <input type="text"value={row.playerName} placeholder="Name (EN)"onChange={(e) => handleUpdatePlayerScoreRow(idx,"playerName", e.target.value)} className="flex-1 bg-brand-stone/40 text-xs p-1 focus:outline-none font-bold border border-stone-100"/>
+  <input type="text"value={row.playerNameThai || ""} placeholder="Name (TH)"onChange={(e) => handleUpdatePlayerScoreRow(idx,"playerNameThai", e.target.value)} className="flex-1 bg-brand-stone/40 text-xs p-1 focus:outline-none font-bold border border-stone-100"/>
+  </div>
+  <div className="flex gap-2 w-full md:w-auto shrink-0 items-center justify-between">
+  <input type="number"value={row.score} placeholder="Score"onChange={(e) => handleUpdatePlayerScoreRow(idx,"score", parseInt(e.target.value)||72)} className="w-16 bg-brand-stone/40 text-xs p-1 font-mono text-center focus:outline-none border border-stone-100"/>
+  <input type="text"value={row.position} placeholder="Pos (EN)"onChange={(e) => handleUpdatePlayerScoreRow(idx,"position", e.target.value)} className="w-20 bg-brand-stone/40 text-xs p-1 text-center text-brand-pink font-bold focus:outline-none border border-stone-100"/>
+  <input type="text"value={row.positionThai || ""} placeholder="Pos (TH)"onChange={(e) => handleUpdatePlayerScoreRow(idx,"positionThai", e.target.value)} className="w-20 bg-brand-stone/40 text-xs p-1 text-center text-brand-pink font-bold focus:outline-none border border-stone-100"/>
+  <button onClick={() => handleRemovePlayerScoreRow(idx)} className="text-red-500 p-1 hover:bg-red-50 rounded shrink-0"><X size={12}/></button>
+  </div>
+  </div>
+  ))}
  </div>
  </div>
  <div className="flex gap-4 pt-4 border-t border-brand-ink/10">
@@ -1877,8 +2233,12 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
              {editingSponsorId ? "EDITING PARTNER" : "NEW PARTNER FORM"}
            </h3>
            <div className="space-y-4">
-             <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Partner Name</label><input type="text" value={sponName} onChange={(e) => setSponName(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-bold" /></div>
-             <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Description</label><textarea rows={3} value={sponDescription} onChange={(e) => setSponDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
+             <div className="grid grid-cols-2 gap-4">
+               <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Partner Name (EN)</label><input type="text" value={sponName} onChange={(e) => setSponName(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-bold" /></div>
+               <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Partner Name (TH)</label><input type="text" value={sponNameThai} onChange={(e) => setSponNameThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
+             </div>
+             <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Description (EN)</label><textarea rows={3} value={sponDescription} onChange={(e) => setSponDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
+             <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Description (TH)</label><textarea rows={3} value={sponDescriptionThai} onChange={(e) => setSponDescriptionThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
              <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Website URL</label><input type="text" value={sponWebsiteUrl} onChange={(e) => setSponWebsiteUrl(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
              <ImageUploadWidget id="spon_logo" label="SPONSOR LOGO IMAGE URL" value={sponImageUrl} onChange={setSponImageUrl} helperText="Transparent PNG is required." />
              <div className="flex items-center gap-2 py-1">
@@ -2013,11 +2373,14 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  <form onSubmit={handleUpdateSiteSettings} className="space-y-6">
  <h3 className="font-mono text-[11px] font-black text-brand-pink uppercase tracking-[0.2em] border-b border-brand-pink/20 pb-2">GLOBAL ANNOUNCEMENTS</h3>
  <div className="space-y-4">
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">MOVING MARQUEE ANNOUNCEMENT TEXT</label><textarea rows={2} value={setsMarqueeText} onChange={(e) => setSetsMarqueeText(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">MOVING MARQUEE ANNOUNCEMENT TEXT (EN)</label><textarea rows={2} value={setsMarqueeText} onChange={(e) => setSetsMarqueeText(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">MOVING MARQUEE ANNOUNCEMENT TEXT (TH)</label><textarea rows={2} value={setsMarqueeTextThai} onChange={(e) => setSetsMarqueeTextThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
  <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">CONTACT TELEPHONE</label><input type="text"value={setsContactPhone} onChange={(e) => setSetsContactPhone(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-mono"/></div>
  <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">CONTACT EMAIL</label><input type="email"value={setsContactEmail} onChange={(e) => setSetsContactEmail(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">HEADQUARTERS ADDRESS</label><textarea rows={2} value={setsContactAddress} onChange={(e) => setSetsContactAddress(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
- <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">ACADEMIC AFFILIATION</label><input type="text"value={setsAcademicAffiliation} onChange={(e) => setSetsAcademicAffiliation(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">HEADQUARTERS ADDRESS (EN)</label><textarea rows={2} value={setsContactAddress} onChange={(e) => setSetsContactAddress(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">HEADQUARTERS ADDRESS (TH)</label><textarea rows={2} value={setsContactAddressThai} onChange={(e) => setSetsContactAddressThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">ACADEMIC AFFILIATION (EN)</label><input type="text"value={setsAcademicAffiliation} onChange={(e) => setSetsAcademicAffiliation(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
+ <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">ACADEMIC AFFILIATION (TH)</label><input type="text"value={setsAcademicAffiliationThai} onChange={(e) => setSetsAcademicAffiliationThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs"/></div>
  </div>
 
  <h3 className="font-mono text-[11px] font-black text-brand-pink uppercase tracking-[0.2em] border-b border-brand-pink/20 pb-2 pt-6">FEATURE VISIBILITY TOGGLES</h3>
@@ -2045,85 +2408,209 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  <p className="text-[10px] text-stone-500 font-mono uppercase mt-2 mb-6">Customize every text label across the platform for local context.</p>
 
  <form onSubmit={handleUpdateSiteLabels} className="space-y-10">
-   {/* NAVIGATION */}
+   {/* LANGUAGE SELECTOR FOR LABELS */}
+   <div className="flex border border-brand-ink font-mono text-xs font-bold overflow-hidden divide-x divide-brand-ink mb-6 bg-brand-neutral max-w-xs">
+     <button
+       type="button"
+       onClick={() => setEditLabelsLanguage("en")}
+       className={`flex-1 py-2 text-center transition-all duration-200 cursor-pointer uppercase ${editLabelsLanguage === "en" ? "bg-brand-ink text-brand-neutral" : "bg-brand-neutral text-stone-500 hover:bg-brand-stone hover:text-brand-ink"}`}
+     >
+       English Labels
+     </button>
+     <button
+       type="button"
+       onClick={() => setEditLabelsLanguage("th")}
+       className={`flex-1 py-2 text-center transition-all duration-200 cursor-pointer uppercase ${editLabelsLanguage === "th" ? "bg-brand-ink text-brand-neutral" : "bg-brand-neutral text-stone-500 hover:bg-brand-stone hover:text-brand-ink"}`}
+     >
+       Thai Labels (แปลไทย)
+     </button>
+   </div>
+
+   {/* NAVIGATION & BRANDING */}
    <div className="space-y-4">
-     <h4 className="font-mono text-[10px] font-black text-brand-ink uppercase bg-brand-stone p-2">NAVIGATION & BRANDING</h4>
+     <h4 className="font-mono text-[10px] font-black text-brand-ink uppercase bg-brand-stone p-2">NAVIGATION & BRANDING ({editLabelsLanguage === "th" ? "THAI" : "ENGLISH"})</h4>
      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
        <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Nav: Home</label><input type="text" value={labelNavHome} onChange={(e) => setLabelNavHome(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
-       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Nav: Activities</label><input type="text" value={labelNavBlog} onChange={(e) => setLabelNavBlog(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Nav: Activities (Parent)</label><input type="text" value={labelNavBlog} onChange={(e) => setLabelNavBlog(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Nav sub-menu: Blog</label><input type="text" value={labelNavBlogSubBlog} onChange={(e) => setLabelNavBlogSubBlog(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Nav sub-menu: Club Activities</label><input type="text" value={labelNavBlogSubClub} onChange={(e) => setLabelNavBlogSubClub(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
        <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Nav: Roster</label><input type="text" value={labelNavRoster} onChange={(e) => setLabelNavRoster(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
        <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Nav: Staff</label><input type="text" value={labelNavStaff} onChange={(e) => setLabelNavStaff(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
        <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Nav: Scores</label><input type="text" value={labelNavScores} onChange={(e) => setLabelNavScores(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
        <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Nav: Partners</label><input type="text" value={labelNavSponsors} onChange={(e) => setLabelNavSponsors(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
        <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Brand Title</label><input type="text" value={labelNavBrandTitle} onChange={(e) => setLabelNavBrandTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px] font-bold" /></div>
        <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Brand Subtitle</label><input type="text" value={labelNavBrandSubtitle} onChange={(e) => setLabelNavBrandSubtitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Social Follow Fb</label><input type="text" value={labelNavFollowFb} onChange={(e) => setLabelNavFollowFb(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Social Follow Ig</label><input type="text" value={labelNavFollowIg} onChange={(e) => setLabelNavFollowIg(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Social Follow Tiktok</label><input type="text" value={labelNavFollowTiktok} onChange={(e) => setLabelNavFollowTiktok(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Nav: Admin active banner</label><input type="text" value={labelNavAdminActive} onChange={(e) => setLabelNavAdminActive(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Nav: Admin portal button</label><input type="text" value={labelNavAdmin} onChange={(e) => setLabelNavAdmin(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Nav: Admin CMS header</label><input type="text" value={labelNavAdminCms} onChange={(e) => setLabelNavAdminCms(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
      </div>
    </div>
 
    {/* HOME PAGE */}
    <div className="space-y-4">
-     <h4 className="font-mono text-[10px] font-black text-brand-ink uppercase bg-brand-stone p-2">HOMEPAGE CONTENT</h4>
+     <h4 className="font-mono text-[10px] font-black text-brand-ink uppercase bg-brand-stone p-2">HOMEPAGE CONTENT ({editLabelsLanguage === "th" ? "THAI" : "ENGLISH"})</h4>
      <div className="space-y-4">
        <div className="grid grid-cols-2 gap-4">
          <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Blog Title</label><input type="text" value={labelHomeBlogTitle} onChange={(e) => setLabelHomeBlogTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
          <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Blog Subtitle</label><input type="text" value={labelHomeBlogSubtitle} onChange={(e) => setLabelHomeBlogSubtitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Activity Label</label><input type="text" value={labelHomeActivityLabel} onChange={(e) => setLabelHomeActivityLabel(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">View All Stories Button</label><input type="text" value={labelHomeViewAllStoriesButton} onChange={(e) => setLabelHomeViewAllStoriesButton(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       </div>
+       <div className="grid grid-cols-2 gap-4">
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Welcome Hero Title</label><input type="text" value={labelHomeWelcomeHeroTitle} onChange={(e) => setLabelHomeWelcomeHeroTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Welcome Hero Subtitle</label><input type="text" value={labelHomeWelcomeHeroSubtitle} onChange={(e) => setLabelHomeWelcomeHeroSubtitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Welcome Hero Social</label><input type="text" value={labelHomeWelcomeHeroSocial} onChange={(e) => setLabelHomeWelcomeHeroSocial(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Featured Activity Badge</label><input type="text" value={labelHomeFeaturedActivityBadge} onChange={(e) => setLabelHomeFeaturedActivityBadge(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       </div>
+       <div className="grid grid-cols-2 gap-4">
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Recent Updates Label</label><input type="text" value={labelHomeRecentUpdatesLabel} onChange={(e) => setLabelHomeRecentUpdatesLabel(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Read Coverage Button</label><input type="text" value={labelHomeReadCoverageButton} onChange={(e) => setLabelHomeReadCoverageButton(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Read Story Button</label><input type="text" value={labelHomeReadStoryButton} onChange={(e) => setLabelHomeReadStoryButton(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">No Blogs Message</label><input type="text" value={labelHomeNoBlogs} onChange={(e) => setLabelHomeNoBlogs(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
        </div>
        <div className="grid grid-cols-2 gap-4">
          <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Standings Title</label><input type="text" value={labelHomeLiveStandingsTitle} onChange={(e) => setLabelHomeLiveStandingsTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
-         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Full Leaderboard Btn</label><input type="text" value={labelHomeFullLeaderboardButton} onChange={(e) => setLabelHomeFullLeaderboardButton(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Full Leaderboard Button</label><input type="text" value={labelHomeFullLeaderboardButton} onChange={(e) => setLabelHomeFullLeaderboardButton(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">No Scores Message</label><input type="text" value={labelHomeNoScores} onChange={(e) => setLabelHomeNoScores(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Modal Official Badge</label><input type="text" value={labelHomeModalOfficialBadge} onChange={(e) => setLabelHomeModalOfficialBadge(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       </div>
+       <div className="grid grid-cols-2 gap-4">
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Modal Editorial Board</label><input type="text" value={labelHomeModalEditorialBoard} onChange={(e) => setLabelHomeModalEditorialBoard(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Modal Location</label><input type="text" value={labelHomeModalLocation} onChange={(e) => setLabelHomeModalLocation(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
        </div>
        <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Membership Title</label><input type="text" value={labelHomeMembershipTitle} onChange={(e) => setLabelHomeMembershipTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
-       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Membership Desc</label><textarea rows={2} value={labelHomeMembershipDescription} onChange={(e) => setLabelHomeMembershipDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Membership Description</label><textarea rows={2} value={labelHomeMembershipDescription} onChange={(e) => setLabelHomeMembershipDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Membership Button Text</label><input type="text" value={labelHomeMembershipButtonText} onChange={(e) => setLabelHomeMembershipButtonText(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+     </div>
+   </div>
+
+   {/* CLUB ACTIVITIES PAGE */}
+   <div className="space-y-4">
+     <h4 className="font-mono text-[10px] font-black text-brand-ink uppercase bg-brand-stone p-2">CLUB ACTIVITIES PAGE ({editLabelsLanguage === "th" ? "THAI" : "ENGLISH"})</h4>
+     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Hero Title Part 1</label><input type="text" value={labelAboutClubHeroTitlePart1} onChange={(e) => setLabelAboutClubHeroTitlePart1(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Hero Title Part 2</label><input type="text" value={labelAboutClubHeroTitlePart2} onChange={(e) => setLabelAboutClubHeroTitlePart2(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Hero Subtitle</label><input type="text" value={labelAboutClubHeroSubtitle} onChange={(e) => setLabelAboutClubHeroSubtitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">No Activities Title</label><input type="text" value={labelAboutClubNoActivitiesTitle} onChange={(e) => setLabelAboutClubNoActivitiesTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5 md:col-span-2"><label className="font-mono text-[8px] font-bold uppercase">No Activities Description</label><textarea rows={2} value={labelAboutClubNoActivitiesDesc} onChange={(e) => setLabelAboutClubNoActivitiesDesc(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+     </div>
+   </div>
+
+   {/* BLOG DETAIL LABELS */}
+   <div className="space-y-4">
+     <h4 className="font-mono text-[10px] font-black text-brand-ink uppercase bg-brand-stone p-2">BLOG DETAIL LABELS ({editLabelsLanguage === "th" ? "THAI" : "ENGLISH"})</h4>
+     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Back to Blog button</label><input type="text" value={labelBlogBackToBlog} onChange={(e) => setLabelBlogBackToBlog(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Published By prefix</label><input type="text" value={labelBlogPublishedBy} onChange={(e) => setLabelBlogPublishedBy(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Location label</label><input type="text" value={labelBlogLocation} onChange={(e) => setLabelBlogLocation(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
      </div>
    </div>
 
    {/* ROSTER PAGE */}
    <div className="space-y-4">
-     <h4 className="font-mono text-[10px] font-black text-brand-ink uppercase bg-brand-stone p-2">ROSTER & TEAM LABELS</h4>
-     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Roster Title</label><input type="text" value={labelRosterTitle} onChange={(e) => setLabelRosterTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
-       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Roster Subtitle</label><input type="text" value={labelRosterSubtitle} onChange={(e) => setLabelRosterSubtitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
-       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Verified Label</label><input type="text" value={labelRosterVerifiedLabel} onChange={(e) => setLabelRosterVerifiedLabel(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
-       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Search Placeholder</label><input type="text" value={labelRosterSearchPlaceholder} onChange={(e) => setLabelRosterSearchPlaceholder(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+     <h4 className="font-mono text-[10px] font-black text-brand-ink uppercase bg-brand-stone p-2">ROSTER & TEAM LABELS ({editLabelsLanguage === "th" ? "THAI" : "ENGLISH"})</h4>
+     <div className="space-y-4">
+       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Roster Title</label><input type="text" value={labelRosterTitle} onChange={(e) => setLabelRosterTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Roster Subtitle</label><input type="text" value={labelRosterSubtitle} onChange={(e) => setLabelRosterSubtitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Verified Label</label><input type="text" value={labelRosterVerifiedLabel} onChange={(e) => setLabelRosterVerifiedLabel(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Search Placeholder</label><input type="text" value={labelRosterSearchPlaceholder} onChange={(e) => setLabelRosterSearchPlaceholder(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Filter Label</label><input type="text" value={labelRosterFilterLabel} onChange={(e) => setLabelRosterFilterLabel(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Status Label</label><input type="text" value={labelRosterStatusLabel} onChange={(e) => setLabelRosterStatusLabel(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">No Results Title</label><input type="text" value={labelRosterNoResultsTitle} onChange={(e) => setLabelRosterNoResultsTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Squad Lead Badge</label><input type="text" value={labelRosterSquadLeadBadge} onChange={(e) => setLabelRosterSquadLeadBadge(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Index Label</label><input type="text" value={labelRosterIndexLabel} onChange={(e) => setLabelRosterIndexLabel(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Athlete Label</label><input type="text" value={labelRosterAthleteLabel} onChange={(e) => setLabelRosterAthleteLabel(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Status Active Label</label><input type="text" value={labelRosterStatusActive} onChange={(e) => setLabelRosterStatusActive(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5 md:col-span-2"><label className="font-mono text-[8px] font-bold uppercase">No Results Description</label><textarea rows={2} value={labelRosterNoResultsDesc} onChange={(e) => setLabelRosterNoResultsDesc(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       </div>
+       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 pt-2">
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Year Filter: All</label><input type="text" value={labelRosterYearAll} onChange={(e) => setLabelRosterYearAll(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Year Filter: Freshman</label><input type="text" value={labelRosterYearFreshman} onChange={(e) => setLabelRosterYearFreshman(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Year Filter: Sophomore</label><input type="text" value={labelRosterYearSophomore} onChange={(e) => setLabelRosterYearSophomore(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Year Filter: Junior</label><input type="text" value={labelRosterYearJunior} onChange={(e) => setLabelRosterYearJunior(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Year Filter: Senior</label><input type="text" value={labelRosterYearSenior} onChange={(e) => setLabelRosterYearSenior(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       </div>
      </div>
    </div>
 
-   {/* STAFF & SCORES */}
+   {/* STAFF & BOARD */}
    <div className="space-y-4">
-     <h4 className="font-mono text-[10px] font-black text-brand-ink uppercase bg-brand-stone p-2">STAFF & SCORES LABELS</h4>
-     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+     <h4 className="font-mono text-[10px] font-black text-brand-ink uppercase bg-brand-stone p-2">STAFF & BOARD LABELS ({editLabelsLanguage === "th" ? "THAI" : "ENGLISH"})</h4>
+     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
        <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Staff Title</label><input type="text" value={labelStaffTitle} onChange={(e) => setLabelStaffTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
        <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Staff Subtitle</label><input type="text" value={labelStaffSubtitle} onChange={(e) => setLabelStaffSubtitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Verified Label</label><input type="text" value={labelStaffVerifiedLabel} onChange={(e) => setLabelStaffVerifiedLabel(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+     </div>
+   </div>
+
+   {/* SCORES PAGE */}
+   <div className="space-y-4">
+     <h4 className="font-mono text-[10px] font-black text-brand-ink uppercase bg-brand-stone p-2">SCORES & STATS LABELS ({editLabelsLanguage === "th" ? "THAI" : "ENGLISH"})</h4>
+     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
        <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Scores Title</label><input type="text" value={labelScoresTitle} onChange={(e) => setLabelScoresTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
        <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Scores Subtitle</label><input type="text" value={labelScoresSubtitle} onChange={(e) => setLabelScoresSubtitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Verified Label</label><input type="text" value={labelScoresVerifiedLabel} onChange={(e) => setLabelScoresVerifiedLabel(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Recap Title</label><input type="text" value={labelScoresRecapTitle} onChange={(e) => setLabelScoresRecapTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Recap Subtitle</label><input type="text" value={labelScoresRecapSubtitle} onChange={(e) => setLabelScoresRecapSubtitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Official Stats Badge</label><input type="text" value={labelScoresOfficialStatsBadge} onChange={(e) => setLabelScoresOfficialStatsBadge(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">View Standings button</label><input type="text" value={labelScoresViewStandingsButton} onChange={(e) => setLabelScoresViewStandingsButton(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Hide Standings button</label><input type="text" value={labelScoresHideStandingsButton} onChange={(e) => setLabelScoresHideStandingsButton(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Table Header: Player</label><input type="text" value={labelScoresTablePlayerHeader} onChange={(e) => setLabelScoresTablePlayerHeader(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Table Header: Score</label><input type="text" value={labelScoresTableScoreHeader} onChange={(e) => setLabelScoresTableScoreHeader(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Table Header: Position</label><input type="text" value={labelScoresTablePositionHeader} onChange={(e) => setLabelScoresTablePositionHeader(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Attestation Label</label><input type="text" value={labelScoresAttestationLabel} onChange={(e) => setLabelScoresAttestationLabel(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Verified Directory Label</label><input type="text" value={labelScoresVerifiedDirectoryLabel} onChange={(e) => setLabelScoresVerifiedDirectoryLabel(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5 md:col-span-2"><label className="font-mono text-[8px] font-bold uppercase">Detailed Leaderboard Header</label><input type="text" value={labelScoresDetailedLeaderboardTitle} onChange={(e) => setLabelScoresDetailedLeaderboardTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
      </div>
    </div>
 
    {/* SPONSORS */}
    <div className="space-y-4">
-     <h4 className="font-mono text-[10px] font-black text-brand-ink uppercase bg-brand-stone p-2">SPONSOR PAGE LABELS</h4>
+     <h4 className="font-mono text-[10px] font-black text-brand-ink uppercase bg-brand-stone p-2">SPONSORS PAGE LABELS ({editLabelsLanguage === "th" ? "THAI" : "ENGLISH"})</h4>
      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
        <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Sponsors Title</label><input type="text" value={labelSponsorsTitle} onChange={(e) => setLabelSponsorsTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
        <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Sponsors Subtitle</label><input type="text" value={labelSponsorsSubtitle} onChange={(e) => setLabelSponsorsSubtitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Verified Label</label><input type="text" value={labelSponsorsVerifiedLabel} onChange={(e) => setLabelSponsorsVerifiedLabel(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Contact Section Title</label><input type="text" value={labelSponsorsContactTitle} onChange={(e) => setLabelSponsorsContactTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Officially Associated Label</label><input type="text" value={labelSponsorsOfficiallyAssociatedLabel} onChange={(e) => setLabelSponsorsOfficiallyAssociatedLabel(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="space-y-1.5 md:col-span-2"><label className="font-mono text-[8px] font-bold uppercase">Contact Section Description</label><textarea rows={2} value={labelSponsorsContactDescription} onChange={(e) => setLabelSponsorsContactDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
      </div>
    </div>
 
    {/* FOOTER */}
-
    <div className="space-y-4">
-     <h4 className="font-mono text-[10px] font-black text-brand-ink uppercase bg-brand-stone p-2">FOOTER & DISCLOSURES</h4>
+     <h4 className="font-mono text-[10px] font-black text-brand-ink uppercase bg-brand-stone p-2">FOOTER SECTION LABELS ({editLabelsLanguage === "th" ? "THAI" : "ENGLISH"})</h4>
      <div className="space-y-4">
        <div className="grid grid-cols-2 gap-4">
          <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Mission Title</label><input type="text" value={labelFooterMissionTitle} onChange={(e) => setLabelFooterMissionTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
          <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Legacy Title</label><input type="text" value={labelFooterLegacyTitle} onChange={(e) => setLabelFooterLegacyTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Mission Description</label><textarea rows={2} value={labelFooterMissionDescription} onChange={(e) => setLabelFooterMissionDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Legacy Description</label><textarea rows={2} value={labelFooterLegacyDescription} onChange={(e) => setLabelFooterLegacyDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
        </div>
-       <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Rights Reserved</label><input type="text" value={labelFooterRightsReserved} onChange={(e) => setLabelFooterRightsReserved(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Directory Section Title</label><input type="text" value={labelFooterDirectoryTitle} onChange={(e) => setLabelFooterDirectoryTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Headquarters Section Title</label><input type="text" value={labelFooterHeadquartersTitle} onChange={(e) => setLabelFooterHeadquartersTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Affiliations Section Title</label><input type="text" value={labelFooterAffiliationsTitle} onChange={(e) => setLabelFooterAffiliationsTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Rights Reserved Notice</label><input type="text" value={labelFooterRightsReserved} onChange={(e) => setLabelFooterRightsReserved(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">CMS Login Link</label><input type="text" value={labelFooterCmsLogin} onChange={(e) => setLabelFooterCmsLogin(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Privacy Disclosure Link</label><input type="text" value={labelFooterPrivacyDisclosure} onChange={(e) => setLabelFooterPrivacyDisclosure(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Terms of Tradition Link</label><input type="text" value={labelFooterTermsOfTradition} onChange={(e) => setLabelFooterTermsOfTradition(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Directory Link: News Room</label><input type="text" value={labelFooterDirectoryNewsRoom} onChange={(e) => setLabelFooterDirectoryNewsRoom(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Directory Link: Varsity Roster</label><input type="text" value={labelFooterDirectoryRoster} onChange={(e) => setLabelFooterDirectoryRoster(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Directory Link: Match Stats</label><input type="text" value={labelFooterDirectoryScores} onChange={(e) => setLabelFooterDirectoryScores(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Affiliations Link: Chula Main</label><input type="text" value={labelFooterAffiliationsChulaMain} onChange={(e) => setLabelFooterAffiliationsChulaMain(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+         <div className="space-y-1.5"><label className="font-mono text-[8px] font-bold uppercase">Affiliations Link: Sports Office</label><input type="text" value={labelFooterAffiliationsSportsOffice} onChange={(e) => setLabelFooterAffiliationsSportsOffice(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-[10px]" /></div>
+       </div>
      </div>
    </div>
 
    <div className="pt-4">
      <button type="submit" className="w-full bg-brand-pink text-brand-neutral hover:bg-brand-ink px-6 py-4 font-mono text-sm font-bold tracking-wider uppercase flex items-center justify-center gap-2 transition-colors">
-       <Save size={16} /> SAVE ALL SITE LABELS
+       <Save size={16} /> SAVE {editLabelsLanguage === "th" ? "THAI" : "ENGLISH"} SITE LABELS
      </button>
    </div>
  </form>

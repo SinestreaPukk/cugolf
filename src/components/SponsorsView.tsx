@@ -1,5 +1,6 @@
 import { Target, ArrowUpRight, Award, Shield, CheckCircle, Edit } from"lucide-react";
 import { Sponsor, SiteLabels, AdminEditProps } from"../types";
+import { useLanguage } from "../utils/LanguageContext";
 
 interface SponsorsViewProps extends AdminEditProps {
  sponsors?: Sponsor[];
@@ -7,6 +8,7 @@ interface SponsorsViewProps extends AdminEditProps {
 }
 
 export default function SponsorsView({ sponsors, siteLabels, isAdmin, onEditSection, activeSectionId }: SponsorsViewProps) {
+ const { language } = useLanguage();
  const corporateSponsors = sponsors && sponsors.length > 0 ? sponsors : [];
 
  const isActive = activeSectionId ==="sponsors_list";
@@ -57,18 +59,20 @@ export default function SponsorsView({ sponsors, siteLabels, isAdmin, onEditSect
  {brand.imageUrl ? (
  <img 
  src={brand.imageUrl} 
- alt={brand.name} 
+ alt={language === "th" && brand.nameThai ? brand.nameThai : brand.name} 
  className="max-h-full max-w-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500"
  />
  ) : (
- <div className="text-stone-300 font-display text-2xl font-bold uppercase select-none">{brand.name}</div>
+ <div className="text-stone-300 font-display text-2xl font-bold uppercase select-none">
+   {language === "th" && brand.nameThai ? brand.nameThai : brand.name}
+ </div>
  )}
  </div>
  
  <div className="p-6 flex flex-col flex-grow space-y-4">
  <div className="flex items-center justify-between">
  <h3 className="font-display text-lg font-bold tracking-tight text-neutral-950 uppercase leading-none">
- {brand.name}
+ {language === "th" && brand.nameThai ? brand.nameThai : brand.name}
  </h3>
  {brand.websiteUrl && (
  <a 
@@ -84,7 +88,7 @@ export default function SponsorsView({ sponsors, siteLabels, isAdmin, onEditSect
  </div>
 
  <p className="text-xs text-stone-600 leading-relaxed text-left line-clamp-3 flex-grow">
- {brand.description}
+ {language === "th" && brand.descriptionThai ? brand.descriptionThai : brand.description}
  </p>
 
  <div className="pt-4 border-t border-stone-100 flex items-center gap-2 font-mono text-[9px] text-stone-400 uppercase font-bold tracking-wider">

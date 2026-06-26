@@ -1,6 +1,7 @@
 import { SiteLabels, SiteSettings, TournamentScore, ClubActivityContent, AdminEditProps } from "../types";
 import { Trophy, Edit, Calendar } from "lucide-react";
 import { useEffect } from "react";
+import { useLanguage } from "../utils/LanguageContext";
 
 interface AboutClubViewProps extends AdminEditProps {
   clubActivity: ClubActivityContent;
@@ -10,6 +11,7 @@ interface AboutClubViewProps extends AdminEditProps {
 }
 
 export default function AboutClubView({ clubActivity, siteLabels, isAdmin, onEditSection, activeSectionId }: AboutClubViewProps) {
+  const { language } = useLanguage();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -57,8 +59,8 @@ export default function AboutClubView({ clubActivity, siteLabels, isAdmin, onEdi
         <div className="absolute inset-0 opacity-60">
           <img 
             src={clubActivity.heroImageUrl || "/uploads/windsor_team_legacy.png"} 
-            className="w-full h-full object-cover"
             alt="CU Golf Club Team"
+            className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-brand-ink/50 mix-blend-multiply" />
           <div className="absolute inset-0 bg-gradient-to-t from-brand-ink via-transparent to-brand-ink/40" />
@@ -66,10 +68,10 @@ export default function AboutClubView({ clubActivity, siteLabels, isAdmin, onEdi
         
         <div className="relative z-10 space-y-4 px-4">
           <h1 className="font-display text-4xl md:text-7xl font-black text-brand-neutral uppercase tracking-tighter leading-none">
-            UPCOMING <span className="text-brand-pink">ACTIVITIES</span>
+            {siteLabels?.aboutClubHeroTitlePart1 || "UPCOMING"} <span className="text-brand-pink">{siteLabels?.aboutClubHeroTitlePart2 || "ACTIVITIES"}</span>
           </h1>
           <p className="font-sans text-stone-400 text-xs md:text-sm max-w-lg mx-auto uppercase tracking-wider leading-relaxed">
-            SCHEDULE & TOUR DATES FOR THE CHULALONGKORN SQUAD
+            {siteLabels?.aboutClubHeroSubtitle || "SCHEDULE & TOUR DATES FOR THE CHULALONGKORN SQUAD"}
           </p>
         </div>
       </section>
@@ -86,7 +88,7 @@ export default function AboutClubView({ clubActivity, siteLabels, isAdmin, onEdi
               try {
                 if (comp.date) {
                   const d = new Date(comp.date);
-                  formattedDate = d.toLocaleDateString("en-US", {
+                  formattedDate = d.toLocaleDateString(language === "th" ? "th-TH" : "en-US", {
                     day: "numeric",
                     month: "short",
                     year: "numeric"
@@ -95,6 +97,8 @@ export default function AboutClubView({ clubActivity, siteLabels, isAdmin, onEdi
               } catch (e) {
                 // fallback
               }
+
+              const diffVal = language === "th" && comp.difficultyThai ? comp.difficultyThai : comp.difficulty;
 
               return (
                 <div 
@@ -105,12 +109,12 @@ export default function AboutClubView({ clubActivity, siteLabels, isAdmin, onEdi
                   <div className="relative aspect-[16/10] overflow-hidden bg-brand-stone border-b border-brand-ink">
                     <img
                       src={comp.imageUrl || "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&q=80&w=800"}
-                      alt={comp.title}
+                      alt={language === "th" && comp.titleThai ? comp.titleThai : comp.title}
                       className="w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-105"
                     />
-                    {comp.difficulty && (
+                    {diffVal && (
                       <span className="absolute top-4 right-4 font-mono text-[9px] font-black bg-brand-ink px-2.5 py-1 text-brand-neutral uppercase tracking-wider z-10">
-                        {comp.difficulty}
+                        {diffVal}
                       </span>
                     )}
                   </div>
@@ -124,11 +128,11 @@ export default function AboutClubView({ clubActivity, siteLabels, isAdmin, onEdi
                       </div>
                       
                       <h3 className="font-display text-xl font-bold text-brand-ink uppercase leading-tight group-hover:text-brand-pink transition-colors">
-                        {comp.title}
+                        {language === "th" && comp.titleThai ? comp.titleThai : comp.title}
                       </h3>
                       
                       <p className="font-sans text-xs text-stone-600 leading-relaxed">
-                        {comp.description}
+                        {language === "th" && comp.descriptionThai ? comp.descriptionThai : comp.description}
                       </p>
                     </div>
                   </div>
@@ -140,10 +144,10 @@ export default function AboutClubView({ clubActivity, siteLabels, isAdmin, onEdi
           <div className="border border-dashed border-brand-ink/30 p-20 text-center max-w-xl mx-auto bg-brand-stone/30">
             <Trophy size={48} strokeWidth={1} className="mx-auto text-stone-300 mb-6"/>
             <h3 className="font-display text-xl font-bold uppercase text-brand-ink mb-3">
-              No upcoming activities scheduled
+              {siteLabels?.aboutClubNoActivitiesTitle || "No upcoming activities scheduled"}
             </h3>
             <p className="font-sans text-xs text-stone-500 leading-relaxed uppercase tracking-wider">
-              Check back later for newly added tournaments and club matches.
+              {siteLabels?.aboutClubNoActivitiesDesc || "Check back later for newly added tournaments and club matches."}
             </p>
           </div>
         )}

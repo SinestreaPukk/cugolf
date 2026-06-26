@@ -3,6 +3,7 @@ import { ArrowRight, Calendar, User, ChevronRight, BookOpen, Clock, Trophy, Targ
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import WelcomeSectionView from "./WelcomeSectionView";
+import { useLanguage } from "../utils/LanguageContext";
 
 interface HomeViewProps extends AdminEditProps {
   news: NewsItem[];
@@ -19,8 +20,9 @@ interface HomeViewProps extends AdminEditProps {
 }
 
 export default function HomeView({ news, scores, roster, gallery, welcomeSection, upcomingActivity, clubActivity, homeSponsorSection, sponsors, siteLabels, siteSettings, isAdmin, onEditSection, activeSectionId }: HomeViewProps) {
-
+ const { language } = useLanguage();
  // Sort by rank (descending) and then by date (descending)
+
  const sortedNews = [...(news || [])].filter(n => n.isVisible !== false).sort((a, b) => {
  const rankA = a.rank || 0;
  const rankB = b.rank || 0;
@@ -87,7 +89,7 @@ export default function HomeView({ news, scores, roster, gallery, welcomeSection
            to="/scores"
            className="font-mono text-[10px] text-brand-pink hover:text-[#c24273] font-bold transition-colors uppercase tracking-widest bg-brand-stone/50 px-4 py-2 border border-brand-ink/10"
          >
-           FULL LEADERBOARD
+           {siteLabels?.homeFullLeaderboardButton || "FULL LEADERBOARD"}
          </Link>
        </div>
 
@@ -96,25 +98,29 @@ export default function HomeView({ news, scores, roster, gallery, welcomeSection
            <div className="md:col-span-1 space-y-2">
              <span className="font-mono text-[9px] text-stone-400 block font-bold uppercase tracking-widest">{quickScores[0].date}</span>
              <h5 className="font-display text-xl md:text-2xl font-black text-brand-ink uppercase leading-tight">
-               {quickScores[0].tournamentName}
+               {language === "th" && quickScores[0].tournamentNameThai ? quickScores[0].tournamentNameThai : quickScores[0].tournamentName}
              </h5>
              <div className="text-[9px] font-mono font-bold text-emerald-800 bg-emerald-50 py-1 px-2.5 border border-emerald-200 inline-block uppercase tracking-wider mt-2 shadow-[2px_2px_0_rgba(5,150,105,0.1)]">
-               UNOFFICIAL STATS
+               {siteLabels?.scoresOfficialStatsBadge || "UNOFFICIAL STATS"}
              </div>
            </div>
 
            <div className="md:col-span-2 space-y-2">
              <div className="grid grid-cols-12 gap-4 pb-2 border-b border-brand-ink/20 font-mono text-[9px] font-bold text-stone-400 uppercase tracking-widest">
-               <div className="col-span-8">Player Name</div>
-               <div className="col-span-2 text-center">Score</div>
-               <div className="col-span-2 text-right">Pos</div>
+               <div className="col-span-8">{siteLabels?.scoresTablePlayerHeader || "Player Name"}</div>
+               <div className="col-span-2 text-center">{siteLabels?.scoresTableScoreHeader || "Score"}</div>
+               <div className="col-span-2 text-right">{siteLabels?.scoresTablePositionHeader || "Pos"}</div>
              </div>
              <div className="space-y-2 pt-2">
                {(quickScores[0]?.scoresList || []).slice(0, 3).map((sl, index) => (
                  <div key={index} className="grid grid-cols-12 gap-4 items-center text-sm md:text-base bg-brand-stone/30 p-2.5 border border-brand-ink/5 hover:border-brand-ink/20 transition-colors">
-                   <span className="col-span-8 font-semibold uppercase text-brand-ink truncate">{sl.playerName}</span>
+                   <span className="col-span-8 font-semibold uppercase text-brand-ink truncate">
+                     {language === "th" && sl.playerNameThai ? sl.playerNameThai : sl.playerName}
+                   </span>
                    <span className="col-span-2 text-center font-mono font-black text-neutral-900">{sl.score}</span>
-                   <span className="col-span-2 text-right font-mono font-bold text-brand-pink">{sl.position}</span>
+                   <span className="col-span-2 text-right font-mono font-bold text-brand-pink">
+                     {language === "th" && sl.positionThai ? sl.positionThai : sl.position}
+                   </span>
                  </div>
                ))}
              </div>
@@ -141,7 +147,7 @@ export default function HomeView({ news, scores, roster, gallery, welcomeSection
          to="/activities/blog"
          className="font-mono text-[9px] md:text-[10px] font-bold text-brand-pink hover:text-[#c24273] tracking-widest uppercase cursor-pointer hover:underline underline-offset-4"
        >
-         VIEW ALL STORIES
+         {siteLabels?.homeViewAllStoriesButton || "VIEW ALL STORIES"}
        </Link>
      </div>
 
@@ -165,10 +171,10 @@ export default function HomeView({ news, scores, roster, gallery, welcomeSection
                <Calendar size={10} /> {blog.publishDate}
              </div>
              <h3 className="font-display text-lg font-black tracking-tight text-brand-ink leading-tight group-hover:text-brand-pink transition-colors line-clamp-2">
-               {blog.title}
+               {language === "th" && blog.titleThai ? blog.titleThai : blog.title}
              </h3>
              <p className="font-sans text-xs text-stone-600 leading-relaxed line-clamp-3 flex-grow">
-               {blog.excerpt}
+               {language === "th" && blog.excerptThai ? blog.excerptThai : blog.excerpt}
              </p>
              <div className="pt-4 border-t border-brand-ink/10">
                <span className="inline-flex items-center gap-1.5 font-mono text-[9px] font-black tracking-widest uppercase text-brand-ink group-hover:text-brand-pink transition-colors">
@@ -210,13 +216,13 @@ export default function HomeView({ news, scores, roster, gallery, welcomeSection
        <div className="lg:w-1/2 p-8 md:p-12 flex flex-col justify-between order-2 lg:order-1">
          <div className="space-y-6">
            <span className="font-mono text-[10px] font-bold text-brand-pink tracking-[0.3em] uppercase">
-             {homeSponsorSection?.subtitle || "CORPORATE PARTNERSHIP"}
+             {language === "th" && homeSponsorSection?.subtitleThai ? homeSponsorSection.subtitleThai : (homeSponsorSection?.subtitle || "CORPORATE PARTNERSHIP")}
            </span>
            <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tight text-brand-ink leading-none">
-             {homeSponsorSection?.title || "SUPPORTING EXCELLENCE"}
+             {language === "th" && homeSponsorSection?.titleThai ? homeSponsorSection.titleThai : (homeSponsorSection?.title || "SUPPORTING EXCELLENCE")}
            </h2>
            <p className="font-sans text-sm md:text-base text-stone-600 leading-relaxed max-w-lg">
-             {homeSponsorSection?.description || "Our sponsors provide the essential resources and infrastructure that empower our student athletes to compete at the highest collegiate level."}
+             {language === "th" && homeSponsorSection?.descriptionThai ? homeSponsorSection.descriptionThai : (homeSponsorSection?.description || "Our sponsors provide the essential resources and infrastructure that empower our student athletes to compete at the highest collegiate level.")}
            </p>
          </div>
          <div className="flex items-center gap-6 mt-8">
@@ -224,7 +230,7 @@ export default function HomeView({ news, scores, roster, gallery, welcomeSection
              to={homeSponsorSection?.buttonUrl || "/sponsors"}
              className="inline-flex items-center gap-2 bg-brand-ink text-brand-neutral px-8 py-4 font-mono text-xs font-black tracking-widest uppercase hover:bg-brand-pink transition-all duration-300 group/btn"
            >
-             {homeSponsorSection?.buttonText || "LEARN MORE"}
+             {language === "th" && homeSponsorSection?.buttonTextThai ? homeSponsorSection.buttonTextThai : (homeSponsorSection?.buttonText || "LEARN MORE")}
              <ArrowRight size={14} className="transition-transform group-hover/btn:translate-x-1" />
            </Link>
          </div>
@@ -244,17 +250,17 @@ export default function HomeView({ news, scores, roster, gallery, welcomeSection
        <div className="flex animate-marquee whitespace-nowrap gap-12 items-center" style={{ animationDuration: '40s' }}>
          {Array(6).fill(null).map((_, groupIdx) => (
            <div key={groupIdx} className="flex items-center gap-12 shrink-0">
-             {homeSponsorSection?.marqueeText && (
+             {(language === "th" && homeSponsorSection?.marqueeTextThai ? homeSponsorSection.marqueeTextThai : homeSponsorSection?.marqueeText) && (
                <span className="font-mono text-xs font-black text-brand-ink/50 tracking-widest uppercase px-8 border-x border-brand-ink/20">
-                 {homeSponsorSection.marqueeText}
+                 {language === "th" && homeSponsorSection?.marqueeTextThai ? homeSponsorSection.marqueeTextThai : homeSponsorSection?.marqueeText}
                </span>
              )}
              {(sponsors || []).map((sponsor, idx) => (
                <div key={`${sponsor.id}-${groupIdx}-${idx}`} className="flex items-center gap-4 shrink-0 px-4">
                  {sponsor.imageUrl ? (
-                   <img src={sponsor.imageUrl} alt={sponsor.name} className="h-10 md:h-12 w-auto object-contain opacity-80 mix-blend-multiply" />
+                   <img src={sponsor.imageUrl} alt={language === "th" && sponsor.nameThai ? sponsor.nameThai : sponsor.name} className="h-10 md:h-12 w-auto object-contain opacity-80 mix-blend-multiply" />
                  ) : (
-                   <span className="font-display text-lg font-black text-stone-300 uppercase">{sponsor.name}</span>
+                   <span className="font-display text-lg font-black text-stone-300 uppercase">{language === "th" && sponsor.nameThai ? sponsor.nameThai : sponsor.name}</span>
                  )}
                </div>
              ))}

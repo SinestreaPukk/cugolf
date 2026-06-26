@@ -34,39 +34,32 @@ export default function StaffView({ staff, siteLabels, isAdmin, onEditSection, a
  
  {/* Title */}
  <section className="mx-auto max-w-7xl pt-6 text-center md:text-left space-y-4">
- <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-[#121212] pb-4 gap-4">
+ <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-brand-ink pb-4 gap-4">
  <div className="space-y-2">
-   <h1 className="font-display text-3xl font-extrabold tracking-tight text-neutral-950 uppercase leading-none">
+   <h1 className="font-display text-3xl font-extrabold tracking-tight text-brand-ink uppercase leading-none">
      {siteLabels?.staffTitle || "EXECUTIVE COMMITTEE & STAFF"}
    </h1>
  </div>
- <span className="font-mono text-[9.5px] font-bold text-stone-400 tracking-wider uppercase">
- {siteLabels?.staffVerifiedLabel ||"ADMINISTRATOR BOARD • ATHLETIC DEPARTMENT APPOINTMENTS"}
- </span>
  </div>
  </section>
 
  {/* Staff Bento Display */}
  <section className="mx-auto max-w-7xl">
- <div className="grid grid-cols-1 md:grid-cols-3 border border-[#121212] divide-y md:divide-y-0 md:divide-x divide-stone-200 overflow-hidden bg-white">
- {sortedStaff.map((person, index) => {
- // Give different icons to create a nice dynamic rhythm
- const Icons = [Star, Award, GraduationCap];
- const SelectIcon = Icons[index % Icons.length];
-
+ <div className="grid grid-cols-1 md:grid-cols-3 border border-brand-ink divide-y md:divide-y-0 md:divide-x divide-stone-200 overflow-hidden bg-brand-neutral">
+ {sortedStaff.map((person) => {
  return (
  <div
  key={person.id}
- className="p-8 flex flex-col justify-between group bg-white hover:bg-stone-50/50 transition-all duration-350"
+ className="p-8 flex flex-col justify-between group bg-brand-neutral hover:bg-brand-stone/30 transition-all duration-300 border-b border-brand-ink/10 md:border-b-0"
  >
  <div className="space-y-6">
  {/* Photo frame */}
- <div className="relative aspect-square border border-[#121212] overflow-hidden bg-stone-50">
+ <div className="relative aspect-square border border-brand-ink overflow-hidden bg-brand-stone">
  <img
  src={person.imageUrl}
  alt={person.name}
  referrerPolicy="no-referrer"
- className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+ className="w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-105"
  />
  </div>
 
@@ -74,13 +67,13 @@ export default function StaffView({ staff, siteLabels, isAdmin, onEditSection, a
  <span className="font-mono text-[9px] text-stone-400 font-bold uppercase tracking-wider block">
  {person.role}
  </span>
- <h3 className="font-display text-base font-bold text-neutral-950 uppercase leading-snug hover:underline">
+ <h3 className="font-display text-base font-bold text-brand-ink uppercase leading-snug hover:underline">
  {person.name}
  </h3>
  </div>
  </div>
 
- <div className="mt-8 pt-4 border-t border-[#121212] flex justify-between items-center text-[10px] font-mono tracking-wider text-stone-400 uppercase font-bold">
+ <div className="mt-8 pt-4 border-t border-brand-ink/10 flex justify-between items-center text-[10px] font-mono tracking-wider text-stone-450 uppercase font-bold">
  <span>{person.year}</span>
  </div>
  </div>

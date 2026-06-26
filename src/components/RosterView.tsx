@@ -44,15 +44,12 @@ export default function RosterView({ roster, siteLabels, isAdmin, onEditSection,
  
  {/* Editorial Title Banner */}
  <section className="mx-auto max-w-7xl pt-6 text-center md:text-left space-y-4">
- <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-[#121212] pb-4 gap-4">
+ <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-brand-ink pb-4 gap-4">
  <div className="space-y-2">
-   <h1 className="font-display text-3xl font-extrabold tracking-tight text-neutral-950 uppercase leading-none">
+   <h1 className="font-display text-3xl font-extrabold tracking-tight text-brand-ink uppercase leading-none">
      {siteLabels?.rosterTitle || "THE 2026 VARSITY SQUAD"}
    </h1>
  </div>
- <span className="font-mono text-[9.5px] font-bold text-stone-400 tracking-wider uppercase">
- {siteLabels?.rosterVerifiedLabel ||"HANDICAP REGISTRATION RECORD VERIFIED • THAILAND AMATEUR INDEX"}
- </span>
  </div>
  </section>
 
@@ -103,20 +100,20 @@ export default function RosterView({ roster, siteLabels, isAdmin, onEditSection,
  {filteredPlayers.map((player) => (
  <div
  key={player.id}
- className="group relative border border-[#121212] bg-white overflow-hidden hover: transition-all duration-300 flex flex-col justify-between"
+ className="group relative border border-brand-ink bg-brand-neutral overflow-hidden flex flex-col justify-between transition-all duration-300 hover:border-brand-pink"
  >
  {/* Image Showcase */}
- <div className="relative aspect-square border-b border-[#121212] overflow-hidden bg-stone-50">
+ <div className="relative aspect-square border-b border-brand-ink overflow-hidden bg-brand-stone">
  <img
  src={player.imageUrl}
  alt={player.name}
  referrerPolicy="no-referrer"
- className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+ className="h-full w-full object-cover transition-all duration-500 ease-out group-hover:scale-105"
  />
  
  {/* Featured Badge */}
  {player.isFeatured && (
- <div className="absolute top-3 left-3 bg-neutral-950 text-[#ffffff] border border-stone-800 font-mono text-[8px] font-bold px-2 py-0.5 tracking-wider uppercase flex items-center gap-1">
+ <div className="absolute top-3 left-3 bg-brand-ink text-brand-neutral border border-brand-ink font-mono text-[8px] font-bold px-2 py-0.5 tracking-wider uppercase flex items-center gap-1 z-10">
  <ShieldCheck size={10} />
  {siteLabels?.rosterSquadLeadBadge ||"SQUAD LEAD"}
  </div>
@@ -124,12 +121,12 @@ export default function RosterView({ roster, siteLabels, isAdmin, onEditSection,
  </div>
 
  {/* Info parameters */}
- <div className="p-5 flex-grow flex flex-col justify-between bg-white">
+ <div className="p-5 flex-grow flex flex-col justify-between bg-brand-neutral">
  <div className="space-y-1.5">
- <h3 className="font-display text-sm font-bold text-neutral-950 tracking-tight hover:underline transition-colors uppercase leading-tight">
+ <h3 className="font-display text-sm font-bold text-brand-ink tracking-tight hover:underline transition-colors uppercase leading-tight">
  {player.name}
  </h3>
- <div className="flex justify-between items-center text-[9.5px] font-mono font-bold text-stone-450 uppercase">
+ <div className="flex justify-between items-center text-[9.5px] font-mono font-bold text-stone-500 uppercase">
  <span>{player.year} class</span>
  <span className="text-right truncate max-w-[120px]">{player.faculty ||"Faculty of Sports Science"}</span>
  </div>
@@ -137,7 +134,7 @@ export default function RosterView({ roster, siteLabels, isAdmin, onEditSection,
 
  <hr className="border-stone-100 my-4"/>
 
- <div className="flex items-center justify-between font-mono text-[8.5px] uppercase tracking-wider text-stone-500 bg-stone-50/50 py-1.5 px-3 border border-[#121212]">
+ <div className="flex items-center justify-between font-mono text-[8.5px] uppercase tracking-wider text-stone-500 bg-brand-stone/50 py-1.5 px-3 border border-brand-ink">
  <span>{siteLabels?.rosterStatusActive ||"STATUS: ACTIVE SQUAD"}</span>
  <ChevronRight size={10} className="text-stone-400"/>
  </div>

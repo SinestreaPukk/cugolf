@@ -48,9 +48,6 @@ export default function ScoresView({ scores, siteLabels, isAdmin, onEditSection,
      {siteLabels?.scoresTitle || "TOURNAMENT LEADERBOARD"}
    </h1>
  </div>
- <span className="font-mono text-[9.5px] font-bold text-stone-400 tracking-wider uppercase">
- {siteLabels?.scoresVerifiedLabel ||"VARSITY LEAGUE ARCHIVES • AMATA SPRING & ALPINE LOGS VERIFIED"}
- </span>
  </div>
  </section>
 

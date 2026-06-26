@@ -122,14 +122,14 @@ app.get("/api/db", async (req, res) => {
 
     if (!db.clubActivity || Object.keys(db.clubActivity).length === 0) {
       db.clubActivity = {
-        heroImageUrl: "/uploads/windsor_team_legacy.png",
+        heroImageUrl: "https://svbrjzmhflraqbkgiczu.supabase.co/storage/v1/object/public/uploads/windsor_team_legacy.png",
         philosophyTitle: "OUR PHILOSOPHY",
         philosophyQuote: "More than just a sport, golf at Chulalongkorn is a vehicle for personal growth, discipline, and lifelong camaraderie.",
         philosophyDescription: "At CU Golf Club, we believe in the \"Pink Spirit\"—a unique blend of fierce competitive drive and absolute integrity. As Thailand's oldest university, our golf program carries the weight of a century-old tradition. We don't just produce athletes; we cultivate leaders who understand that peak performance on the green is rooted in humility, respect for the game, and support for one's teammates.",
         technicalExcellenceDescription: "We leverage modern analytics and professional coaching to ensure our squad remains at the forefront of collegiate golf. Our training focuses on precision, mental fortitude, and strategic course management, preparing students for the high-pressure environment of national championships.",
         captainName: "Sakditouch Pukkanasut",
         captainRole: "PRESIDENT & SQUAD CAPTAIN",
-        captainImageUrl: "/uploads/Screenshot_2026-05-26_at_21_44_02-1779806963893.png",
+        captainImageUrl: "https://svbrjzmhflraqbkgiczu.supabase.co/storage/v1/object/public/uploads/Screenshot_2026-05-26_at_21_44_02-1779806963893.png",
         captainPhilosophy: "My primary goal for this season is to bridge the gap between our storied history and the modern competitive landscape. We are not just a club; we are a high-performance unit. We prioritize consistency over occasional brilliance. Every practice session is a step toward our goal of reclaiming the Varsity Championship title.\n\nUnity is our greatest asset. Whether you're a freshman or a senior, on the green, we are one Pink Squad.",
         competitions: [
           {

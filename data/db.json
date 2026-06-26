@@ -332,25 +332,33 @@
         "id": "comp-1",
         "title": "CHANG U. GOLF CHAMPIONSHIP",
         "description": "The premier collegiate golf tournament in Thailand. CU Golf Club competes against the nation's top universities for the ultimate team trophy.",
-        "difficulty": "ELITE LEVEL"
+        "difficulty": "ELITE LEVEL",
+        "imageUrl": "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&q=80&w=800",
+        "date": "2026-07-15"
       },
       {
         "id": "comp-2",
         "title": "THE UNIVERSITY GAMES OF THAILAND",
         "description": "An annual multi-sport event where our representatives compete for individual and team gold medals in the Inthanin Games and beyond.",
-        "difficulty": "NATIONAL LEVEL"
+        "difficulty": "NATIONAL LEVEL",
+        "imageUrl": "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&q=80&w=800",
+        "date": "2026-08-10"
       },
       {
         "id": "comp-3",
         "title": "CHULALYMPICS GOLF",
         "description": "Our internal university tournament featuring Putting, Long Drive, and Closest to the Pin challenges across all faculties.",
-        "difficulty": "UNIVERSITY LEVEL"
+        "difficulty": "UNIVERSITY LEVEL",
+        "imageUrl": "https://images.unsplash.com/photo-1593111774240-d529f52ee4de?auto=format&fit=crop&q=80&w=800",
+        "date": "2026-09-05"
       },
       {
         "id": "comp-4",
         "title": "FRIENDLY INTERNATIONAL MATCHES",
         "description": "Expanding our horizons through matches with international partners like Meiji University (Japan) and others across Asia.",
-        "difficulty": "INTERNATIONAL"
+        "difficulty": "INTERNATIONAL",
+        "imageUrl": "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&q=80&w=800",
+        "date": "2026-10-12"
       }
     ],
     "trainingDescription": "Our squad trains at the finest facilities in Thailand, including Amata Spring Country Club and Alpine Golf Club. We utilize state-of-the-art launch monitors and video analysis to refine every aspect of our game, from short-game precision to driving distance.",

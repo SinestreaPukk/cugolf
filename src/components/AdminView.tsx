@@ -1234,13 +1234,15 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  };
 
  const handleAddCompetition = () => {
- const newComp: Competition = {
- id: `comp-${Date.now()}`,
- title:"New Competition",
- description:"Brief description of the tournament.",
- difficulty:"NATIONAL LEVEL"
- };
- setCaCompetitions([...caCompetitions, newComp]);
+  const newComp: Competition = {
+   id: `comp-${Date.now()}`,
+   title: "New Competition",
+   description: "Brief description of the tournament.",
+   difficulty: "NATIONAL LEVEL",
+   imageUrl: "",
+   date: new Date().toISOString().split("T")[0]
+  };
+  setCaCompetitions([...caCompetitions, newComp]);
  };
 
  const handleUpdateCompetition = (id: string, updates: Partial<Competition>) => {
@@ -1599,11 +1601,27 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  </h3>
  <div className="space-y-4">
  {caCompetitions.map((comp) => (
- <div key={comp.id} className="border border-stone-200 p-4 space-y-3 bg-brand-stone relative">
- <button onClick={() => handleDeleteCompetition(comp.id)} className="absolute top-2 right-2 text-red-500"><Trash2 size={12} /></button>
+ <div key={comp.id} className="border border-stone-200 p-4 space-y-3 bg-brand-stone relative text-left">
+ <button onClick={() => handleDeleteCompetition(comp.id)} className="absolute top-2 right-2 text-red-500 hover:text-red-700 transition-colors cursor-pointer"><Trash2 size={12} /></button>
+ <div className="space-y-1.5">
+ <label className="font-mono text-[9px] font-bold uppercase">Activity Title</label>
  <input type="text"value={comp.title} onChange={(e) => handleUpdateCompetition(comp.id, { title: e.target.value })} placeholder="Title"className="w-full bg-brand-neutral border border-brand-ink/10 p-2 text-xs focus:outline-none font-bold"/>
+ </div>
+ <div className="grid grid-cols-2 gap-4">
+ <div className="space-y-1.5">
+ <label className="font-mono text-[9px] font-bold uppercase">Difficulty/Level</label>
  <input type="text"value={comp.difficulty} onChange={(e) => handleUpdateCompetition(comp.id, { difficulty: e.target.value })} placeholder="Difficulty/Level"className="w-full bg-brand-neutral border border-brand-ink/10 p-2 text-xs focus:outline-none font-mono"/>
+ </div>
+ <div className="space-y-1.5">
+ <label className="font-mono text-[9px] font-bold uppercase">Activity Date</label>
+ <input type="date"value={comp.date || ""} onChange={(e) => handleUpdateCompetition(comp.id, { date: e.target.value })} className="w-full bg-brand-neutral border border-brand-ink/10 p-2 text-xs focus:outline-none font-mono"/>
+ </div>
+ </div>
+ <ImageUploadWidget id={`comp_img_${comp.id}`}label="Activity Photo"value={comp.imageUrl || ""} onChange={(url) => handleUpdateCompetition(comp.id, { imageUrl: url })} />
+ <div className="space-y-1.5">
+ <label className="font-mono text-[9px] font-bold uppercase">Description</label>
  <textarea rows={3} value={comp.description} onChange={(e) => handleUpdateCompetition(comp.id, { description: e.target.value })} placeholder="Description"className="w-full bg-brand-neutral border border-brand-ink/10 p-2 text-xs focus:outline-none"/>
+ </div>
  </div>
  ))}
  </div>

@@ -230,6 +230,8 @@ export interface Competition {
   title: string;
   description: string;
   difficulty: string;
+  imageUrl?: string;
+  date?: string;
 }
 
 export interface ClubActivityContent {

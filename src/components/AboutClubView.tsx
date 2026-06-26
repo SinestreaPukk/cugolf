@@ -52,15 +52,16 @@ export default function AboutClubView({ clubActivity, siteLabels, isAdmin, onEdi
   return (
     <div className="space-y-16 animate-fade-in pb-24">
       {/* 1. HERO SECTION */}
-      <section className="relative h-[40vh] flex flex-col items-center justify-center text-center overflow-hidden bg-brand-ink">
+      <section className="relative h-[40vh] w-screen left-1/2 -translate-x-1/2 flex flex-col items-center justify-center text-center overflow-hidden bg-brand-ink">
         {renderEditOverlay("ca_hero", "EDIT HERO IMAGE")}
-        <div className="absolute inset-0 opacity-40">
+        <div className="absolute inset-0 opacity-60">
           <img 
             src={clubActivity.heroImageUrl || "/uploads/windsor_team_legacy.png"} 
-            className="w-full h-full object-cover grayscale"
+            className="w-full h-full object-cover"
             alt="CU Golf Club Team"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-transparent to-neutral-950/50"/>
+          <div className="absolute inset-0 bg-brand-ink/50 mix-blend-multiply" />
+          <div className="absolute inset-0 bg-gradient-to-t from-brand-ink via-transparent to-brand-ink/40" />
         </div>
         
         <div className="relative z-10 space-y-4 px-4">
@@ -105,7 +106,7 @@ export default function AboutClubView({ clubActivity, siteLabels, isAdmin, onEdi
                     <img
                       src={comp.imageUrl || "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&q=80&w=800"}
                       alt={comp.title}
-                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 ease-out group-hover:scale-105"
+                      className="w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-105"
                     />
                     {comp.difficulty && (
                       <span className="absolute top-4 right-4 font-mono text-[9px] font-black bg-brand-ink px-2.5 py-1 text-brand-neutral uppercase tracking-wider z-10">

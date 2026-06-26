@@ -163,6 +163,7 @@ function AppContent() {
                 gallery={dbState.gallery || []}
                 welcomeSection={dbState.welcomeSection}
                 upcomingActivity={dbState.upcomingActivity}
+                clubActivity={dbState.clubActivity}
                 homeSponsorSection={dbState.homeSponsorSection}
                 sponsors={dbState.sponsors || []}
                 siteLabels={dbState.siteLabels}
@@ -197,6 +198,7 @@ function AppContent() {
                 gallery={dbState.gallery || []}
                 welcomeSection={dbState.welcomeSection}
                 upcomingActivity={dbState.upcomingActivity}
+                clubActivity={dbState.clubActivity}
                 homeSponsorSection={dbState.homeSponsorSection}
                 sponsors={dbState.sponsors || []}
                 siteLabels={dbState.siteLabels}

@@ -1,23 +1,24 @@
-import { NewsItem, TournamentScore, Player, WelcomeSection, UpcomingActivity, SiteLabels, SiteSettings, HomeSponsorSection, Sponsor, AdminEditProps, GalleryImage } from"../types";
-import { ArrowRight, Calendar, User, ChevronRight, BookOpen, Clock, Trophy, Target, MapPin, ArrowUpRight, Edit, Image } from"lucide-react";
-import { useState } from"react";
-import { Link } from"react-router-dom";
-import WelcomeSectionView from"./WelcomeSectionView";
+import { NewsItem, TournamentScore, Player, WelcomeSection, UpcomingActivity, SiteLabels, SiteSettings, HomeSponsorSection, Sponsor, AdminEditProps, GalleryImage, ClubActivityContent } from "../types";
+import { ArrowRight, Calendar, User, ChevronRight, BookOpen, Clock, Trophy, Target, MapPin, ArrowUpRight, Edit, Image } from "lucide-react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import WelcomeSectionView from "./WelcomeSectionView";
 
 interface HomeViewProps extends AdminEditProps {
- news: NewsItem[];
- scores: TournamentScore[];
- roster: Player[];
- gallery: GalleryImage[];
- welcomeSection: WelcomeSection;
- upcomingActivity: UpcomingActivity;
- homeSponsorSection?: HomeSponsorSection;
- sponsors: Sponsor[];
- siteLabels?: SiteLabels;
- siteSettings?: SiteSettings;
+  news: NewsItem[];
+  scores: TournamentScore[];
+  roster: Player[];
+  gallery: GalleryImage[];
+  welcomeSection: WelcomeSection;
+  upcomingActivity: UpcomingActivity;
+  clubActivity?: ClubActivityContent;
+  homeSponsorSection?: HomeSponsorSection;
+  sponsors: Sponsor[];
+  siteLabels?: SiteLabels;
+  siteSettings?: SiteSettings;
 }
 
-export default function HomeView({ news, scores, roster, gallery, welcomeSection, upcomingActivity, homeSponsorSection, sponsors, siteLabels, siteSettings, isAdmin, onEditSection, activeSectionId }: HomeViewProps) {
+export default function HomeView({ news, scores, roster, gallery, welcomeSection, upcomingActivity, clubActivity, homeSponsorSection, sponsors, siteLabels, siteSettings, isAdmin, onEditSection, activeSectionId }: HomeViewProps) {
 
  // Sort by rank (descending) and then by date (descending)
  const sortedNews = [...(news || [])].filter(n => n.isVisible !== false).sort((a, b) => {
@@ -71,71 +72,112 @@ export default function HomeView({ news, scores, roster, gallery, welcomeSection
    </div>
  </section>
 
- {/* 3. UPCOMING ACTIVITY SECTION */}
- {upcomingActivity?.showSection && (
-   <section 
-     className={`mx-auto max-w-7xl animate-fade-in shadow-[8px_8px_0px_rgba(18,18,18,0.1)] relative ${isAdmin ? 'transition-all duration-200 cursor-pointer' : ''} ${isAdmin && activeSectionId === 'home_upcoming' ? 'ring-4 ring-[#da5f8e] bg-brand-pink/5 z-40' : isAdmin ? 'hover:ring-4 hover:ring-[#da5f8e]/50 hover:bg-brand-pink/5' : ''}`}
-     onClick={(e) => {
-       if (isAdmin && onEditSection) {
-         e.stopPropagation();
-         onEditSection("home_upcoming");
-       }
-     }}
-   >
-     {isAdmin && (
-       <div className={`absolute top-4 right-4 z-50 bg-brand-pink text-brand-neutral px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${activeSectionId === 'home_upcoming' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
-         <Edit size={12} /> EDIT UPCOMING ACTIVITY
-       </div>
-     )}
-     <div className="flex flex-col md:flex-row bg-brand-neutral border border-brand-ink overflow-hidden">
-       {/* Image Side */}
-       <div className="md:w-1/2 h-64 md:h-auto relative overflow-hidden bg-brand-stone border-b md:border-b-0 md:border-r border-brand-ink">
-         <img 
-           src={upcomingActivity.imageUrl || "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&q=80&w=1200"} 
-           alt="Upcoming Activity"
-           className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-         />
-       </div>
+  {/* 3. UPCOMING ACTIVITIES SECTION */}
+  {clubActivity && (
+    <section 
+      className={`mx-auto max-w-7xl animate-fade-in relative ${isAdmin ? 'transition-all duration-200 cursor-pointer' : ''} ${isAdmin && activeSectionId === 'ca_competitions' ? 'ring-4 ring-[#da5f8e] bg-brand-pink/5 z-40' : isAdmin ? 'hover:ring-4 hover:ring-[#da5f8e]/50 hover:bg-brand-pink/5' : ''}`}
+      onClick={(e) => {
+        if (isAdmin && onEditSection) {
+          e.stopPropagation();
+          onEditSection("ca_competitions");
+        }
+      }}
+    >
+      {isAdmin && (
+        <div className={`absolute top-4 right-4 z-50 bg-brand-pink text-brand-neutral px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${activeSectionId === 'ca_competitions' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+          <Edit size={12} /> EDIT CLUB ACTIVITIES
+        </div>
+      )}
 
-       {/* Content Side */}
-       <div className="md:w-1/2 p-8 md:p-12 flex flex-col justify-center space-y-6">
-         <div className="space-y-4">
-           <div className="flex flex-wrap gap-4 text-stone-400 font-mono text-[10px] font-bold uppercase tracking-wider">
-             <div className="flex items-center gap-1.5">
-               <Calendar size={12} className="text-brand-pink" />
-               <span>{upcomingActivity.date || "TBD"}</span>
-             </div>
-             <div className="flex items-center gap-1.5">
-               <MapPin size={12} className="text-brand-pink" />
-               <span>{upcomingActivity.location || "TBD"}</span>
-             </div>
-           </div>
+      <div className="space-y-8">
+        <div className="flex items-center justify-between border-b border-brand-ink pb-4">
+          <span className="font-display text-xl md:text-2xl font-bold text-brand-ink uppercase flex items-center gap-2.5">
+            <Calendar size={20} className="text-brand-pink" />
+            UPCOMING CLUB ACTIVITIES
+          </span>
+          <Link
+            to="/activities/club"
+            className="font-mono text-[9px] md:text-[10px] font-bold text-brand-pink hover:text-[#c24273] tracking-widest uppercase cursor-pointer hover:underline underline-offset-4"
+          >
+            VIEW ALL ACTIVITIES
+          </Link>
+        </div>
 
-           <h2 className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-brand-ink uppercase leading-tight">
-             {upcomingActivity.title || "UPCOMING ACTIVITY"}
-           </h2>
+        {(() => {
+          const todayStr = new Date().toISOString().split("T")[0];
+          const upcoming = (clubActivity.competitions || [])
+            .filter(c => !c.date || c.date >= todayStr)
+            .sort((a, b) => {
+              if (!a.date) return 1;
+              if (!b.date) return -1;
+              return a.date.localeCompare(b.date);
+            })
+            .slice(0, 2);
 
-           <p className="font-sans text-sm text-stone-600 leading-relaxed">
-             {upcomingActivity.description || "Stay tuned for our next competitive or social engagement. Updates are published here regularly."}
-           </p>
-         </div>
+          if (upcoming.length === 0) {
+            return (
+              <div className="text-center py-12 text-stone-400 font-mono text-xs uppercase tracking-widest border border-dashed border-brand-ink/20 bg-brand-stone/20">
+                <span>No upcoming activities scheduled at this time.</span>
+              </div>
+            );
+          }
 
-         {upcomingActivity.registrationUrl && (
-           <div>
-             <a
-               href={upcomingActivity.registrationUrl}
-               target="_blank"
-               rel="noopener noreferrer"
-               className="inline-flex items-center gap-2 border-2 border-brand-ink text-brand-ink px-6 py-3 font-mono text-xs font-black tracking-widest uppercase hover:bg-brand-ink hover:text-brand-neutral transition-all duration-300"
-             >
-               SECURE YOUR SPOT <ArrowUpRight size={14} />
-             </a>
-           </div>
-         )}
-       </div>
-     </div>
-   </section>
- )}
+          return (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {upcoming.map((comp) => {
+                let formattedDate = comp.date || "UPCOMING";
+                try {
+                  if (comp.date) {
+                    const d = new Date(comp.date);
+                    formattedDate = d.toLocaleDateString("en-US", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric"
+                    }).toUpperCase();
+                  }
+                } catch (e) {
+                  // ignore
+                }
+
+                return (
+                  <Link 
+                    key={comp.id}
+                    to="/activities/club"
+                    className="flex flex-col sm:flex-row bg-brand-neutral border border-brand-ink overflow-hidden group shadow-[4px_4px_0px_rgba(18,18,18,0.05)] hover:shadow-none hover:translate-y-1 hover:translate-x-1 transition-all"
+                  >
+                    {/* Image Side */}
+                    <div className="sm:w-2/5 h-48 sm:h-auto relative overflow-hidden bg-brand-stone border-b sm:border-b-0 sm:border-r border-brand-ink shrink-0">
+                      <img 
+                        src={comp.imageUrl || "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&q=80&w=800"} 
+                        alt={comp.title}
+                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 ease-out group-hover:scale-105"
+                      />
+                    </div>
+
+                    {/* Content Side */}
+                    <div className="sm:w-3/5 p-6 flex flex-col justify-center space-y-3">
+                      <div className="flex items-center gap-1.5 font-mono text-[9px] text-brand-pink font-bold uppercase tracking-wider">
+                        <Calendar size={10} />
+                        <span>{formattedDate}</span>
+                      </div>
+
+                      <h3 className="font-display text-base font-extrabold tracking-tight text-brand-ink uppercase leading-tight group-hover:text-brand-pink transition-colors">
+                        {comp.title}
+                      </h3>
+
+                      <p className="font-sans text-[11px] text-stone-600 leading-relaxed line-clamp-3">
+                        {comp.description}
+                      </p>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          );
+        })()}
+      </div>
+    </section>
+  )}
 
  {/* 4. LIVE STANDINGS WIDGET */}
  {(siteSettings?.showHomeScores ?? true) && (

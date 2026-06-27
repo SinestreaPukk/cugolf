@@ -26,6 +26,22 @@ body {
   --font-serif: "TH Sarabun New", "Sarabun", sans-serif;
   --font-display: "TH Sarabun New", "Sarabun", sans-serif;
   font-family: var(--font-thai);
+  font-weight: 500;
+  line-height: 1.6;
+  letter-spacing: 0.015em;
+  
+  /* Scale up sizes for TH Sarabun New web rendering legibility */
+  --text-xs: 0.85rem;
+  --text-sm: 1.0rem;
+  --text-base: 1.15rem;
+  --text-lg: 1.3rem;
+  --text-xl: 1.45rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.15rem;
+  --text-4xl: 2.6rem;
+  --text-5xl: 3.45rem;
+  --text-6xl: 4.3rem;
+  --text-7xl: 5.2rem;
 }
 
 ::selection {

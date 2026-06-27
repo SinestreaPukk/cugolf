@@ -22,9 +22,9 @@ body {
 }
 
 .font-thai {
-  --font-sans: "TH Sarabun New", "Sarabun", sans-serif;
-  --font-serif: "TH Sarabun New", "Sarabun", sans-serif;
-  --font-display: "TH Sarabun New", "Sarabun", sans-serif;
+  --font-sans: "Inter", "TH Sarabun New", "Sarabun", sans-serif;
+  --font-serif: "Playfair Display", "TH Sarabun New", "Sarabun", serif;
+  --font-display: "Space Grotesk", "TH Sarabun New", "Sarabun", sans-serif;
   font-family: var(--font-thai);
   font-weight: 500;
   line-height: 1.6;

@@ -70,7 +70,6 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  }, []);
 
  const navLinks = [
- { id:"home", label: siteLabels?.navHome ||"HOME", path:"/", show: true },
  { 
  id:"activities", 
  label: siteLabels?.navBlog ||"ACTIVITIES", 

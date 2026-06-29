@@ -336,3 +336,14 @@ export interface DatabaseState {
   siteLabels: SiteLabels;
   siteLabelsThai?: SiteLabels;
 }
+
+export interface Member {
+  id: string;
+  email: string;
+  name: string;
+  phone?: string;
+  handicap?: number;
+  year?: string;
+  faculty?: string;
+  created_at?: string;
+}

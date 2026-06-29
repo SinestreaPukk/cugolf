@@ -1,4 +1,4 @@
-import { DatabaseState, NewsItem, Player, Staff, TournamentScore, GalleryImage, WelcomeSection, UpcomingActivity, Sponsor, SiteSettings, SiteLabels, HomeSponsorSection, ClubActivityContent } from "../types";
+import { DatabaseState, NewsItem, Player, Staff, TournamentScore, GalleryImage, WelcomeSection, UpcomingActivity, Sponsor, SiteSettings, SiteLabels, HomeSponsorSection, ClubActivityContent, Member } from "../types";
 
 // Dynamic API helpers
 export async function getDatabaseState(): Promise<DatabaseState> {
@@ -257,3 +257,51 @@ export async function uploadPhoto(filename: string, base64Data: string): Promise
   }
   return data;
 }
+
+// MEMBERSHIP API HELPERS
+export async function registerMember(memberData: Partial<Member> & { password?: string }): Promise<{ success: boolean; message?: string }> {
+  const res = await fetch("/api/members/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(memberData)
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Failed to register member");
+  return data;
+}
+
+export async function loginMember(credentials: { email?: string; password?: string }): Promise<{ success: boolean; token?: string; user?: any; message?: string }> {
+  const res = await fetch("/api/members/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(credentials)
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Failed to login member");
+  return data;
+}
+
+export async function getMemberProfile(token: string): Promise<{ success: boolean; user?: any; message?: string }> {
+  const res = await fetch("/api/members/me", {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Failed to retrieve member profile");
+  return data;
+}
+
+export async function getAdminMembers(token: string): Promise<{ success: boolean; members?: Member[]; message?: string }> {
+  const res = await fetch("/api/admin/members", {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Failed to retrieve members directory");
+  return data;
+}
+

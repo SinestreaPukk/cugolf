@@ -63,14 +63,12 @@ export default function HomeView({ news, scores, roster, gallery, welcomeSection
    </div>
 
    <div className="shrink-0 relative z-10">
-     <a
-       href="https://docs.google.com/forms/d/e/1FAIpQLSdaKMAAJw0pSaf7k9atDaUiuws7zpuYg6-903oI2qt2Qk4UIg/viewform?usp=sharing&ouid=106138206988272329432"
-       target="_blank"
-       rel="noopener noreferrer"
+     <Link
+       to="/membership"
        className="inline-flex items-center gap-3 bg-brand-neutral text-brand-ink px-10 py-5 font-mono text-xs font-black tracking-widest uppercase hover:bg-brand-pink hover:text-brand-neutral transition-all duration-350 shadow-[4px_4px_0px_rgba(218,95,142,1)] hover:shadow-none translate-y-0 hover:translate-y-1 hover:translate-x-1 border-2 border-transparent"
      >
        {siteLabels?.homeMembershipButtonText || "REGISTER NOW"} <ArrowRight size={16} />
-     </a>
+     </Link>
    </div>
  </section>
 

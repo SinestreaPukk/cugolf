@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS scores;
 DROP TABLE IF EXISTS gallery;
 DROP TABLE IF EXISTS sponsors;
 DROP TABLE IF EXISTS site_config;
+DROP TABLE IF EXISTS members;
 
 -- Create news table (Note: Column names must match db.json keys exactly for easy migration)
 CREATE TABLE news (
@@ -85,6 +86,18 @@ CREATE TABLE site_config (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Create members table
+CREATE TABLE members (
+  id TEXT PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  name TEXT NOT NULL,
+  phone TEXT,
+  handicap FLOAT,
+  year TEXT,
+  faculty TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Enable RLS
 ALTER TABLE news ENABLE ROW LEVEL SECURITY;
 ALTER TABLE roster ENABLE ROW LEVEL SECURITY;
@@ -93,6 +106,7 @@ ALTER TABLE scores ENABLE ROW LEVEL SECURITY;
 ALTER TABLE gallery ENABLE ROW LEVEL SECURITY;
 ALTER TABLE sponsors ENABLE ROW LEVEL SECURITY;
 ALTER TABLE site_config ENABLE ROW LEVEL SECURITY;
+ALTER TABLE members ENABLE ROW LEVEL SECURITY;
 
 -- Add Read policies
 CREATE POLICY "Allow public read news" ON news FOR SELECT USING (true);
@@ -102,6 +116,7 @@ CREATE POLICY "Allow public read scores" ON scores FOR SELECT USING (true);
 CREATE POLICY "Allow public read gallery" ON gallery FOR SELECT USING (true);
 CREATE POLICY "Allow public read sponsors" ON sponsors FOR SELECT USING (true);
 CREATE POLICY "Allow public read site_config" ON site_config FOR SELECT USING (true);
+CREATE POLICY "Allow public read members" ON members FOR SELECT USING (true);
 
 -- Add Write policies (for migration/admin)
 -- Note: In a real app, you'd restrict this to authenticated users
@@ -112,3 +127,4 @@ CREATE POLICY "Allow all for scores" ON scores FOR ALL USING (true) WITH CHECK (
 CREATE POLICY "Allow all for gallery" ON gallery FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all for sponsors" ON sponsors FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "Allow all for site_config" ON site_config FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "Allow all for members" ON members FOR ALL USING (true) WITH CHECK (true);

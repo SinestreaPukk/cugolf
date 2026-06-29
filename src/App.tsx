@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { DatabaseState } from "./types";
-import { getDatabaseState } from "./utils/api";
+import { getDatabaseState, getMemberProfile } from "./utils/api";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import HomeView from "./components/HomeView";
@@ -13,6 +13,7 @@ import BlogView from "./components/BlogView";
 import AboutClubView from "./components/AboutClubView";
 import ActivityDetailView from "./components/ActivityDetailView";
 import AdminView from "./components/AdminView";
+import MemberAuthView from "./components/MemberAuthView";
 import { ShieldCheck, RefreshCw, AlertCircle } from "lucide-react";
 import { LanguageProvider, useLanguage } from "./utils/LanguageContext";
 
@@ -36,6 +37,53 @@ function AppContent() {
       localStorage.removeItem("cu-golf-club-admin-token");
     }
   };
+
+  // Persistent member user and token state
+  const [memberToken, setMemberToken] = useState<string | null>(() => {
+    return localStorage.getItem("cu-golf-club-member-token");
+  });
+  const [memberUser, setMemberUser] = useState<any>(() => {
+    const cached = localStorage.getItem("cu-golf-club-member-user");
+    return cached ? JSON.parse(cached) : null;
+  });
+
+  const syncMemberToken = (token: string | null) => {
+    setMemberToken(token);
+    if (token) {
+      localStorage.setItem("cu-golf-club-member-token", token);
+    } else {
+      localStorage.removeItem("cu-golf-club-member-token");
+      localStorage.removeItem("cu-golf-club-member-user");
+    }
+  };
+
+  const syncMemberUser = (user: any) => {
+    setMemberUser(user);
+    if (user) {
+      localStorage.setItem("cu-golf-club-member-user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("cu-golf-club-member-user");
+    }
+  };
+
+  // Verify member session on token change or app startup
+  useEffect(() => {
+    const verifyMemberSession = async () => {
+      if (memberToken) {
+        try {
+          const res = await getMemberProfile(memberToken);
+          if (res.success && res.user) {
+            syncMemberUser(res.user);
+          } else {
+            syncMemberToken(null);
+          }
+        } catch (err) {
+          console.error("Failed to verify member session:", err);
+        }
+      }
+    };
+    verifyMemberSession();
+  }, [memberToken]);
 
   // Service state fetching
   const refreshState = async () => {
@@ -125,6 +173,11 @@ function AppContent() {
         isAdminLoggedIn={!!adminToken}
         siteLabels={labels}
         siteSettings={dbState?.siteSettings}
+        memberUser={memberUser}
+        onLogout={() => {
+          syncMemberToken(null);
+          syncMemberUser(null);
+        }}
       />
 
       {(dbState?.siteSettings?.showMarquee ?? true) && (
@@ -194,6 +247,14 @@ function AppContent() {
             <Route path="/staff" element={<StaffView staff={dbState.staff || []} siteLabels={labels} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
             <Route path="/scores" element={<ScoresView scores={dbState.scores || []} siteLabels={labels} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
             <Route path="/sponsors" element={<SponsorsView sponsors={dbState.sponsors || []} siteLabels={labels} isAdmin={!!adminToken} />} />
+            <Route path="/membership" element={
+              <MemberAuthView
+                memberUser={memberUser}
+                setMemberUser={syncMemberUser}
+                memberToken={memberToken}
+                setMemberToken={syncMemberToken}
+              />
+            } />
             <Route path="/admin" element={
               <AdminView
                 dbState={dbState}

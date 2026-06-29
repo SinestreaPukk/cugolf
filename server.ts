@@ -372,6 +372,167 @@ app.post("/api/admin/auth", async (req, res) => {
   }
 });
 
+// MEMBER REGISTRATION & AUTHENTICATION ENDPOINTS
+app.post("/api/members/register", async (req, res) => {
+  const { email, password, name, phone, year, faculty, handicap } = req.body;
+
+  if (!email || !password || !name) {
+    return res.status(400).json({ success: false, message: "Email, password, and name are required." });
+  }
+
+  try {
+    // 1. Create the user in Supabase Auth using admin/service client
+    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+      user_metadata: { name }
+    });
+
+    if (authError) {
+      console.error("Supabase Auth sign up error:", authError.message);
+      return res.status(400).json({ success: false, message: authError.message });
+    }
+
+    if (!authData.user) {
+      return res.status(500).json({ success: false, message: "Failed to create user in auth system." });
+    }
+
+    // 2. Insert profile information into the 'members' table
+    const { error: dbError } = await supabase.from("members").insert({
+      id: authData.user.id,
+      email,
+      name,
+      phone: phone || null,
+      year: year || null,
+      faculty: faculty || null,
+      handicap: typeof handicap === "number" ? handicap : null
+    });
+
+    if (dbError) {
+      console.error("Supabase Database members insert error:", dbError.message);
+      // Rollback Auth user if DB insert fails to maintain consistency
+      await supabase.auth.admin.deleteUser(authData.user.id);
+      return res.status(500).json({ success: false, message: `Database setup failed: ${dbError.message}` });
+    }
+
+    res.json({ success: true, message: "Member registration successful." });
+  } catch (err: any) {
+    console.error("Registration endpoint crash:", err);
+    res.status(500).json({ success: false, message: err.message || "Internal server error during registration." });
+  }
+});
+
+app.post("/api/members/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ success: false, message: "Email and password are required." });
+  }
+
+  try {
+    // Authenticate user with Supabase Auth
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      console.error("Supabase login error:", error.message);
+      return res.status(401).json({ success: false, message: "Invalid email or password." });
+    }
+
+    // Fetch user profile from the members table
+    const { data: profile, error: profileError } = await supabase
+      .from("members")
+      .select("*")
+      .eq("id", data.user.id)
+      .single();
+
+    if (profileError) {
+      console.warn("Could not retrieve member database profile:", profileError.message);
+    }
+
+    res.json({
+      success: true,
+      token: data.session?.access_token,
+      user: {
+        id: data.user.id,
+        email: data.user.email,
+        name: profile?.name || data.user.user_metadata?.name || "Member",
+        profile: profile || null
+      }
+    });
+  } catch (err: any) {
+    console.error("Login endpoint crash:", err);
+    res.status(500).json({ success: false, message: err.message || "Internal server error during login." });
+  }
+});
+
+app.get("/api/members/me", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ success: false, message: "Access denied. Missing token." });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  try {
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+
+    if (authError || !user) {
+      return res.status(401).json({ success: false, message: "Session expired or invalid token." });
+    }
+
+    // Fetch user profile from the members table
+    const { data: profile, error: profileError } = await supabase
+      .from("members")
+      .select("*")
+      .eq("id", user.id)
+      .single();
+
+    res.json({
+      success: true,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: profile?.name || user.user_metadata?.name || "Member",
+        profile: profile || null
+      }
+    });
+  } catch (err: any) {
+    console.error("Get member profile error:", err);
+    res.status(500).json({ success: false, message: "Internal server error retrieving profile." });
+  }
+});
+
+app.get("/api/admin/members", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ success: false, message: "Unauthorized admin access." });
+  }
+  
+  // Verify token via admin client
+  const token = authHeader.replace("Bearer ", "");
+  const { data: { user }, error } = await supabase.auth.getUser(token);
+  if (error || !user || user.email !== "admin@cugolfclub.com") {
+    return res.status(403).json({ success: false, message: "Access denied. Admin credentials required." });
+  }
+
+  try {
+    const { data: membersList, error: listError } = await supabase
+      .from("members")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (listError) throw listError;
+    res.json({ success: true, members: membersList });
+  } catch (err: any) {
+    console.error("Admin member list fetch error:", err);
+    res.status(500).json({ success: false, message: err.message || "Failed to fetch member directory." });
+  }
+});
+
 // BLOGS CRUD
 app.post("/api/news", async (req, res) => {
   try {

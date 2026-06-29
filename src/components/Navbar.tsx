@@ -1,4 +1,4 @@
-import { ArrowRight, Menu, X, Instagram, Facebook, ChevronDown } from "lucide-react";
+import { ArrowRight, Menu, X, Instagram, Facebook, ChevronDown, LogOut } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "./Logo";
@@ -47,9 +47,11 @@ interface NavbarProps {
  isAdminLoggedIn: boolean;
  siteLabels?: SiteLabels;
  siteSettings?: SiteSettings;
+ memberUser?: any;
+ onLogout?: () => void;
 }
 
-export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSettings }: NavbarProps) {
+export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSettings, memberUser, onLogout }: NavbarProps) {
  const { language, setLanguage } = useLanguage();
  const [isOpen, setIsOpen] = useState(false);
  const [isActivitiesOpen, setIsActivitiesOpen] = useState(false);
@@ -83,6 +85,7 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  { id:"staff", label: siteLabels?.navStaff ||"STAFF & BOARD", path:"/staff", show: siteSettings?.showNavbarStaff ?? true },
  { id:"scores", label: siteLabels?.navScores ||"SCORES & STATS", path:"/scores", show: siteSettings?.showNavbarScores ?? true },
  { id:"sponsors", label: siteLabels?.navSponsors ||"PARTNERS", path:"/sponsors", show: siteSettings?.showNavbarSponsors ?? true },
+ { id:"membership", label: memberUser ? (language === "th" ? "พอร์ทัลสมาชิก" : "MY PORTAL") : (language === "th" ? "สมัครสมาชิก" : "MEMBERSHIP"), path:"/membership", show: true },
  ].filter(link => link.show);
 
  const isActive = (path: string) => {
@@ -194,6 +197,16 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
       <TikTokIcon size={18} />
       </a>
     </div>
+
+    {memberUser && (
+      <button
+        onClick={onLogout}
+        className="font-sans text-[10px] font-black tracking-widest text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors uppercase border border-red-600/30 px-3 py-1 cursor-pointer"
+        title="Log out of your session"
+      >
+        {language === "th" ? "ออกจากระบบ" : "LOGOUT"}
+      </button>
+    )}
 
     {/* Desktop Language Switch Toggle */}
     <button
@@ -307,6 +320,19 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  <TikTokIcon size={14} />
  <span>{siteLabels?.navFollowTiktok || "FOLLOW @CUGOLFCLUB (TIKTOK)"}</span>
  </a>
+
+ {memberUser && (
+    <button
+      onClick={() => {
+        setIsOpen(false);
+        if (onLogout) onLogout();
+      }}
+      className="flex items-center gap-2.5 font-sans text-[11px] font-bold tracking-widest text-red-600 uppercase py-2 cursor-pointer border border-red-600/30 px-3 justify-center mt-2"
+    >
+      <LogOut size={12} />
+      <span>{language === "th" ? "ออกจากระบบสมาชิก" : "DISCONNECT SESSION"}</span>
+    </button>
+  )}
  </div>
  </div>
  </div>

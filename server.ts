@@ -660,6 +660,51 @@ app.post("/api/members/reset-password", async (req, res) => {
   }
 });
 
+// Change password for a logged-in user — verifies old password first, no email required.
+app.post("/api/members/change-password", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  const { oldPassword, newPassword } = req.body;
+
+  if (!authHeader?.startsWith("Bearer ")) {
+    return res.status(401).json({ success: false, message: "Access denied." });
+  }
+  if (!oldPassword || !newPassword) {
+    return res.status(400).json({ success: false, message: "Old and new passwords are required." });
+  }
+  if (newPassword.length < 6) {
+    return res.status(400).json({ success: false, message: "New password must be at least 6 characters." });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  try {
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    if (authError || !user) {
+      return res.status(401).json({ success: false, message: "Session expired. Please log in again." });
+    }
+
+    // Verify the old password is correct before allowing the change
+    const verify = await signInDirect(user.email!, oldPassword);
+    if ("error" in verify) {
+      return res.status(401).json({ success: false, message: "Current password is incorrect." });
+    }
+
+    if (!supabaseAdmin) {
+      return res.status(500).json({ success: false, message: "Password service unavailable." });
+    }
+
+    const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(user.id, { password: newPassword });
+    if (updateError) {
+      return res.status(400).json({ success: false, message: updateError.message });
+    }
+
+    res.json({ success: true, message: "Password changed successfully." });
+  } catch (err: any) {
+    console.error("Change password crash:", err);
+    res.status(500).json({ success: false, message: err.message || "Internal server error." });
+  }
+});
+
 app.get("/api/members/me", async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {

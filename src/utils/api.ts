@@ -338,7 +338,7 @@ export async function removeAdminEmail(email: string, token: string): Promise<{ 
 
 export async function updateAdminMember(
   id: string,
-  data: { name?: string; studentId?: string; year?: string; faculty?: string; email?: string; newPassword?: string },
+  data: { name?: string; studentId?: string; year?: string; faculty?: string; email?: string; prefix?: string; instagram?: string; lineId?: string; newPassword?: string },
   token: string
 ): Promise<{ success: boolean; message?: string }> {
   const res = await fetch(`/api/admin/members/${id}`, {
@@ -355,6 +355,15 @@ export async function deleteAdminMember(id: string, token: string): Promise<{ su
     headers: { "Authorization": `Bearer ${token}` }
   });
   return handleResponse(res, "Failed to delete member");
+}
+
+export async function changePassword(oldPassword: string, newPassword: string, token: string): Promise<{ success: boolean; message?: string }> {
+  const res = await fetch("/api/members/change-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+    body: JSON.stringify({ oldPassword, newPassword })
+  });
+  return handleResponse(res, "Failed to change password");
 }
 
 export async function syncMembersToSheets(token: string): Promise<{ success: boolean; synced?: number; total?: number; errors?: number; message?: string }> {

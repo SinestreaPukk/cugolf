@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { registerMember, loginMember, forgotPassword, resetPassword } from "../utils/api";
+import { registerMember, loginMember, forgotPassword, resetPassword, changePassword } from "../utils/api";
 import { Member, SiteSettings } from "../types";
 import { useLanguage } from "../utils/LanguageContext";
 import { useNavigate, Link } from "react-router-dom";
@@ -46,6 +46,14 @@ export default function MemberAuthView({
   // Forgot/Reset password states
   const [forgotEmail, setForgotEmail] = useState("");
   const [recoveryToken, setRecoveryToken] = useState<string | null>(null);
+
+  // Change password (logged-in)
+  const [showChangePw, setShowChangePw] = useState(false);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [changePwError, setChangePwError] = useState("");
+  const [changePwSuccess, setChangePwSuccess] = useState("");
 
   useEffect(() => {
     // Check if URL has a recovery token (e.g. from password reset redirect)
@@ -341,6 +349,80 @@ export default function MemberAuthView({
               )}
             </div>
           )}
+
+          {/* Change Password */}
+          <div className="pt-2 border-t border-brand-ink/10 space-y-2">
+            <button
+              onClick={() => { setShowChangePw(v => !v); setChangePwError(""); setChangePwSuccess(""); }}
+              className="w-full bg-brand-stone hover:bg-stone-200 text-brand-ink py-2.5 border border-brand-ink text-xs font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer"
+            >
+              {language === "th" ? "เปลี่ยนรหัสผ่าน" : "CHANGE PASSWORD"}
+            </button>
+            {showChangePw && (
+              <div className="space-y-2 pt-1">
+                {changePwError && <p className="text-red-500 text-[10px] font-mono">{changePwError}</p>}
+                {changePwSuccess && <p className="text-green-600 text-[10px] font-mono">{changePwSuccess}</p>}
+                <input
+                  type="password"
+                  placeholder={language === "th" ? "รหัสผ่านปัจจุบัน" : "Current password"}
+                  value={oldPassword}
+                  onChange={e => setOldPassword(e.target.value)}
+                  className="w-full border border-brand-ink/30 bg-white px-3 py-2 text-xs font-mono focus:outline-none focus:border-brand-ink"
+                />
+                <input
+                  type="password"
+                  placeholder={language === "th" ? "รหัสผ่านใหม่" : "New password"}
+                  value={newPassword}
+                  onChange={e => setNewPassword(e.target.value)}
+                  className="w-full border border-brand-ink/30 bg-white px-3 py-2 text-xs font-mono focus:outline-none focus:border-brand-ink"
+                />
+                <input
+                  type="password"
+                  placeholder={language === "th" ? "ยืนยันรหัสผ่านใหม่" : "Confirm new password"}
+                  value={confirmNewPassword}
+                  onChange={e => setConfirmNewPassword(e.target.value)}
+                  className="w-full border border-brand-ink/30 bg-white px-3 py-2 text-xs font-mono focus:outline-none focus:border-brand-ink"
+                />
+                <button
+                  disabled={loading}
+                  onClick={async () => {
+                    setChangePwError("");
+                    setChangePwSuccess("");
+                    if (!oldPassword || !newPassword || !confirmNewPassword) {
+                      setChangePwError(language === "th" ? "กรุณากรอกข้อมูลให้ครบ" : "All fields are required.");
+                      return;
+                    }
+                    if (newPassword !== confirmNewPassword) {
+                      setChangePwError(language === "th" ? "รหัสผ่านใหม่ไม่ตรงกัน" : "New passwords do not match.");
+                      return;
+                    }
+                    if (newPassword.length < 6) {
+                      setChangePwError(language === "th" ? "รหัสผ่านใหม่ต้องมีอย่างน้อย 6 ตัวอักษร" : "New password must be at least 6 characters.");
+                      return;
+                    }
+                    setLoading(true);
+                    try {
+                      const res = await changePassword(oldPassword, newPassword, memberToken!);
+                      if (res.success) {
+                        setChangePwSuccess(language === "th" ? "เปลี่ยนรหัสผ่านสำเร็จ" : "Password changed successfully.");
+                        setOldPassword(""); setNewPassword(""); setConfirmNewPassword("");
+                        setShowChangePw(false);
+                      } else {
+                        setChangePwError(res.message || (language === "th" ? "เกิดข้อผิดพลาด" : "Failed to change password."));
+                      }
+                    } catch (err: any) {
+                      setChangePwError(err.message || (language === "th" ? "เกิดข้อผิดพลาด" : "Error."));
+                    } finally {
+                      setLoading(false);
+                    }
+                  }}
+                  className="w-full bg-brand-ink hover:bg-neutral-800 text-brand-neutral py-2.5 border border-brand-ink text-xs font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer disabled:opacity-50"
+                >
+                  {loading ? "..." : (language === "th" ? "ยืนยันเปลี่ยนรหัสผ่าน" : "CONFIRM CHANGE")}
+                </button>
+              </div>
+            )}
+          </div>
 
           <div className="pt-2">
             <button

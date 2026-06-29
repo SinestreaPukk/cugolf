@@ -519,11 +519,12 @@ app.post("/api/members/login", async (req, res) => {
   }
 
   try {
+    // ilike = case-insensitive match, handles emails stored in any casing
     const { data: profile, error: profileError } = await supabaseAdmin
       .from("members")
       .select("*")
-      .eq("email", email.trim().toLowerCase())
-      .eq("student_id", studentId.trim())
+      .ilike("email", email.trim())
+      .ilike("student_id", studentId.trim())
       .single();
 
     if (profileError || !profile) {

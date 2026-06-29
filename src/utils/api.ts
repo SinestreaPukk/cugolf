@@ -335,3 +335,11 @@ export async function removeAdminEmail(email: string, token: string): Promise<{ 
   });
   return handleResponse(res, "Failed to remove admin email");
 }
+
+export async function syncMembersToSheets(token: string): Promise<{ success: boolean; synced?: number; total?: number; errors?: number; message?: string }> {
+  const res = await fetch("/api/admin/sync-sheets", {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+  return handleResponse(res, "Failed to sync members to Google Sheets");
+}

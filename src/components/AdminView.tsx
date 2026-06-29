@@ -38,7 +38,8 @@ import {
  uploadPhoto,
  getAdminEmailsList,
  addAdminEmail,
- removeAdminEmail
+ removeAdminEmail,
+ syncMembersToSheets
 } from"../utils/api";
 import {
  Plus, Trash2, Edit, Save, FileText, Sparkles, LogOut, Users,
@@ -205,6 +206,10 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  const [newAdminEmail, setNewAdminEmail] = useState("");
  const [isLoadingAdmins, setIsLoadingAdmins] = useState(false);
 
+ // Google Sheets sync state
+ const [isSyncing, setIsSyncing] = useState(false);
+ const [syncResult, setSyncResult] = useState<{ synced?: number; total?: number; errors?: number; message?: string } | null>(null);
+
  const loadAdmins = async () => {
    setIsLoadingAdmins(true);
    try {
@@ -262,6 +267,23 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
      setErrorMsg(err.message || "Failed to remove admin email.");
    } finally {
      setIsLoadingAdmins(false);
+   }
+ };
+
+ const handleSyncSheets = async () => {
+   setIsSyncing(true);
+   setSyncResult(null);
+   try {
+     const res = await syncMembersToSheets(adminToken || "");
+     if (res.success) {
+       setSyncResult({ synced: res.synced, total: res.total, errors: res.errors });
+     } else {
+       setSyncResult({ message: res.message || "Sync failed." });
+     }
+   } catch (err: any) {
+     setSyncResult({ message: err.message || "Sync failed." });
+   } finally {
+     setIsSyncing(false);
    }
  };
 
@@ -2768,6 +2790,56 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
            )}
          </div>
        )}
+     </div>
+
+     {/* Google Sheets Sync Panel */}
+     <div className="border-2 border-brand-ink bg-brand-neutral p-6 shadow-[6px_6px_0px_rgba(0,0,0,1)]">
+       <div className="border-b-2 border-brand-ink pb-4 mb-6">
+         <h2 className="font-display text-lg font-bold uppercase tracking-wider text-brand-ink flex items-center gap-2">
+           <RefreshCw size={20} className="text-brand-pink" /> GOOGLE SHEETS SYNC
+         </h2>
+         <p className="font-mono text-[9px] text-neutral-400 mt-1 uppercase font-bold">
+           PUSH ALL REGISTERED MEMBERS TO THE LINKED SPREADSHEET
+         </p>
+       </div>
+
+       <div className="space-y-4">
+         <p className="font-sans text-[11px] text-stone-500 leading-relaxed">
+           Manually sync all member records to Google Sheets. The server also runs this sync automatically every 24 hours.
+           New registrations are pushed individually at the time of registration.
+         </p>
+
+         <button
+           type="button"
+           onClick={handleSyncSheets}
+           disabled={isSyncing}
+           className="bg-brand-ink text-brand-neutral hover:bg-neutral-800 border-2 border-brand-ink py-2.5 px-5 font-mono text-xs font-black uppercase flex items-center gap-2 cursor-pointer transition-colors disabled:opacity-50"
+         >
+           <RefreshCw size={14} className={isSyncing ? "animate-spin" : ""} />
+           {isSyncing ? "SYNCING..." : "SYNC ALL MEMBERS NOW"}
+         </button>
+
+         {syncResult && (
+           <div className={`border-2 p-3 font-mono text-xs ${syncResult.message ? "border-red-400 bg-red-50 text-red-700" : "border-emerald-500 bg-emerald-50 text-emerald-800"}`}>
+             {syncResult.message
+               ? `⚠️ ${syncResult.message}`
+               : `✅ Synced ${syncResult.synced} of ${syncResult.total} members${syncResult.errors ? ` (${syncResult.errors} errors)` : ""}.`
+             }
+           </div>
+         )}
+
+         <div className="bg-neutral-50 border border-brand-ink/20 p-3 space-y-1">
+           <p className="font-mono text-[8px] text-neutral-400 uppercase font-bold tracking-wider">LINKED SPREADSHEET</p>
+           <a
+             href="https://docs.google.com/spreadsheets/d/1PHmxOGZl_rG816srgIOYkUXCFxJSnmISh8z78QdpPAg/edit"
+             target="_blank"
+             rel="noopener noreferrer"
+             className="font-mono text-[10px] text-brand-ink underline hover:text-brand-pink break-all transition-colors"
+           >
+             CU Golf Club — Member Registry Spreadsheet ↗
+           </a>
+         </div>
+       </div>
      </div>
    </div>
  );

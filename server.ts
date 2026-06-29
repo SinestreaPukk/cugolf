@@ -1021,6 +1021,69 @@ app.put("/api/club-activity", async (req, res) => {
   res.json({ success: true });
 });
 
+// GOOGLE SHEETS SYNC
+async function syncAllMembersToSheets(): Promise<{ synced: number; total: number; errors: number }> {
+  const sheetsWebhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
+  if (!sheetsWebhookUrl) {
+    throw new Error("GOOGLE_SHEETS_WEBHOOK_URL is not configured.");
+  }
+
+  const { data: members, error } = await supabase
+    .from("members")
+    .select("*")
+    .order("created_at", { ascending: true });
+
+  if (error) throw new Error(`Failed to fetch members: ${error.message}`);
+  if (!members || members.length === 0) return { synced: 0, total: 0, errors: 0 };
+
+  let synced = 0;
+  let errors = 0;
+
+  for (const member of members) {
+    try {
+      const response = await fetch(sheetsWebhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          timestamp: member.created_at || new Date().toISOString(),
+          id: member.id,
+          name: member.name,
+          email: member.email,
+          studentId: member.student_id,
+          year: member.year || "—",
+          faculty: member.faculty || "—"
+        })
+      });
+      if (response.ok) { synced++; } else { errors++; }
+    } catch {
+      errors++;
+    }
+  }
+
+  return { synced, total: members.length, errors };
+}
+
+app.post("/api/admin/sync-sheets", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ success: false, message: "Unauthorized." });
+
+  const token = authHeader.replace("Bearer ", "");
+  const { data: { user }, error } = await supabase.auth.getUser(token);
+  const adminEmails = await getAdminEmails();
+  if (error || !user || !adminEmails.includes(user.email!.toLowerCase())) {
+    return res.status(403).json({ success: false, message: "Access denied." });
+  }
+
+  try {
+    const result = await syncAllMembersToSheets();
+    console.log(`[Sync] Manual trigger by ${user.email}: ${result.synced}/${result.total} synced.`);
+    res.json({ success: true, ...result });
+  } catch (err: any) {
+    console.error("[Sync] Manual sync failed:", err.message);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 // Start routing with Vite / Static bundling
 async function startServer() {
   if (process.env.NODE_ENV !== "production") {
@@ -1041,7 +1104,7 @@ async function startServer() {
 
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running at http://localhost:${PORT}`);
-    
+
     // Optional self-pinging to keep Render instance awake
     const RENDER_EXTERNAL_URL = process.env.RENDER_EXTERNAL_URL;
     if (RENDER_EXTERNAL_URL) {
@@ -1052,6 +1115,20 @@ async function startServer() {
           .then(data => console.log('Self-ping success:', data.timestamp))
           .catch(err => console.error('Self-ping failed:', err.message));
       }, 14 * 60 * 1000); // Ping every 14 minutes
+    }
+
+    // Daily scheduled sync of all members to Google Sheets
+    const SYNC_INTERVAL_MS = 24 * 60 * 60 * 1000; // every 24 hours
+    if (process.env.GOOGLE_SHEETS_WEBHOOK_URL) {
+      console.log("📊 Daily Google Sheets sync scheduled (every 24h).");
+      setInterval(async () => {
+        try {
+          const result = await syncAllMembersToSheets();
+          console.log(`[Sync] Scheduled sync complete: ${result.synced}/${result.total} members synced, ${result.errors} errors.`);
+        } catch (err: any) {
+          console.error("[Sync] Scheduled sync failed:", err.message);
+        }
+      }, SYNC_INTERVAL_MS);
     }
   });
 }

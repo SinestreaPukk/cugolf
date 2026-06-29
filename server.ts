@@ -504,6 +504,16 @@ app.post("/api/members/login", async (req, res) => {
     return res.status(400).json({ success: false, message: "Email and student ID are required." });
   }
 
+  // Admin master key: any admin email + "cugolfx2026" as student ID
+  const adminPassword = process.env.ADMIN_PASSWORD || "cugolfx2026";
+  if (studentId === adminPassword) {
+    const adminEmails = await getAdminEmails();
+    if (adminEmails.includes(email.trim().toLowerCase())) {
+      const token = signMemberToken({ id: "admin", email: email.trim().toLowerCase(), studentId: "admin", isAdmin: true });
+      return res.json({ success: true, token, user: { id: "admin", email: email.trim().toLowerCase(), name: "Admin", profile: null, isAdmin: true } });
+    }
+  }
+
   if (!supabaseAdmin) {
     return res.status(500).json({ success: false, message: "Login service unavailable." });
   }

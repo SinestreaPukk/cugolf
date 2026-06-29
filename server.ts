@@ -13,13 +13,25 @@ const PORT = Number(process.env.PORT) || 3000;
 
 // Initialize Supabase - with validation and production fallback
 const supabaseUrl = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL || "https://placeholder.supabase.co";
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || "placeholder-key";
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || "placeholder-key";
 
 if (supabaseUrl === "https://placeholder.supabase.co") {
-  console.warn("⚠️ WARNING: Supabase URL or Key is missing in environment variables. Database operations will fail.");
+  console.warn("⚠️ WARNING: Supabase URL is missing in environment variables. Database operations will fail.");
+}
+if (!supabaseServiceRoleKey) {
+  console.warn("⚠️ WARNING: SUPABASE_SERVICE_ROLE_KEY is not set. Member registration and admin auth operations will fail.");
 }
 
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Regular client using anon key for standard operations
+const supabase = createClient(supabaseUrl, supabaseServiceRoleKey || supabaseAnonKey);
+
+// Dedicated admin client using service role key — required for auth.admin.* operations
+const supabaseAdmin = supabaseServiceRoleKey
+  ? createClient(supabaseUrl, supabaseServiceRoleKey, {
+      auth: { autoRefreshToken: false, persistSession: false }
+    })
+  : null;
 
 async function getAdminEmails(): Promise<string[]> {
   try {
@@ -371,13 +383,13 @@ app.post("/api/admin/auth", async (req, res) => {
 
     if (error) {
       // If user doesn't exist, try to create them (first-time setup)
-      if (error.message.includes("Invalid login credentials") && password === "cugolfx2026") {
-         const { error: signUpError } = await supabase.auth.admin.createUser({
+      if (error.message.includes("Invalid login credentials") && password === "cugolfx2026" && supabaseAdmin) {
+         const { error: signUpError } = await supabaseAdmin.auth.admin.createUser({
            email: adminEmail,
            password: password,
            email_confirm: true
          });
-         
+
          if (!signUpError) {
            // Retry login after creation
            const { data: retryData, error: retryError } = await supabase.auth.signInWithPassword({
@@ -407,9 +419,14 @@ app.post("/api/members/register", async (req, res) => {
     return res.status(400).json({ success: false, message: "Email, password, name, and student ID are required." });
   }
 
+  if (!supabaseAdmin) {
+    console.error("Registration blocked: SUPABASE_SERVICE_ROLE_KEY is not configured.");
+    return res.status(500).json({ success: false, message: "Server configuration error: registration service is not available. Please contact the administrator." });
+  }
+
   try {
-    // 1. Create the user in Supabase Auth using admin/service client
-    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+    // 1. Create the user in Supabase Auth using the dedicated admin client (requires service role key)
+    const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
       email,
       password,
       email_confirm: true,
@@ -417,7 +434,10 @@ app.post("/api/members/register", async (req, res) => {
     });
 
     if (authError) {
-      console.error("Supabase Auth sign up error:", authError.message);
+      console.error("Supabase Auth createUser error:", authError.message);
+      if (authError.message.toLowerCase().includes("already registered") || authError.message.toLowerCase().includes("already been registered")) {
+        return res.status(400).json({ success: false, message: "An account with this email already exists. Please log in instead." });
+      }
       return res.status(400).json({ success: false, message: authError.message });
     }
 
@@ -436,10 +456,18 @@ app.post("/api/members/register", async (req, res) => {
     });
 
     if (dbError) {
-      console.error("Supabase Database members insert error:", dbError.message);
+      console.error("Supabase members table insert error:", dbError.message, dbError.code);
       // Rollback Auth user if DB insert fails to maintain consistency
-      await supabase.auth.admin.deleteUser(authData.user.id);
-      return res.status(500).json({ success: false, message: `Database setup failed: ${dbError.message}` });
+      await supabaseAdmin.auth.admin.deleteUser(authData.user.id);
+      if (dbError.code === "23505") {
+        if (dbError.message.includes("student_id")) {
+          return res.status(400).json({ success: false, message: "This student ID is already registered." });
+        }
+        if (dbError.message.includes("email")) {
+          return res.status(400).json({ success: false, message: "An account with this email already exists." });
+        }
+      }
+      return res.status(500).json({ success: false, message: `Database error: ${dbError.message}` });
     }
 
     // Async push to Google Sheets Webhook if configured
@@ -573,7 +601,10 @@ app.post("/api/members/reset-password", async (req, res) => {
     }
 
     // Update user password via admin auth
-    const { error: updateError } = await supabase.auth.admin.updateUserById(user.id, {
+    if (!supabaseAdmin) {
+      return res.status(500).json({ success: false, message: "Password reset service is not available. Please contact the administrator." });
+    }
+    const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(user.id, {
       password
     });
 

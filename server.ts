@@ -5,6 +5,7 @@ import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 import { createClient } from "@supabase/supabase-js";
+import nodemailer from "nodemailer";
 
 dotenv.config();
 
@@ -602,29 +603,71 @@ app.post("/api/members/forgot-password", async (req, res) => {
     return res.status(400).json({ success: false, message: "Email is required." });
   }
 
+  if (!supabaseAdmin) {
+    return res.status(500).json({ success: false, message: "Server configuration error." });
+  }
+
   try {
     const host = req.headers.host || "localhost:3000";
     const protocol = (req.headers["x-forwarded-proto"] as string) || "http";
     const appUrl = process.env.APP_URL || `${protocol}://${host}`;
     const redirectTo = `${appUrl}/membership`;
 
-    const response = await fetch(`${supabaseUrl}/auth/v1/recover`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", apikey: authApiKey },
-      body: JSON.stringify({ email, redirect_to: redirectTo })
+    // generateLink does NOT send an email and has NO rate limit — we send our own email.
+    const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
+      type: "recovery",
+      email,
+      options: { redirectTo }
     });
 
-    if (!response.ok) {
-      const body = await response.json().catch(() => ({}));
-      console.error("Supabase forgot-password error:", response.status, JSON.stringify(body));
-      const detail = body.msg || body.message || body.error_description || body.error || `HTTP ${response.status}`;
-      // Rate-limit or redirect-URL-not-whitelisted are the two most common causes
-      return res.status(400).json({ success: false, message: detail, rateLimited: response.status === 429 });
+    if (linkError) {
+      console.error("generateLink error:", linkError.message);
+      // User not found — return generic message for security
+      return res.json({ success: true, message: "If that email is registered, a reset link has been sent." });
     }
 
-    res.json({ success: true, message: "Password reset instructions sent to your email. Check your inbox (and spam folder)." });
+    const recoveryLink = linkData?.properties?.action_link;
+    if (!recoveryLink) {
+      return res.status(500).json({ success: false, message: "Could not generate reset link." });
+    }
+
+    // Send via custom SMTP if configured, otherwise log to server console (for local dev)
+    const smtpHost = process.env.SMTP_HOST;
+    const smtpUser = process.env.SMTP_USER;
+    const smtpPass = process.env.SMTP_PASS;
+    const smtpFrom = process.env.SMTP_FROM || smtpUser || "noreply@cugolfclub.com";
+
+    if (smtpHost && smtpUser && smtpPass) {
+      const transporter = nodemailer.createTransport({
+        host: smtpHost,
+        port: Number(process.env.SMTP_PORT) || 587,
+        secure: Number(process.env.SMTP_PORT) === 465,
+        auth: { user: smtpUser, pass: smtpPass }
+      });
+
+      await transporter.sendMail({
+        from: `"CU Golf Club" <${smtpFrom}>`,
+        to: email,
+        subject: "Reset your CU Golf Club password",
+        html: `
+          <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px">
+            <h2 style="font-size:18px;font-weight:700;margin-bottom:8px">Password Reset</h2>
+            <p style="color:#555;margin-bottom:24px">Click the button below to set a new password. This link expires in 1 hour.</p>
+            <a href="${recoveryLink}" style="display:inline-block;background:#121212;color:#fff;padding:12px 24px;text-decoration:none;font-weight:700;font-size:13px;letter-spacing:1px">RESET PASSWORD</a>
+            <p style="color:#999;font-size:11px;margin-top:24px">If you did not request this, ignore this email. Your password will not change.</p>
+          </div>
+        `
+      });
+
+      console.log(`Password reset email sent to ${email}`);
+    } else {
+      // No SMTP configured — log link for dev/admin use
+      console.log(`[FORGOT PASSWORD] No SMTP configured. Recovery link for ${email}:\n${recoveryLink}`);
+    }
+
+    res.json({ success: true, message: "If that email is registered, a reset link has been sent. Check your inbox and spam folder." });
   } catch (err: any) {
-    console.error("Forgot password endpoint crash:", err);
+    console.error("Forgot password crash:", err);
     res.status(500).json({ success: false, message: err.message || "Internal server error." });
   }
 });

@@ -30,10 +30,9 @@ export default function MemberAuthView({
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [studentId, setStudentId] = useState("");
   const [faculty, setFaculty] = useState("");
-  const [year, setYear] = useState("Freshman");
-  const [handicap, setHandicap] = useState<number | "">("");
+  const [year, setYear] = useState("Year 1");
 
   useEffect(() => {
     setErrorMsg("");
@@ -73,7 +72,7 @@ export default function MemberAuthView({
     setErrorMsg("");
     setSuccessMsg("");
 
-    if (!email || !password || !name) {
+    if (!email || !password || !name || !studentId) {
       setErrorMsg(language === "th" ? "กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน" : "Please fill in all required fields.");
       return;
     }
@@ -95,10 +94,9 @@ export default function MemberAuthView({
         email,
         password,
         name,
-        phone: phone || undefined,
+        studentId,
         faculty: faculty || undefined,
-        year: year || undefined,
-        handicap: handicap !== "" ? Number(handicap) : undefined
+        year: year || undefined
       });
 
       if (res.success) {
@@ -152,22 +150,18 @@ export default function MemberAuthView({
               <span className="font-bold text-brand-ink">{memberUser.email}</span>
             </div>
             <div className="flex justify-between border-b border-brand-ink/10 pb-2">
-              <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "เบอร์โทรศัพท์" : "PHONE"}</span>
-              <span className="font-bold text-brand-ink">{profile.phone || "—"}</span>
+              <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "รหัสนิสิต" : "STUDENT ID"}</span>
+              <span className="font-bold text-brand-ink">{profile.studentId || "—"}</span>
             </div>
             <div className="flex justify-between border-b border-brand-ink/10 pb-2">
-              <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "ระดับชั้นปี" : "CLASS YEAR"}</span>
-              <span className="font-bold text-brand-ink uppercase">{profile.year || "—"}</span>
+              <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "ชั้นปี" : "YEAR"}</span>
+              <span className="font-bold text-brand-ink uppercase">
+                {profile.year ? (language === "th" ? profile.year.replace("Year", "ชั้นปีที่") : profile.year) : "—"}
+              </span>
             </div>
             <div className="flex justify-between border-b border-brand-ink/10 pb-2">
               <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "คณะ" : "FACULTY"}</span>
               <span className="font-bold text-brand-ink uppercase">{profile.faculty || "—"}</span>
-            </div>
-            <div className="flex justify-between border-b border-brand-ink/10 pb-2">
-              <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "แต้มต่อแฮนดิแคป" : "HANDICAP INDEX"}</span>
-              <span className="font-mono font-bold text-brand-pink">
-                {profile.handicap !== undefined && profile.handicap !== null ? profile.handicap.toFixed(1) : "—"}
-              </span>
             </div>
           </div>
 
@@ -269,7 +263,7 @@ export default function MemberAuthView({
             
             <div className="space-y-1">
               <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
-                {language === "th" ? "ชื่อ-นามสกุล *" : "FULL NAME *"}
+                {language === "th" ? "ชื่อ-นามสกุลจริง *" : "FULL NAME *"}
               </label>
               <input
                 type="text"
@@ -290,6 +284,20 @@ export default function MemberAuthView({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="e.g. user@domain.com"
+                className="w-full px-3 py-2.5 bg-white border border-brand-ink text-brand-ink text-xs font-semibold focus:outline-none focus:border-brand-pink transition-colors placeholder:text-neutral-300"
+                required
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
+                {language === "th" ? "รหัสนิสิต *" : "STUDENT ID *"}
+              </label>
+              <input
+                type="text"
+                value={studentId}
+                onChange={(e) => setStudentId(e.target.value)}
+                placeholder="e.g. 66XXXXXXXX"
                 className="w-full px-3 py-2.5 bg-white border border-brand-ink text-brand-ink text-xs font-semibold focus:outline-none focus:border-brand-pink transition-colors placeholder:text-neutral-300"
                 required
               />
@@ -327,49 +335,20 @@ export default function MemberAuthView({
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
                 <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
-                  {language === "th" ? "เบอร์โทรศัพท์" : "PHONE NUMBER"}
-                </label>
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="e.g. 0812345678"
-                  className="w-full px-3 py-2.5 bg-white border border-brand-ink text-brand-ink text-xs font-semibold focus:outline-none focus:border-brand-pink transition-colors placeholder:text-neutral-300"
-                />
-              </div>
-              <div className="space-y-1">
-                <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
-                  {language === "th" ? "แต้มต่อแฮนดิแคป" : "HANDICAP"}
-                </label>
-                <input
-                  type="number"
-                  step="0.1"
-                  value={handicap}
-                  onChange={(e) => setHandicap(e.target.value === "" ? "" : Number(e.target.value))}
-                  placeholder="e.g. 2.4"
-                  className="w-full px-3 py-2.5 bg-white border border-brand-ink text-brand-ink text-xs font-semibold focus:outline-none focus:border-brand-pink transition-colors placeholder:text-neutral-300"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
                   {language === "th" ? "ระดับชั้นปี" : "CLASS YEAR"}
                 </label>
-                <div className="relative">
-                  <select
-                    value={year}
-                    onChange={(e) => setYear(e.target.value)}
-                    className="w-full px-3 py-2.5 bg-white border border-brand-ink text-brand-ink text-xs font-semibold focus:outline-none focus:border-brand-pink transition-colors cursor-pointer appearance-none"
-                  >
-                    <option value="Freshman">{language === "th" ? "ปี 1 (Freshman)" : "Freshman"}</option>
-                    <option value="Sophomore">{language === "th" ? "ปี 2 (Sophomore)" : "Sophomore"}</option>
-                    <option value="Junior">{language === "th" ? "ปี 3 (Junior)" : "Junior"}</option>
-                    <option value="Senior">{language === "th" ? "ปี 4 (Senior)" : "Senior"}</option>
-                    <option value="Alumni">{language === "th" ? "ศิษย์เก่า (Alumni)" : "Alumni"}</option>
-                  </select>
-                </div>
+                <select
+                  value={year}
+                  onChange={(e) => setYear(e.target.value)}
+                  className="w-full px-3 py-2.5 bg-white border border-brand-ink text-brand-ink text-xs font-semibold focus:outline-none focus:border-brand-pink transition-colors cursor-pointer"
+                >
+                  <option value="Year 1">{language === "th" ? "ชั้นปีที่ 1" : "Year 1"}</option>
+                  <option value="Year 2">{language === "th" ? "ชั้นปีที่ 2" : "Year 2"}</option>
+                  <option value="Year 3">{language === "th" ? "ชั้นปีที่ 3" : "Year 3"}</option>
+                  <option value="Year 4">{language === "th" ? "ชั้นปีที่ 4" : "Year 4"}</option>
+                  <option value="Year 5">{language === "th" ? "ชั้นปีที่ 5" : "Year 5"}</option>
+                  <option value="Year 6">{language === "th" ? "ชั้นปีที่ 6" : "Year 6"}</option>
+                </select>
               </div>
 
               <div className="space-y-1">

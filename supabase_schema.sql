@@ -91,8 +91,7 @@ CREATE TABLE members (
   id TEXT PRIMARY KEY,
   email TEXT NOT NULL UNIQUE,
   name TEXT NOT NULL,
-  phone TEXT,
-  handicap FLOAT,
+  student_id TEXT UNIQUE NOT NULL,
   year TEXT,
   faculty TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()

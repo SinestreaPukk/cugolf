@@ -374,10 +374,10 @@ app.post("/api/admin/auth", async (req, res) => {
 
 // MEMBER REGISTRATION & AUTHENTICATION ENDPOINTS
 app.post("/api/members/register", async (req, res) => {
-  const { email, password, name, phone, year, faculty, handicap } = req.body;
+  const { email, password, name, studentId, year, faculty } = req.body;
 
-  if (!email || !password || !name) {
-    return res.status(400).json({ success: false, message: "Email, password, and name are required." });
+  if (!email || !password || !name || !studentId) {
+    return res.status(400).json({ success: false, message: "Email, password, name, and student ID are required." });
   }
 
   try {
@@ -403,10 +403,9 @@ app.post("/api/members/register", async (req, res) => {
       id: authData.user.id,
       email,
       name,
-      phone: phone || null,
+      student_id: studentId,
       year: year || null,
-      faculty: faculty || null,
-      handicap: typeof handicap === "number" ? handicap : null
+      faculty: faculty || null
     });
 
     if (dbError) {
@@ -453,6 +452,8 @@ app.post("/api/members/login", async (req, res) => {
       console.warn("Could not retrieve member database profile:", profileError.message);
     }
 
+    const formattedProfile = profile ? { ...profile, studentId: profile.student_id } : null;
+
     res.json({
       success: true,
       token: data.session?.access_token,
@@ -460,7 +461,7 @@ app.post("/api/members/login", async (req, res) => {
         id: data.user.id,
         email: data.user.email,
         name: profile?.name || data.user.user_metadata?.name || "Member",
-        profile: profile || null
+        profile: formattedProfile
       }
     });
   } catch (err: any) {
@@ -491,13 +492,15 @@ app.get("/api/members/me", async (req, res) => {
       .eq("id", user.id)
       .single();
 
+    const formattedProfile = profile ? { ...profile, studentId: profile.student_id } : null;
+
     res.json({
       success: true,
       user: {
         id: user.id,
         email: user.email,
         name: profile?.name || user.user_metadata?.name || "Member",
-        profile: profile || null
+        profile: formattedProfile
       }
     });
   } catch (err: any) {
@@ -526,7 +529,13 @@ app.get("/api/admin/members", async (req, res) => {
       .order("created_at", { ascending: false });
 
     if (listError) throw listError;
-    res.json({ success: true, members: membersList });
+
+    const formattedMembers = (membersList || []).map((m: any) => ({
+      ...m,
+      studentId: m.student_id
+    }));
+
+    res.json({ success: true, members: formattedMembers });
   } catch (err: any) {
     console.error("Admin member list fetch error:", err);
     res.status(500).json({ success: false, message: err.message || "Failed to fetch member directory." });

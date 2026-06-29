@@ -341,8 +341,7 @@ export interface Member {
   id: string;
   email: string;
   name: string;
-  phone?: string;
-  handicap?: number;
+  studentId: string;
   year?: string;
   faculty?: string;
   created_at?: string;

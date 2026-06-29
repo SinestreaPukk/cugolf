@@ -336,6 +336,27 @@ export async function removeAdminEmail(email: string, token: string): Promise<{ 
   return handleResponse(res, "Failed to remove admin email");
 }
 
+export async function updateAdminMember(
+  id: string,
+  data: { name?: string; studentId?: string; year?: string; faculty?: string; email?: string; newPassword?: string },
+  token: string
+): Promise<{ success: boolean; message?: string }> {
+  const res = await fetch(`/api/admin/members/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+    body: JSON.stringify(data)
+  });
+  return handleResponse(res, "Failed to update member");
+}
+
+export async function deleteAdminMember(id: string, token: string): Promise<{ success: boolean; message?: string }> {
+  const res = await fetch(`/api/admin/members/${id}`, {
+    method: "DELETE",
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+  return handleResponse(res, "Failed to delete member");
+}
+
 export async function syncMembersToSheets(token: string): Promise<{ success: boolean; synced?: number; total?: number; errors?: number; message?: string }> {
   const res = await fetch("/api/admin/sync-sheets", {
     method: "POST",

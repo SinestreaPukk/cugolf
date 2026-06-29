@@ -695,6 +695,79 @@ app.get("/api/admin/members", async (req, res) => {
   }
 });
 
+app.put("/api/admin/members/:id", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ success: false, message: "Unauthorized." });
+
+  const token = authHeader.replace("Bearer ", "");
+  const { data: { user }, error } = await supabase.auth.getUser(token);
+  const adminEmails = await getAdminEmails();
+  if (error || !user || !adminEmails.includes(user.email!.toLowerCase())) {
+    return res.status(403).json({ success: false, message: "Access denied." });
+  }
+
+  const { id } = req.params;
+  const { name, studentId, year, faculty, email, newPassword } = req.body;
+
+  try {
+    const dbUpdates: any = {};
+    if (name !== undefined) dbUpdates.name = name;
+    if (studentId !== undefined) dbUpdates.student_id = studentId;
+    if (year !== undefined) dbUpdates.year = year;
+    if (faculty !== undefined) dbUpdates.faculty = faculty;
+    if (email !== undefined) dbUpdates.email = email;
+
+    if (Object.keys(dbUpdates).length > 0) {
+      const { error: dbError } = await supabase.from("members").update(dbUpdates).eq("id", id);
+      if (dbError) return res.status(500).json({ success: false, message: dbError.message });
+    }
+
+    if ((email || newPassword) && supabaseAdmin) {
+      const authUpdates: any = {};
+      if (email) authUpdates.email = email;
+      if (newPassword) authUpdates.password = newPassword;
+      const { error: authError } = await supabaseAdmin.auth.admin.updateUserById(id, authUpdates);
+      if (authError) return res.status(500).json({ success: false, message: authError.message });
+    }
+
+    res.json({ success: true });
+  } catch (err: any) {
+    console.error("Admin member update error:", err);
+    res.status(500).json({ success: false, message: err.message || "Failed to update member." });
+  }
+});
+
+app.delete("/api/admin/members/:id", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ success: false, message: "Unauthorized." });
+
+  const token = authHeader.replace("Bearer ", "");
+  const { data: { user }, error } = await supabase.auth.getUser(token);
+  const adminEmails = await getAdminEmails();
+  if (error || !user || !adminEmails.includes(user.email!.toLowerCase())) {
+    return res.status(403).json({ success: false, message: "Access denied." });
+  }
+
+  if (!supabaseAdmin) {
+    return res.status(500).json({ success: false, message: "Admin client not configured." });
+  }
+
+  const { id } = req.params;
+
+  try {
+    const { error: dbError } = await supabase.from("members").delete().eq("id", id);
+    if (dbError) return res.status(500).json({ success: false, message: dbError.message });
+
+    const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(id);
+    if (authError) console.error("Auth delete error (DB already removed):", authError.message);
+
+    res.json({ success: true });
+  } catch (err: any) {
+    console.error("Admin member delete error:", err);
+    res.status(500).json({ success: false, message: err.message || "Failed to delete member." });
+  }
+});
+
 // ADMIN EMAILS MANAGEMENT ENDPOINTS
 app.get("/api/admin/emails", async (req, res) => {
   const authHeader = req.headers.authorization;

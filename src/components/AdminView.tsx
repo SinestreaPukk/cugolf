@@ -39,7 +39,10 @@ import {
  getAdminEmailsList,
  addAdminEmail,
  removeAdminEmail,
- syncMembersToSheets
+ syncMembersToSheets,
+ getAdminMembers,
+ updateAdminMember,
+ deleteAdminMember
 } from"../utils/api";
 import {
  Plus, Trash2, Edit, Save, FileText, Sparkles, LogOut, Users,
@@ -199,7 +202,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
 
  // Visual CMS State
  const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
- const [activeView, setActiveView] = useState<"home"|"blog"|"club"|"roster"|"staff"|"scores"|"sponsors"|"settings"|"gallery"|"upcoming"|"admins">("home");
+ const [activeView, setActiveView] = useState<"home"|"blog"|"club"|"roster"|"staff"|"scores"|"sponsors"|"settings"|"gallery"|"upcoming"|"admins"|"members">("home");
 
  // Admin emails management states and handlers
  const [adminEmails, setAdminEmails] = useState<string[]>([]);
@@ -209,6 +212,18 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  // Google Sheets sync state
  const [isSyncing, setIsSyncing] = useState(false);
  const [syncResult, setSyncResult] = useState<{ synced?: number; total?: number; errors?: number; message?: string } | null>(null);
+
+ // Member management state
+ const [membersList, setMembersList] = useState<any[]>([]);
+ const [isLoadingMembers, setIsLoadingMembers] = useState(false);
+ const [editingMember, setEditingMember] = useState<any | null>(null);
+ const [editName, setEditName] = useState("");
+ const [editEmail, setEditEmail] = useState("");
+ const [editStudentId, setEditStudentId] = useState("");
+ const [editYear, setEditYear] = useState("");
+ const [editFaculty, setEditFaculty] = useState("");
+ const [editPassword, setEditPassword] = useState("");
+ const [memberSearch, setMemberSearch] = useState("");
 
  const loadAdmins = async () => {
    setIsLoadingAdmins(true);
@@ -287,9 +302,73 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
    }
  };
 
+ const loadMembers = async () => {
+   setIsLoadingMembers(true);
+   try {
+     const res = await getAdminMembers(adminToken || "");
+     if (res.success && res.members) setMembersList(res.members);
+   } catch (err: any) {
+     setErrorMsg(err.message || "Failed to load members.");
+   } finally {
+     setIsLoadingMembers(false);
+   }
+ };
+
+ const openEditMember = (member: any) => {
+   setEditingMember(member);
+   setEditName(member.name || "");
+   setEditEmail(member.email || "");
+   setEditStudentId(member.studentId || member.student_id || "");
+   setEditYear(member.year || "");
+   setEditFaculty(member.faculty || "");
+   setEditPassword("");
+ };
+
+ const handleUpdateMember = async (e: React.FormEvent) => {
+   e.preventDefault();
+   if (!editingMember) return;
+   try {
+     const res = await updateAdminMember(editingMember.id, {
+       name: editName,
+       email: editEmail,
+       studentId: editStudentId,
+       year: editYear,
+       faculty: editFaculty,
+       ...(editPassword ? { newPassword: editPassword } : {})
+     }, adminToken || "");
+     if (res.success) {
+       setSuccessMsg("Member updated successfully.");
+       setEditingMember(null);
+       loadMembers();
+     } else {
+       setErrorMsg(res.message || "Failed to update member.");
+     }
+   } catch (err: any) {
+     setErrorMsg(err.message || "Failed to update member.");
+   }
+ };
+
+ const handleDeleteMember = async (member: any) => {
+   if (!window.confirm(`Remove ${member.name} (${member.email}) permanently? This cannot be undone.`)) return;
+   try {
+     const res = await deleteAdminMember(member.id, adminToken || "");
+     if (res.success) {
+       setSuccessMsg(`${member.name} has been removed.`);
+       setMembersList(prev => prev.filter(m => m.id !== member.id));
+     } else {
+       setErrorMsg(res.message || "Failed to delete member.");
+     }
+   } catch (err: any) {
+     setErrorMsg(err.message || "Failed to delete member.");
+   }
+ };
+
  React.useEffect(() => {
    if (activeView === "admins" && adminToken) {
      loadAdmins();
+   }
+   if (activeView === "members" && adminToken) {
+     loadMembers();
    }
  }, [activeView, adminToken]);
 
@@ -2716,6 +2795,128 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  </div>
  );
 
+ case "members":
+ return (
+   <div className="animate-fade-in py-6 space-y-6">
+     {/* Edit Modal */}
+     {editingMember && (
+       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+         <div className="bg-brand-neutral border-2 border-brand-ink shadow-[8px_8px_0px_rgba(0,0,0,1)] w-full max-w-md">
+           <div className="border-b-2 border-brand-ink px-6 py-4 flex items-center justify-between">
+             <h3 className="font-display text-sm font-bold uppercase tracking-wider">Edit Member</h3>
+             <button onClick={() => setEditingMember(null)} className="text-stone-400 hover:text-brand-ink cursor-pointer"><X size={18} /></button>
+           </div>
+           <form onSubmit={handleUpdateMember} className="p-6 space-y-4">
+             <div className="space-y-1">
+               <label className="font-mono text-[9px] font-bold uppercase text-neutral-400 block">Full Name</label>
+               <input type="text" value={editName} onChange={e => setEditName(e.target.value)} className="w-full border border-brand-ink bg-white px-3 py-2 text-xs font-semibold focus:outline-none" required />
+             </div>
+             <div className="space-y-1">
+               <label className="font-mono text-[9px] font-bold uppercase text-neutral-400 block">Email</label>
+               <input type="email" value={editEmail} onChange={e => setEditEmail(e.target.value)} className="w-full border border-brand-ink bg-white px-3 py-2 text-xs font-semibold focus:outline-none" required />
+             </div>
+             <div className="space-y-1">
+               <label className="font-mono text-[9px] font-bold uppercase text-neutral-400 block">Student ID</label>
+               <input type="text" value={editStudentId} onChange={e => setEditStudentId(e.target.value)} className="w-full border border-brand-ink bg-white px-3 py-2 text-xs font-semibold focus:outline-none" required />
+             </div>
+             <div className="grid grid-cols-2 gap-3">
+               <div className="space-y-1">
+                 <label className="font-mono text-[9px] font-bold uppercase text-neutral-400 block">Year</label>
+                 <select value={editYear} onChange={e => setEditYear(e.target.value)} className="w-full border border-brand-ink bg-white px-3 py-2 text-xs font-semibold focus:outline-none cursor-pointer">
+                   {["Year 1","Year 2","Year 3","Year 4","Year 5","Year 6"].map(y => <option key={y} value={y}>{y}</option>)}
+                 </select>
+               </div>
+               <div className="space-y-1">
+                 <label className="font-mono text-[9px] font-bold uppercase text-neutral-400 block">Faculty</label>
+                 <input type="text" value={editFaculty} onChange={e => setEditFaculty(e.target.value)} className="w-full border border-brand-ink bg-white px-3 py-2 text-xs font-semibold focus:outline-none" />
+               </div>
+             </div>
+             <div className="space-y-1">
+               <label className="font-mono text-[9px] font-bold uppercase text-neutral-400 block">New Password <span className="text-neutral-300">(leave blank to keep current)</span></label>
+               <input type="password" value={editPassword} onChange={e => setEditPassword(e.target.value)} placeholder="••••••••" className="w-full border border-brand-ink bg-white px-3 py-2 text-xs font-semibold focus:outline-none" minLength={6} />
+             </div>
+             <div className="flex gap-3 pt-2">
+               <button type="submit" className="flex-1 bg-brand-ink text-brand-neutral hover:bg-neutral-800 py-2.5 font-mono text-xs font-black uppercase cursor-pointer transition-colors flex items-center justify-center gap-2">
+                 <Save size={12} /> SAVE CHANGES
+               </button>
+               <button type="button" onClick={() => setEditingMember(null)} className="px-4 border-2 border-brand-ink font-mono text-xs font-black uppercase cursor-pointer hover:bg-brand-stone transition-colors">
+                 CANCEL
+               </button>
+             </div>
+           </form>
+         </div>
+       </div>
+     )}
+
+     <div className="border-2 border-brand-ink bg-brand-neutral p-6 shadow-[6px_6px_0px_rgba(0,0,0,1)]">
+       <div className="border-b-2 border-brand-ink pb-4 mb-6 flex items-center justify-between">
+         <div>
+           <h2 className="font-display text-lg font-bold uppercase tracking-wider text-brand-ink flex items-center gap-2">
+             <Users size={20} className="text-brand-pink" /> REGISTERED MEMBERS
+           </h2>
+           <p className="font-mono text-[9px] text-neutral-400 mt-1 uppercase font-bold">
+             {membersList.length} TOTAL — EDIT PROFILE OR REMOVE ACCESS
+           </p>
+         </div>
+         <button onClick={loadMembers} disabled={isLoadingMembers} className="border-2 border-brand-ink px-3 py-1.5 font-mono text-[10px] font-black uppercase flex items-center gap-2 hover:bg-brand-stone transition-colors cursor-pointer disabled:opacity-50">
+           <RefreshCw size={12} className={isLoadingMembers ? "animate-spin" : ""} /> REFRESH
+         </button>
+       </div>
+
+       <div className="mb-4">
+         <input
+           type="text"
+           placeholder="Search by name, email, or student ID..."
+           value={memberSearch}
+           onChange={e => setMemberSearch(e.target.value)}
+           className="w-full border border-brand-ink/30 bg-white px-3 py-2 text-xs font-semibold focus:outline-none focus:border-brand-ink"
+         />
+       </div>
+
+       {isLoadingMembers && membersList.length === 0 ? (
+         <div className="flex items-center justify-center py-16"><RefreshCw size={24} className="animate-spin text-neutral-400" /></div>
+       ) : (
+         <div className="divide-y-2 divide-brand-ink/10 border-2 border-brand-ink">
+           {membersList
+             .filter(m => {
+               const q = memberSearch.toLowerCase();
+               return !q || m.name?.toLowerCase().includes(q) || m.email?.toLowerCase().includes(q) || (m.studentId || m.student_id || "").toLowerCase().includes(q);
+             })
+             .map(member => (
+               <div key={member.id} className="flex items-center justify-between p-4 hover:bg-neutral-50 transition-colors gap-4">
+                 <div className="min-w-0 flex-1 space-y-0.5">
+                   <p className="font-mono text-xs font-black text-brand-ink truncate">{member.name}</p>
+                   <p className="font-mono text-[10px] text-stone-500 truncate">{member.email}</p>
+                   <div className="flex items-center gap-3 flex-wrap">
+                     <span className="font-mono text-[9px] bg-brand-stone px-1.5 py-0.5 text-brand-ink font-bold">ID: {member.studentId || member.student_id || "—"}</span>
+                     {member.year && <span className="font-mono text-[9px] text-neutral-400">{member.year}</span>}
+                     {member.faculty && <span className="font-mono text-[9px] text-neutral-400 truncate">{member.faculty}</span>}
+                   </div>
+                 </div>
+                 <div className="flex items-center gap-2 shrink-0">
+                   <button onClick={() => openEditMember(member)} className="border border-brand-ink px-3 py-1.5 font-mono text-[9px] font-black uppercase flex items-center gap-1.5 hover:bg-brand-ink hover:text-brand-neutral transition-colors cursor-pointer">
+                     <Edit size={10} /> EDIT
+                   </button>
+                   <button onClick={() => handleDeleteMember(member)} className="border border-red-400 text-red-500 hover:bg-red-500 hover:text-white px-2 py-1.5 transition-colors cursor-pointer">
+                     <Trash2 size={12} />
+                   </button>
+                 </div>
+               </div>
+             ))}
+           {membersList.filter(m => {
+             const q = memberSearch.toLowerCase();
+             return !q || m.name?.toLowerCase().includes(q) || m.email?.toLowerCase().includes(q) || (m.studentId || m.student_id || "").toLowerCase().includes(q);
+           }).length === 0 && (
+             <div className="p-8 text-center font-mono text-xs text-stone-400">
+               {memberSearch ? "NO MEMBERS MATCH YOUR SEARCH" : "NO REGISTERED MEMBERS YET"}
+             </div>
+           )}
+         </div>
+       )}
+     </div>
+   </div>
+ );
+
  case "admins":
  return (
    <div className="space-y-8 animate-fade-in max-w-2xl mx-auto py-6">
@@ -3004,6 +3205,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  { id:"scores", label:"SCORES"},
  { id:"sponsors", label:"SPONSORS"},
  { id:"settings", label:"SETTINGS"},
+ { id:"members", label:"MEMBERS"},
  { id:"admins", label:"ADMINS"},
  ].map((tab) => (
  <button

@@ -1,4 +1,4 @@
-import { ArrowRight, Menu, X, Instagram, Facebook, ChevronDown, LogOut } from "lucide-react";
+import { ArrowRight, Menu, X, Instagram, Facebook, ChevronDown } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "./Logo";
@@ -197,15 +197,7 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
       </a>
     </div>
 
-    {memberUser && (
-      <button
-        onClick={onLogout}
-        className="font-sans text-[10px] font-black tracking-widest text-red-600 hover:text-red-700 hover:bg-red-50 transition-colors uppercase border border-red-600/30 px-3 py-1 cursor-pointer"
-        title="Log out of your session"
-      >
-        {language === "th" ? "ออกจากระบบ" : "LOGOUT"}
-      </button>
-    )}
+
 
     {/* Desktop Language Switch Toggle */}
     <button
@@ -320,18 +312,6 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  <span>{siteLabels?.navFollowTiktok || "FOLLOW @CUGOLFCLUB (TIKTOK)"}</span>
  </a>
 
- {memberUser && (
-    <button
-      onClick={() => {
-        setIsOpen(false);
-        if (onLogout) onLogout();
-      }}
-      className="flex items-center gap-2.5 font-sans text-[11px] font-bold tracking-widest text-red-600 uppercase py-2 cursor-pointer border border-red-600/30 px-3 justify-center mt-2"
-    >
-      <LogOut size={12} />
-      <span>{language === "th" ? "ออกจากระบบสมาชิก" : "DISCONNECT SESSION"}</span>
-    </button>
-  )}
  </div>
  </div>
  </div>

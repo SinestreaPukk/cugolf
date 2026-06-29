@@ -23,8 +23,11 @@ if (!supabaseServiceRoleKey) {
   console.warn("⚠️ WARNING: SUPABASE_SERVICE_ROLE_KEY is not set. Member registration and admin auth operations will fail.");
 }
 
-// Regular client using anon key for standard operations
-const supabase = createClient(supabaseUrl, supabaseServiceRoleKey || supabaseAnonKey);
+// Regular client — persistSession: false prevents cached user JWTs from
+// leaking between requests and causing RLS violations on server-side inserts
+const supabase = createClient(supabaseUrl, supabaseServiceRoleKey || supabaseAnonKey, {
+  auth: { autoRefreshToken: false, persistSession: false }
+});
 
 // Dedicated admin client using service role key — required for auth.admin.* operations
 const supabaseAdmin = supabaseServiceRoleKey

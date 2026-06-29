@@ -19,7 +19,7 @@
  */
 
 var SHEET_NAME = "Members";
-var HEADERS = ["Timestamp", "Member ID", "Name", "Email", "Student ID", "Year", "Faculty"];
+var HEADERS = ["Timestamp", "Member ID", "Prefix", "Name", "Email", "Student ID", "Year", "Faculty", "Instagram", "Line ID"];
 
 function getOrCreateSheet() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -45,11 +45,14 @@ function doPost(e) {
     var row = [
       data.timestamp || new Date().toISOString(),
       memberId,
+      data.prefix || "—",
       data.name || "",
       data.email || "",
       data.studentId || "",
       data.year || "—",
-      data.faculty || "—"
+      data.faculty || "—",
+      data.instagram || "—",
+      data.lineId || "—"
     ];
 
     // Check for existing row by Member ID (column B = index 2) to avoid duplicates

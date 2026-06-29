@@ -35,10 +35,13 @@ export default function MemberAuthView({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [prefix, setPrefix] = useState("นาย");
   const [name, setName] = useState("");
   const [studentId, setStudentId] = useState("");
   const [faculty, setFaculty] = useState("");
   const [year, setYear] = useState("Year 1");
+  const [instagram, setInstagram] = useState("");
+  const [lineId, setLineId] = useState("");
 
   // Forgot/Reset password states
   const [forgotEmail, setForgotEmail] = useState("");
@@ -116,10 +119,13 @@ export default function MemberAuthView({
       const res = await registerMember({
         email,
         password,
+        prefix,
         name,
         studentId,
         faculty: faculty || undefined,
-        year: year || undefined
+        year: year || undefined,
+        instagram: instagram || undefined,
+        lineId: lineId || undefined
       });
 
       if (res.success) {
@@ -242,6 +248,12 @@ export default function MemberAuthView({
           </div>
 
           <div className="space-y-3 font-sans text-xs">
+            {profile.prefix && (
+              <div className="flex justify-between border-b border-brand-ink/10 pb-2">
+                <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "คำนำหน้า" : "PREFIX"}</span>
+                <span className="font-bold text-brand-ink">{profile.prefix}</span>
+              </div>
+            )}
             <div className="flex justify-between border-b border-brand-ink/10 pb-2">
               <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "ชื่อ-นามสกุล" : "NAME"}</span>
               <span className="font-bold text-brand-ink uppercase">{memberUser.name}</span>
@@ -264,6 +276,18 @@ export default function MemberAuthView({
               <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "คณะ" : "FACULTY"}</span>
               <span className="font-bold text-brand-ink uppercase">{profile.faculty || "—"}</span>
             </div>
+            {profile.instagram && (
+              <div className="flex justify-between border-b border-brand-ink/10 pb-2">
+                <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Instagram</span>
+                <span className="font-bold text-brand-ink">{profile.instagram}</span>
+              </div>
+            )}
+            {profile.lineId && (
+              <div className="flex justify-between border-b border-brand-ink/10 pb-2">
+                <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Line ID</span>
+                <span className="font-bold text-brand-ink">{profile.lineId}</span>
+              </div>
+            )}
           </div>
 
           {memberUser.isAdmin && (
@@ -436,6 +460,31 @@ export default function MemberAuthView({
           <form onSubmit={handleRegister} className="space-y-4">
             <div className="space-y-1">
               <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
+                {language === "th" ? "คำนำหน้า *" : "PREFIX *"}
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { th: "นาย", en: "Mr." },
+                  { th: "นางสาว", en: "Ms." }
+                ].map(opt => (
+                  <button
+                    key={opt.th}
+                    type="button"
+                    onClick={() => setPrefix(opt.th)}
+                    className={`py-2.5 text-xs font-mono font-bold border transition-colors cursor-pointer ${
+                      prefix === opt.th
+                        ? "bg-brand-ink text-brand-neutral border-brand-ink"
+                        : "bg-white text-brand-ink border-brand-ink hover:bg-brand-stone"
+                    }`}
+                  >
+                    {language === "th" ? opt.th : `${opt.th} / ${opt.en}`}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
                 {language === "th" ? "ชื่อ-นามสกุลจริง *" : "FULL NAME *"}
               </label>
               <input
@@ -533,6 +582,33 @@ export default function MemberAuthView({
                   value={faculty}
                   onChange={(e) => setFaculty(e.target.value)}
                   placeholder="e.g. Sports Science"
+                  className="w-full px-3 py-2.5 bg-white border border-brand-ink text-brand-ink text-xs font-semibold focus:outline-none focus:border-brand-pink transition-colors placeholder:text-neutral-300"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
+                  Instagram
+                </label>
+                <input
+                  type="text"
+                  value={instagram}
+                  onChange={(e) => setInstagram(e.target.value)}
+                  placeholder="@username"
+                  className="w-full px-3 py-2.5 bg-white border border-brand-ink text-brand-ink text-xs font-semibold focus:outline-none focus:border-brand-pink transition-colors placeholder:text-neutral-300"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
+                  Line ID
+                </label>
+                <input
+                  type="text"
+                  value={lineId}
+                  onChange={(e) => setLineId(e.target.value)}
+                  placeholder="line_id"
                   className="w-full px-3 py-2.5 bg-white border border-brand-ink text-brand-ink text-xs font-semibold focus:outline-none focus:border-brand-pink transition-colors placeholder:text-neutral-300"
                 />
               </div>

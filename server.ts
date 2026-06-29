@@ -413,7 +413,7 @@ app.post("/api/admin/auth", async (req, res) => {
 
 // MEMBER REGISTRATION & AUTHENTICATION ENDPOINTS
 app.post("/api/members/register", async (req, res) => {
-  const { email, password, name, studentId, year, faculty } = req.body;
+  const { email, password, name, prefix, studentId, year, faculty, instagram, lineId } = req.body;
 
   if (!email || !password || !name || !studentId) {
     return res.status(400).json({ success: false, message: "Email, password, name, and student ID are required." });
@@ -450,9 +450,12 @@ app.post("/api/members/register", async (req, res) => {
       id: authData.user.id,
       email,
       name,
+      prefix: prefix || null,
       student_id: studentId,
       year: year || null,
-      faculty: faculty || null
+      faculty: faculty || null,
+      instagram: instagram || null,
+      line_id: lineId || null
     });
 
     if (dbError) {
@@ -479,11 +482,14 @@ app.post("/api/members/register", async (req, res) => {
         body: JSON.stringify({
           timestamp: new Date().toISOString(),
           id: authData.user.id,
+          prefix: prefix || "—",
           name,
           email,
           studentId,
           year: year || "—",
-          faculty: faculty || "—"
+          faculty: faculty || "—",
+          instagram: instagram || "—",
+          lineId: lineId || "—"
         })
       }).then(response => {
         if (!response.ok) {
@@ -707,15 +713,18 @@ app.put("/api/admin/members/:id", async (req, res) => {
   }
 
   const { id } = req.params;
-  const { name, studentId, year, faculty, email, newPassword } = req.body;
+  const { name, prefix, studentId, year, faculty, email, instagram, lineId, newPassword } = req.body;
 
   try {
     const dbUpdates: any = {};
     if (name !== undefined) dbUpdates.name = name;
+    if (prefix !== undefined) dbUpdates.prefix = prefix;
     if (studentId !== undefined) dbUpdates.student_id = studentId;
     if (year !== undefined) dbUpdates.year = year;
     if (faculty !== undefined) dbUpdates.faculty = faculty;
     if (email !== undefined) dbUpdates.email = email;
+    if (instagram !== undefined) dbUpdates.instagram = instagram;
+    if (lineId !== undefined) dbUpdates.line_id = lineId;
 
     if (Object.keys(dbUpdates).length > 0) {
       const { error: dbError } = await supabase.from("members").update(dbUpdates).eq("id", id);
@@ -1120,11 +1129,14 @@ async function syncAllMembersToSheets(): Promise<{ synced: number; total: number
         body: JSON.stringify({
           timestamp: member.created_at || new Date().toISOString(),
           id: member.id,
+          prefix: member.prefix || "—",
           name: member.name,
           email: member.email,
           studentId: member.student_id,
           year: member.year || "—",
-          faculty: member.faculty || "—"
+          faculty: member.faculty || "—",
+          instagram: member.instagram || "—",
+          lineId: member.line_id || "—"
         })
       });
       if (response.ok) { synced++; } else { errors++; }

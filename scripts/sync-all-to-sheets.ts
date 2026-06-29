@@ -48,11 +48,14 @@ async function syncAllToSheets() {
         body: JSON.stringify({
           timestamp: member.created_at || new Date().toISOString(),
           id: member.id,
+          prefix: member.prefix || "—",
           name: member.name,
           email: member.email,
           studentId: member.student_id,
           year: member.year || "—",
-          faculty: member.faculty || "—"
+          faculty: member.faculty || "—",
+          instagram: member.instagram || "—",
+          lineId: member.line_id || "—"
         })
       });
 

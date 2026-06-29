@@ -91,9 +91,12 @@ CREATE TABLE members (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email TEXT NOT NULL UNIQUE,
   name TEXT NOT NULL,
+  prefix TEXT,
   student_id TEXT UNIQUE NOT NULL,
   year TEXT,
   faculty TEXT,
+  instagram TEXT,
+  line_id TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

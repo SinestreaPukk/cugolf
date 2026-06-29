@@ -219,9 +219,12 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  const [editingMember, setEditingMember] = useState<any | null>(null);
  const [editName, setEditName] = useState("");
  const [editEmail, setEditEmail] = useState("");
+ const [editPrefix, setEditPrefix] = useState("");
  const [editStudentId, setEditStudentId] = useState("");
  const [editYear, setEditYear] = useState("");
  const [editFaculty, setEditFaculty] = useState("");
+ const [editInstagram, setEditInstagram] = useState("");
+ const [editLineId, setEditLineId] = useState("");
  const [editPassword, setEditPassword] = useState("");
  const [memberSearch, setMemberSearch] = useState("");
 
@@ -318,9 +321,12 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
    setEditingMember(member);
    setEditName(member.name || "");
    setEditEmail(member.email || "");
+   setEditPrefix(member.prefix || "นาย");
    setEditStudentId(member.studentId || member.student_id || "");
-   setEditYear(member.year || "");
+   setEditYear(member.year || "Year 1");
    setEditFaculty(member.faculty || "");
+   setEditInstagram(member.instagram || "");
+   setEditLineId(member.line_id || member.lineId || "");
    setEditPassword("");
  };
 
@@ -331,9 +337,12 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
      const res = await updateAdminMember(editingMember.id, {
        name: editName,
        email: editEmail,
+       prefix: editPrefix,
        studentId: editStudentId,
        year: editYear,
        faculty: editFaculty,
+       instagram: editInstagram,
+       lineId: editLineId,
        ...(editPassword ? { newPassword: editPassword } : {})
      }, adminToken || "");
      if (res.success) {
@@ -2808,6 +2817,17 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
            </div>
            <form onSubmit={handleUpdateMember} className="p-6 space-y-4">
              <div className="space-y-1">
+               <label className="font-mono text-[9px] font-bold uppercase text-neutral-400 block">คำนำหน้า / Prefix</label>
+               <div className="grid grid-cols-2 gap-2">
+                 {["นาย","นางสาว"].map(p => (
+                   <button key={p} type="button" onClick={() => setEditPrefix(p)}
+                     className={`py-2 text-xs font-mono font-bold border transition-colors cursor-pointer ${editPrefix === p ? "bg-brand-ink text-brand-neutral border-brand-ink" : "bg-white text-brand-ink border-brand-ink hover:bg-brand-stone"}`}>
+                     {p}
+                   </button>
+                 ))}
+               </div>
+             </div>
+             <div className="space-y-1">
                <label className="font-mono text-[9px] font-bold uppercase text-neutral-400 block">Full Name</label>
                <input type="text" value={editName} onChange={e => setEditName(e.target.value)} className="w-full border border-brand-ink bg-white px-3 py-2 text-xs font-semibold focus:outline-none" required />
              </div>
@@ -2829,6 +2849,16 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
                <div className="space-y-1">
                  <label className="font-mono text-[9px] font-bold uppercase text-neutral-400 block">Faculty</label>
                  <input type="text" value={editFaculty} onChange={e => setEditFaculty(e.target.value)} className="w-full border border-brand-ink bg-white px-3 py-2 text-xs font-semibold focus:outline-none" />
+               </div>
+             </div>
+             <div className="grid grid-cols-2 gap-3">
+               <div className="space-y-1">
+                 <label className="font-mono text-[9px] font-bold uppercase text-neutral-400 block">Instagram</label>
+                 <input type="text" value={editInstagram} onChange={e => setEditInstagram(e.target.value)} placeholder="@username" className="w-full border border-brand-ink bg-white px-3 py-2 text-xs font-semibold focus:outline-none" />
+               </div>
+               <div className="space-y-1">
+                 <label className="font-mono text-[9px] font-bold uppercase text-neutral-400 block">Line ID</label>
+                 <input type="text" value={editLineId} onChange={e => setEditLineId(e.target.value)} placeholder="line_id" className="w-full border border-brand-ink bg-white px-3 py-2 text-xs font-semibold focus:outline-none" />
                </div>
              </div>
              <div className="space-y-1">

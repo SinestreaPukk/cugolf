@@ -342,7 +342,10 @@ export interface Member {
   email: string;
   name: string;
   studentId: string;
+  prefix?: string;
   year?: string;
   faculty?: string;
+  instagram?: string;
+  lineId?: string;
   created_at?: string;
 }

@@ -415,43 +415,31 @@ app.post("/api/members/register", async (req, res) => {
       return res.status(500).json({ success: false, message: `Database setup failed: ${dbError.message}` });
     }
 
-    // Sync to Google Form (which writes to the Google Sheet)
-    const yearMapping: Record<string, string> = {
-      "Year 1": "ปี 1",
-      "Year 2": "ปี 2",
-      "Year 3": "ปี 3",
-      "Year 4": "ปี 4",
-      "Year 5": "ปี 5",
-      "Year 6": "ปี 6"
-    };
-    const mappedYear = yearMapping[year] || year || "ปี 1";
-
-    const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdaKMAAJw0pSaf7k9atDaUiuws7zpuYg6-903oI2qt2Qk4UIg/formResponse";
-    const formParams = new URLSearchParams();
-    formParams.append("entry.1176826944", name); // Name
-    formParams.append("entry.388278079", faculty || "—"); // Faculty
-    formParams.append("entry.376007304", mappedYear); // Year
-    formParams.append("entry.121611115", studentId); // Student ID
-    formParams.append("entry.717576877", "—"); // Phone
-    formParams.append("entry.626226461", "—"); // Line ID
-    formParams.append("entry.959057401", "Synced from Membership App"); // Reason
-    formParams.append("entry.327757806", "เข้าแล้ว"); // Checkbox
-
-    fetch(formUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: formParams.toString()
-    }).then(response => {
-      if (response.status === 401) {
-        console.warn("⚠️ Google Form sync failed (401 Unauthorized). Please turn off 'Restrict to users in Chulalongkorn University' in the Google Form Settings.");
-      } else if (!response.ok) {
-        console.warn("Google Form sync returned non-OK status:", response.status);
-      } else {
-        console.log("Successfully synced registrant to Google Sheets via Form Response.");
-      }
-    }).catch(fetchErr => {
-      console.error("Error sending registration to Google Form Webhook:", fetchErr.message);
-    });
+    // Async push to Google Sheets Webhook if configured
+    const sheetsWebhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
+    if (sheetsWebhookUrl) {
+      fetch(sheetsWebhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          timestamp: new Date().toISOString(),
+          id: authData.user.id,
+          name,
+          email,
+          studentId,
+          year: year || "—",
+          faculty: faculty || "—"
+        })
+      }).then(response => {
+        if (!response.ok) {
+          console.warn("Google Sheets Sync returned non-OK status:", response.status);
+        } else {
+          console.log("Successfully synced registrant to Google Sheets.");
+        }
+      }).catch(fetchErr => {
+        console.error("Error sending registration to Google Sheets Webhook:", fetchErr.message);
+      });
+    }
 
     res.json({ success: true, message: "Member registration successful." });
   } catch (err: any) {

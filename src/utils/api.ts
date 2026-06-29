@@ -281,7 +281,7 @@ export async function getAdminMembers(token: string): Promise<{ success: boolean
   return handleResponse(res, "Failed to retrieve members directory");
 }
 
-export async function forgotPassword(email: string): Promise<{ success: boolean; accessToken?: string | null; message?: string }> {
+export async function forgotPassword(email: string): Promise<{ success: boolean; message?: string }> {
   const res = await fetch("/api/members/forgot-password", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

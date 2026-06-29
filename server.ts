@@ -608,34 +608,69 @@ app.post("/api/members/forgot-password", async (req, res) => {
   }
 
   try {
-    // Step 1: generate a recovery token (no email sent, no rate limit)
+    const host = req.headers.host || "localhost:3000";
+    const protocol = (req.headers["x-forwarded-proto"] as string) || "http";
+    const appUrl = process.env.APP_URL || `${protocol}://${host}`;
+    const redirectTo = `${appUrl}/membership`;
+
+    // Generate a Supabase recovery link — no email sent by Supabase, no rate limit
     const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
       type: "recovery",
       email,
-      options: { redirectTo: "https://unused" }
+      options: { redirectTo }
     });
 
-    if (linkError || !linkData?.properties?.hashed_token) {
-      // Email not found — return generic success so we don't reveal registered emails
-      return res.json({ success: true, accessToken: null });
+    if (linkError || !linkData?.properties?.action_link) {
+      // Don't reveal whether the email is registered
+      return res.json({ success: true });
     }
 
-    // Step 2: exchange the hashed token for a session — fully server-side, no redirect needed
-    const { data: verifyData, error: verifyError } = await supabase.auth.verifyOtp({
-      token_hash: linkData.properties.hashed_token,
-      type: "recovery"
+    // Send via SMTP (nodemailer)
+    const smtpHost = process.env.SMTP_HOST;
+    const smtpUser = process.env.SMTP_USER;
+    const smtpPass = process.env.SMTP_PASS;
+
+    if (!smtpHost || !smtpUser || !smtpPass) {
+      console.error("[forgot-password] SMTP not configured. Set SMTP_HOST, SMTP_USER, SMTP_PASS.");
+      return res.status(500).json({ success: false, message: "Email service not configured. Please contact an admin." });
+    }
+
+    const smtpFrom = process.env.SMTP_FROM || smtpUser;
+    const transporter = nodemailer.createTransport({
+      host: smtpHost,
+      port: Number(process.env.SMTP_PORT) || 587,
+      secure: Number(process.env.SMTP_PORT) === 465,
+      auth: { user: smtpUser, pass: smtpPass }
     });
 
-    if (verifyError || !verifyData?.session?.access_token) {
-      console.error("verifyOtp failed:", verifyError?.message);
-      return res.json({ success: true, accessToken: null });
-    }
+    await transporter.sendMail({
+      from: `"CU Golf Club" <${smtpFrom}>`,
+      to: email,
+      subject: "Reset your CU Golf Club password",
+      html: `
+        <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:40px 32px;background:#fff">
+          <h1 style="font-size:20px;font-weight:700;margin:0 0 8px">Password Reset</h1>
+          <p style="color:#555;margin:0 0 28px;font-size:14px;line-height:1.6">
+            We received a request to reset the password for your CU Golf Club account.<br>
+            Click the button below — this link expires in <strong>1 hour</strong>.
+          </p>
+          <a href="${linkData.properties.action_link}"
+             style="display:inline-block;background:#111;color:#fff;padding:14px 28px;
+                    text-decoration:none;font-weight:700;font-size:13px;letter-spacing:1.5px">
+            RESET PASSWORD
+          </a>
+          <p style="color:#999;font-size:11px;margin-top:32px">
+            If you did not request this, ignore this email — your password will not change.
+          </p>
+        </div>
+      `
+    });
 
-    // Return the access token — frontend will show the reset form immediately, no redirect
-    res.json({ success: true, accessToken: verifyData.session.access_token });
+    console.log(`[forgot-password] Reset email sent to ${email}`);
+    res.json({ success: true });
   } catch (err: any) {
     console.error("Forgot password crash:", err);
-    res.status(500).json({ success: false, message: err.message || "Internal server error." });
+    res.status(500).json({ success: false, message: err.message || "Failed to send reset email." });
   }
 });
 

@@ -191,20 +191,12 @@ export default function MemberAuthView({
     setSuccessMsg("");
 
     try {
-      const res = await forgotPassword(forgotEmail);
-      if (res.success && res.accessToken) {
-        // Token exchanged server-side — show reset form immediately, no redirect
-        setRecoveryToken(res.accessToken);
-        setForgotEmail("");
-        setActiveTab("reset");
-      } else if (res.success) {
-        // Email not found — generic message (don't reveal registered emails)
-        setSuccessMsg(
-          language === "th"
-            ? "หากอีเมลนี้ถูกลงทะเบียนไว้ กรุณาติดต่อผู้ดูแลระบบเพื่อรีเซ็ตรหัสผ่าน"
-            : "Email not found. Please contact an admin to reset your password."
-        );
-      }
+      await forgotPassword(forgotEmail);
+      setSuccessMsg(
+        language === "th"
+          ? "ส่งลิงก์รีเซ็ตรหัสผ่านไปที่อีเมลของคุณแล้ว กรุณาตรวจสอบกล่องขาเข้า (รวมถึงโฟลเดอร์สแปม)"
+          : "Password reset link sent! Check your inbox (and spam folder)."
+      );
     } catch (err: any) {
       console.error(err);
       setErrorMsg(err.message || (language === "th" ? "เกิดข้อผิดพลาดในการส่งคำขอ" : "Something went wrong. Please try again."));

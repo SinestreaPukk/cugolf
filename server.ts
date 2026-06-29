@@ -514,20 +514,33 @@ app.post("/api/members/login", async (req, res) => {
     }
   }
 
-  if (!supabaseAdmin) {
-    return res.status(500).json({ success: false, message: "Login service unavailable." });
-  }
+  // Use supabaseAdmin (service role) or fall back to supabase (also uses service role when key is set)
+  const db = supabaseAdmin || supabase;
 
   try {
-    // ilike = case-insensitive match, handles emails stored in any casing
-    const { data: profile, error: profileError } = await supabaseAdmin
+    // Fetch all members with matching email (case-insensitive), then check student ID in JS
+    const { data: rows, error: dbError } = await db
       .from("members")
       .select("*")
-      .ilike("email", email.trim())
-      .ilike("student_id", studentId.trim())
-      .single();
+      .ilike("email", email.trim());
 
-    if (profileError || !profile) {
+    if (dbError) {
+      console.error("Login DB error:", dbError.message, dbError.code);
+      return res.status(500).json({ success: false, message: "Database error. Please try again." });
+    }
+
+    if (!rows || rows.length === 0) {
+      console.log(`Login failed: no member found with email "${email.trim()}"`);
+      return res.status(401).json({ success: false, message: "Invalid email or student ID." });
+    }
+
+    // Match student ID case-insensitively and with whitespace stripped
+    const profile = rows.find(
+      (m: any) => m.student_id?.trim().toLowerCase() === studentId.trim().toLowerCase()
+    );
+
+    if (!profile) {
+      console.log(`Login failed: email found but student ID "${studentId.trim()}" did not match (stored: "${rows[0]?.student_id}")`);
       return res.status(401).json({ success: false, message: "Invalid email or student ID." });
     }
 

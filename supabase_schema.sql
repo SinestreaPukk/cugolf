@@ -88,7 +88,7 @@ CREATE TABLE site_config (
 
 -- Create members table
 CREATE TABLE members (
-  id TEXT PRIMARY KEY,
+  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email TEXT NOT NULL UNIQUE,
   name TEXT NOT NULL,
   student_id TEXT UNIQUE NOT NULL,

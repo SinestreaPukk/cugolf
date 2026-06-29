@@ -592,16 +592,25 @@ app.post("/api/members/forgot-password", async (req, res) => {
 
   try {
     const host = req.headers.host || "localhost:3000";
-    const protocol = req.headers["x-forwarded-proto"] || "http";
-    const redirectTo = `${protocol}://${host}/membership`;
+    const protocol = (req.headers["x-forwarded-proto"] as string) || "http";
+    const appUrl = process.env.APP_URL || `${protocol}://${host}`;
+    const redirectTo = `${appUrl}/membership`;
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo,
+    // Must use anon key (not service role key) — Supabase rejects recovery
+    // emails sent with the service role key in some configurations.
+    const response = await fetch(`${supabaseUrl}/auth/v1/recover`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: supabaseAnonKey
+      },
+      body: JSON.stringify({ email, redirect_to: redirectTo })
     });
 
-    if (error) {
-      console.error("Supabase forgot-password error:", error.message);
-      return res.status(400).json({ success: false, message: error.message });
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}));
+      console.error("Supabase forgot-password error:", body);
+      return res.status(400).json({ success: false, message: body.msg || body.error_description || "Could not send reset email." });
     }
 
     res.json({ success: true, message: "Password reset instructions sent to your email." });

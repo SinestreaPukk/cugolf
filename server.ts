@@ -608,46 +608,31 @@ app.post("/api/members/forgot-password", async (req, res) => {
   }
 
   try {
-    const host = req.headers.host || "localhost:3000";
-    const protocol = (req.headers["x-forwarded-proto"] as string) || "http";
-    const appUrl = process.env.APP_URL || `${protocol}://${host}`;
-    const redirectTo = `${appUrl}/membership`;
-
-    // generateLink never sends an email and has no rate limit.
-    // We return the action_link to the frontend which navigates to it directly —
-    // no email service needed at all.
+    // Step 1: generate a recovery token (no email sent, no rate limit)
     const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
       type: "recovery",
       email,
-      options: { redirectTo }
+      options: { redirectTo: "https://unused" }
     });
 
-    if (linkError || !linkData?.properties?.action_link) {
-      // Return success anyway — don't reveal whether the email is registered
-      return res.json({ success: true, actionLink: null });
+    if (linkError || !linkData?.properties?.hashed_token) {
+      // Email not found — return generic success so we don't reveal registered emails
+      return res.json({ success: true, accessToken: null });
     }
 
-    // Optionally also send via SMTP if configured (bonus — not required)
-    const smtpHost = process.env.SMTP_HOST;
-    const smtpUser = process.env.SMTP_USER;
-    const smtpPass = process.env.SMTP_PASS;
-    if (smtpHost && smtpUser && smtpPass) {
-      const smtpFrom = process.env.SMTP_FROM || smtpUser;
-      const transporter = nodemailer.createTransport({
-        host: smtpHost,
-        port: Number(process.env.SMTP_PORT) || 587,
-        secure: Number(process.env.SMTP_PORT) === 465,
-        auth: { user: smtpUser, pass: smtpPass }
-      });
-      await transporter.sendMail({
-        from: `"CU Golf Club" <${smtpFrom}>`,
-        to: email,
-        subject: "Reset your CU Golf Club password",
-        html: `<div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px"><h2 style="font-size:18px;font-weight:700;margin-bottom:8px">Password Reset</h2><p style="color:#555;margin-bottom:24px">Click the button below to set a new password. This link expires in 1 hour.</p><a href="${linkData.properties.action_link}" style="display:inline-block;background:#121212;color:#fff;padding:12px 24px;text-decoration:none;font-weight:700;font-size:13px;letter-spacing:1px">RESET PASSWORD</a><p style="color:#999;font-size:11px;margin-top:24px">If you did not request this, ignore this email.</p></div>`
-      }).catch(e => console.error("SMTP send failed:", e.message));
+    // Step 2: exchange the hashed token for a session — fully server-side, no redirect needed
+    const { data: verifyData, error: verifyError } = await supabase.auth.verifyOtp({
+      token_hash: linkData.properties.hashed_token,
+      type: "recovery"
+    });
+
+    if (verifyError || !verifyData?.session?.access_token) {
+      console.error("verifyOtp failed:", verifyError?.message);
+      return res.json({ success: true, accessToken: null });
     }
 
-    res.json({ success: true, actionLink: linkData.properties.action_link });
+    // Return the access token — frontend will show the reset form immediately, no redirect
+    res.json({ success: true, accessToken: verifyData.session.access_token });
   } catch (err: any) {
     console.error("Forgot password crash:", err);
     res.status(500).json({ success: false, message: err.message || "Internal server error." });

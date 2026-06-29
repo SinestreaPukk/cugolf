@@ -192,21 +192,22 @@ export default function MemberAuthView({
 
     try {
       const res = await forgotPassword(forgotEmail);
-      if (res.success && res.actionLink) {
-        // Navigate to the Supabase recovery link — it verifies the token and
-        // redirects back to /membership?code=... where the reset form appears.
-        window.location.href = res.actionLink;
+      if (res.success && res.accessToken) {
+        // Token exchanged server-side — show reset form immediately, no redirect
+        setRecoveryToken(res.accessToken);
+        setForgotEmail("");
+        setActiveTab("reset");
       } else if (res.success) {
-        // Email not found (we don't reveal which) — show generic message
+        // Email not found — generic message (don't reveal registered emails)
         setSuccessMsg(
           language === "th"
-            ? "หากอีเมลนี้ถูกลงทะเบียนไว้ ระบบจะส่งลิงก์รีเซ็ตให้"
-            : "If that email is registered, a reset link has been sent."
+            ? "หากอีเมลนี้ถูกลงทะเบียนไว้ กรุณาติดต่อผู้ดูแลระบบเพื่อรีเซ็ตรหัสผ่าน"
+            : "Email not found. Please contact an admin to reset your password."
         );
       }
     } catch (err: any) {
       console.error(err);
-      setErrorMsg(err.message || (language === "th" ? "เกิดข้อผิดพลาดในการส่งคำขอ" : "Failed to send reset email. Please try again."));
+      setErrorMsg(err.message || (language === "th" ? "เกิดข้อผิดพลาดในการส่งคำขอ" : "Something went wrong. Please try again."));
     } finally {
       setLoading(false);
     }

@@ -38,6 +38,10 @@ const supabaseAdmin = supabaseServiceRoleKey
     })
   : null;
 
+// The effective API key for auth HTTP calls — service role key works on all
+// /auth/v1/* endpoints, so we use it as a fallback when anon key is absent.
+const authApiKey = supabaseAnonKey !== "placeholder-key" ? supabaseAnonKey : (supabaseServiceRoleKey || supabaseAnonKey);
+
 // Sign in via direct HTTP — no shared client state is modified, eliminating
 // the session-pollution that caused RLS violations on concurrent requests.
 async function signInDirect(email: string, password: string): Promise<{
@@ -46,7 +50,7 @@ async function signInDirect(email: string, password: string): Promise<{
 } | { error: string }> {
   const res = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=password`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", apikey: supabaseAnonKey },
+    headers: { "Content-Type": "application/json", apikey: authApiKey },
     body: JSON.stringify({ email, password })
   });
   const body = await res.json();
@@ -101,11 +105,17 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 // Serve static uploaded materials (Keep for backward compatibility during migration)
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
-// Health check — shows configuration status without exposing secrets
+// Health check — shows what the server is ACTUALLY using (resolved values, not raw env var names)
 app.get("/api/health", async (req, res) => {
+  const resolvedUrl = supabaseUrl;
+  const resolvedAnonKey = supabaseAnonKey;
+
+  const urlOk = resolvedUrl !== "https://placeholder.supabase.co";
+  const anonOk = resolvedAnonKey !== "placeholder-key";
+
   const checks: Record<string, boolean | string> = {
-    supabase_url: !!process.env.VITE_SUPABASE_URL,
-    anon_key: !!(process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY),
+    supabase_url: urlOk ? resolvedUrl : "NOT SET (placeholder in use — login will fail)",
+    anon_key: anonOk ? "set" : "NOT SET (placeholder in use — login will fail)",
     service_role_key: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
     admin_client_ready: !!supabaseAdmin,
     google_sheets_webhook: !!process.env.GOOGLE_SHEETS_WEBHOOK_URL,
@@ -114,14 +124,14 @@ app.get("/api/health", async (req, res) => {
 
   let db_columns = "untested";
   try {
-    const { data, error } = await supabase.from("members").select("id, prefix, instagram, line_id").limit(1);
+    const { error } = await supabase.from("members").select("id, prefix, instagram, line_id").limit(1);
     db_columns = error ? `error: ${error.message}` : "ok (prefix, instagram, line_id exist)";
   } catch (e: any) {
     db_columns = `exception: ${e.message}`;
   }
   checks.db_columns = db_columns;
 
-  const allOk = checks.supabase_url && checks.anon_key && checks.service_role_key && checks.admin_client_ready && db_columns === "ok (prefix, instagram, line_id exist)";
+  const allOk = urlOk && anonOk && !!supabaseAdmin && db_columns === "ok (prefix, instagram, line_id exist)";
   res.status(allOk ? 200 : 500).json({ ok: allOk, checks });
 });
 
@@ -598,14 +608,9 @@ app.post("/api/members/forgot-password", async (req, res) => {
     const appUrl = process.env.APP_URL || `${protocol}://${host}`;
     const redirectTo = `${appUrl}/membership`;
 
-    // Must use anon key (not service role key) — Supabase rejects recovery
-    // emails sent with the service role key in some configurations.
     const response = await fetch(`${supabaseUrl}/auth/v1/recover`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        apikey: supabaseAnonKey
-      },
+      headers: { "Content-Type": "application/json", apikey: authApiKey },
       body: JSON.stringify({ email, redirect_to: redirectTo })
     });
 

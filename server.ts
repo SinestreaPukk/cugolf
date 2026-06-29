@@ -415,6 +415,32 @@ app.post("/api/members/register", async (req, res) => {
       return res.status(500).json({ success: false, message: `Database setup failed: ${dbError.message}` });
     }
 
+    // Async push to Google Sheets Webhook if configured
+    const sheetsWebhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
+    if (sheetsWebhookUrl) {
+      fetch(sheetsWebhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          timestamp: new Date().toISOString(),
+          id: authData.user.id,
+          name,
+          email,
+          studentId,
+          year: year || "—",
+          faculty: faculty || "—"
+        })
+      }).then(response => {
+        if (!response.ok) {
+          console.warn("Google Sheets Sync returned non-OK status:", response.status);
+        } else {
+          console.log("Successfully synced registrant to Google Sheets.");
+        }
+      }).catch(fetchErr => {
+        console.error("Error sending registration to Google Sheets Webhook:", fetchErr.message);
+      });
+    }
+
     res.json({ success: true, message: "Member registration successful." });
   } catch (err: any) {
     console.error("Registration endpoint crash:", err);

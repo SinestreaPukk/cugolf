@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
 import { DatabaseState } from "./types";
 import { getDatabaseState, getMemberProfile } from "./utils/api";
 import Navbar from "./components/Navbar";
@@ -53,7 +53,8 @@ function AppContent() {
       localStorage.setItem("cu-golf-club-member-token", token);
     } else {
       localStorage.removeItem("cu-golf-club-member-token");
-      localStorage.removeItem("cu-golf-club-member-user");
+      setAdminToken(null);
+      localStorage.removeItem("cu-golf-club-admin-token");
     }
   };
 
@@ -61,8 +62,18 @@ function AppContent() {
     setMemberUser(user);
     if (user) {
       localStorage.setItem("cu-golf-club-member-user", JSON.stringify(user));
+      if (user.isAdmin) {
+        const token = memberToken || localStorage.getItem("cu-golf-club-member-token");
+        setAdminToken(token);
+        localStorage.setItem("cu-golf-club-admin-token", token || "");
+      } else {
+        setAdminToken(null);
+        localStorage.removeItem("cu-golf-club-admin-token");
+      }
     } else {
       localStorage.removeItem("cu-golf-club-member-user");
+      setAdminToken(null);
+      localStorage.removeItem("cu-golf-club-admin-token");
     }
   };
 
@@ -256,12 +267,16 @@ function AppContent() {
               />
             } />
             <Route path="/admin" element={
-              <AdminView
-                dbState={dbState}
-                refreshState={refreshState}
-                adminToken={adminToken}
-                setAdminToken={syncAdminToken}
-              />
+              adminToken ? (
+                <AdminView
+                  dbState={dbState}
+                  refreshState={refreshState}
+                  adminToken={adminToken}
+                  setAdminToken={syncAdminToken}
+                />
+              ) : (
+                <Navigate to="/membership" replace />
+              )
             } />
             {/* Fallback */}
             <Route path="*" element={

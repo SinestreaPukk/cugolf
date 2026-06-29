@@ -21,6 +21,10 @@ if (supabaseUrl === "https://placeholder.supabase.co") {
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || "admin@cugolfclub.com")
+  .split(",")
+  .map(e => e.trim().toLowerCase());
+
 // Initialize Gemini client conditionally if API key exists
 const geminiApiKey = process.env.GEMINI_API_KEY;
 let ai: GoogleGenAI | null = null;
@@ -487,7 +491,8 @@ app.post("/api/members/login", async (req, res) => {
         id: data.user.id,
         email: data.user.email,
         name: profile?.name || data.user.user_metadata?.name || "Member",
-        profile: formattedProfile
+        profile: formattedProfile,
+        isAdmin: ADMIN_EMAILS.includes(data.user.email.toLowerCase())
       }
     });
   } catch (err: any) {
@@ -590,7 +595,8 @@ app.get("/api/members/me", async (req, res) => {
         id: user.id,
         email: user.email,
         name: profile?.name || user.user_metadata?.name || "Member",
-        profile: formattedProfile
+        profile: formattedProfile,
+        isAdmin: ADMIN_EMAILS.includes(user.email.toLowerCase())
       }
     });
   } catch (err: any) {
@@ -608,7 +614,7 @@ app.get("/api/admin/members", async (req, res) => {
   // Verify token via admin client
   const token = authHeader.replace("Bearer ", "");
   const { data: { user }, error } = await supabase.auth.getUser(token);
-  if (error || !user || user.email !== "admin@cugolfclub.com") {
+  if (error || !user || !ADMIN_EMAILS.includes(user.email.toLowerCase())) {
     return res.status(403).json({ success: false, message: "Access denied. Admin credentials required." });
   }
 

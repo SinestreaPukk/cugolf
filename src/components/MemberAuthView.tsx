@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { registerMember, loginMember, forgotPassword, resetPassword } from "../utils/api";
 import { Member } from "../types";
 import { useLanguage } from "../utils/LanguageContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Loader2, ShieldCheck, CheckCircle2 } from "lucide-react";
 
 interface MemberAuthViewProps {
@@ -259,6 +259,17 @@ export default function MemberAuthView({
               <span className="font-bold text-brand-ink uppercase">{profile.faculty || "—"}</span>
             </div>
           </div>
+
+          {memberUser.isAdmin && (
+            <div className="pt-2">
+              <Link
+                to="/admin"
+                className="w-full inline-flex justify-center items-center bg-brand-pink hover:bg-brand-ink text-brand-neutral hover:text-brand-neutral py-2.5 border border-brand-ink text-xs font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer"
+              >
+                {language === "th" ? "⚡ เข้าสู่หน้าแอดมิน (CMS)" : "⚡ ACCESS ADMIN CMS"}
+              </Link>
+            </div>
+          )}
 
           <div className="pt-2">
             <button

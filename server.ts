@@ -609,11 +609,13 @@ app.post("/api/members/forgot-password", async (req, res) => {
 
     if (!response.ok) {
       const body = await response.json().catch(() => ({}));
-      console.error("Supabase forgot-password error:", body);
-      return res.status(400).json({ success: false, message: body.msg || body.error_description || "Could not send reset email." });
+      console.error("Supabase forgot-password error:", response.status, JSON.stringify(body));
+      const detail = body.msg || body.message || body.error_description || body.error || `HTTP ${response.status}`;
+      // Rate-limit or redirect-URL-not-whitelisted are the two most common causes
+      return res.status(400).json({ success: false, message: detail, rateLimited: response.status === 429 });
     }
 
-    res.json({ success: true, message: "Password reset instructions sent to your email." });
+    res.json({ success: true, message: "Password reset instructions sent to your email. Check your inbox (and spam folder)." });
   } catch (err: any) {
     console.error("Forgot password endpoint crash:", err);
     res.status(500).json({ success: false, message: err.message || "Internal server error." });

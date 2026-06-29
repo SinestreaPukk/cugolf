@@ -173,13 +173,18 @@ export default function MemberAuthView({
       if (res.success) {
         setSuccessMsg(
           language === "th"
-            ? "ส่งคำแนะนำการรีเซ็ตรหัสผ่านไปยังอีเมลของคุณแล้ว!"
-            : "Password reset instructions have been sent to your email!"
+            ? "ส่งคำแนะนำการรีเซ็ตรหัสผ่านไปยังอีเมลของคุณแล้ว! กรุณาตรวจสอบกล่องขาเข้า (รวมถึงโฟลเดอร์สแปม)"
+            : "Reset link sent! Check your inbox and spam folder."
         );
       }
     } catch (err: any) {
       console.error(err);
-      setErrorMsg(err.message || (language === "th" ? "เกิดข้อผิดพลาดในการส่งคำขอ" : "Error requesting password reset."));
+      // Supabase free tier has a very low email rate limit — show a helpful fallback
+      setErrorMsg(
+        language === "th"
+          ? "ไม่สามารถส่งอีเมลรีเซ็ตรหัสผ่านได้ในขณะนี้ กรุณาล็อกอินก่อนแล้วใช้ฟีเจอร์ \"เปลี่ยนรหัสผ่าน\" ในพอร์ทัลสมาชิก หรือติดต่อผู้ดูแลระบบ"
+          : "Could not send reset email right now (email limit reached). If you know your password, log in and use Change Password in the member portal. Otherwise contact an admin to reset it for you."
+      );
     } finally {
       setLoading(false);
     }

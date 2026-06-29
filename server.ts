@@ -1,6 +1,7 @@
 import express from "express";
 import path from "path";
 import fs from "fs";
+import crypto from "crypto";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
@@ -43,20 +44,28 @@ const supabaseAdmin = supabaseServiceRoleKey
 // /auth/v1/* endpoints, so we use it as a fallback when anon key is absent.
 const authApiKey = supabaseAnonKey !== "placeholder-key" ? supabaseAnonKey : (supabaseServiceRoleKey || supabaseAnonKey);
 
-// Sign in via direct HTTP — no shared client state is modified, eliminating
-// the session-pollution that caused RLS violations on concurrent requests.
-async function signInDirect(email: string, password: string): Promise<{
-  access_token: string;
-  user: { id: string; email: string; user_metadata: Record<string, unknown> };
-} | { error: string }> {
-  const res = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=password`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", apikey: authApiKey },
-    body: JSON.stringify({ email, password })
-  });
-  const body = await res.json();
-  if (!res.ok) return { error: body.error_description || body.error || "Invalid credentials" };
-  return body;
+// JWT helpers — members no longer use Supabase auth sessions.
+// We sign our own tokens so login requires only email + student ID (no password).
+const jwtSecret = process.env.JWT_SECRET || "cu-golf-club-dev-secret-change-in-production";
+
+function signMemberToken(payload: { id: string; email: string; studentId: string; isAdmin: boolean }): string {
+  const header = Buffer.from(JSON.stringify({ alg: "HS256", typ: "JWT" })).toString("base64url");
+  const body = Buffer.from(JSON.stringify({ ...payload, exp: Math.floor(Date.now() / 1000) + 7 * 24 * 3600 })).toString("base64url");
+  const sig = crypto.createHmac("sha256", jwtSecret).update(`${header}.${body}`).digest("base64url");
+  return `${header}.${body}.${sig}`;
+}
+
+function verifyMemberToken(token: string): { id: string; email: string; studentId: string; isAdmin: boolean } | null {
+  try {
+    const [header, body, sig] = token.split(".");
+    const expected = crypto.createHmac("sha256", jwtSecret).update(`${header}.${body}`).digest("base64url");
+    if (sig !== expected) return null;
+    const payload = JSON.parse(Buffer.from(body, "base64url").toString());
+    if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) return null;
+    return payload;
+  } catch {
+    return null;
+  }
 }
 
 async function getAdminEmails(): Promise<string[]> {
@@ -425,89 +434,46 @@ app.get("/api/db", async (req, res) => {
   }
 });
 
-// Admin validation - Updated to use Supabase Auth
+// CMS admin auth — password-based, separate from member portal
 app.post("/api/admin/auth", async (req, res) => {
   const { password } = req.body;
-  const adminEmail = "admin@cugolfclub.com"; // Default admin email for the club
+  const adminPassword = process.env.ADMIN_PASSWORD || "cugolfx2026";
 
-  try {
-    let authResult = await signInDirect(adminEmail, password);
-
-    if ("error" in authResult) {
-      // If user doesn't exist, try to create them (first-time setup)
-      if (password === "cugolfx2026" && supabaseAdmin) {
-        const { error: signUpError } = await supabaseAdmin.auth.admin.createUser({
-          email: adminEmail,
-          password: password,
-          email_confirm: true
-        });
-        if (!signUpError) {
-          authResult = await signInDirect(adminEmail, password);
-        }
-      }
-      if ("error" in authResult) {
-        return res.status(401).json({ success: false, message: "Invalid credentials." });
-      }
-    }
-
-    res.json({ success: true, token: authResult.access_token });
-  } catch (err: any) {
-    console.error("Auth error:", err);
-    res.status(500).json({ success: false, message: "Authentication service error." });
+  if (!password || password !== adminPassword) {
+    return res.status(401).json({ success: false, message: "Invalid credentials." });
   }
+
+  const adminEmail = "admin@cugolfclub.com";
+  const token = signMemberToken({ id: "admin", email: adminEmail, studentId: "", isAdmin: true });
+  res.json({ success: true, token });
 });
 
 // MEMBER REGISTRATION & AUTHENTICATION ENDPOINTS
 app.post("/api/members/register", async (req, res) => {
-  const { email, password, name, prefix, studentId, year, faculty, instagram, lineId } = req.body;
+  const { email, name, prefix, studentId, year, faculty, instagram, lineId } = req.body;
 
-  if (!email || !password || !name || !studentId) {
-    return res.status(400).json({ success: false, message: "Email, password, name, and student ID are required." });
-  }
-  if (password.length < 6) {
-    return res.status(400).json({ success: false, message: "Password must be at least 6 characters." });
+  if (!email || !name || !studentId) {
+    return res.status(400).json({ success: false, message: "Email, name, and student ID are required." });
   }
 
   if (!supabaseAdmin) {
-    console.error("Registration blocked: SUPABASE_SERVICE_ROLE_KEY is not configured on the server.");
-    return res.status(500).json({ success: false, message: "Registration is currently unavailable. Please contact the administrator. (Server missing SUPABASE_SERVICE_ROLE_KEY)" });
+    return res.status(500).json({ success: false, message: "Registration is currently unavailable. (Server missing SUPABASE_SERVICE_ROLE_KEY)" });
   }
 
   try {
-    // 1. Create auth user
-    const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
-      email,
-      password,
-      email_confirm: true,
-      user_metadata: { name }
-    });
+    const memberId = crypto.randomUUID();
+    const profileFull = { id: memberId, email, name, prefix: prefix || null, student_id: studentId, year: year || null, faculty: faculty || null, instagram: instagram || null, line_id: lineId || null };
+    const profileCore = { id: memberId, email, name, student_id: studentId, year: year || null, faculty: faculty || null };
 
-    if (authError) {
-      console.error("Auth createUser error:", authError.message, authError.status);
-      if (authError.message.toLowerCase().includes("already registered") || authError.message.toLowerCase().includes("already been registered")) {
-        return res.status(400).json({ success: false, message: "An account with this email already exists. Please log in instead." });
-      }
-      return res.status(400).json({ success: false, message: authError.message });
-    }
-
-    if (!authData.user) {
-      return res.status(500).json({ success: false, message: "Auth user creation returned no data." });
-    }
-
-    // 2. Insert profile into members table — try with new columns first, fall back to core only
-    const profileFull = { id: authData.user.id, email, name, prefix: prefix || null, student_id: studentId, year: year || null, faculty: faculty || null, instagram: instagram || null, line_id: lineId || null };
-    const profileCore = { id: authData.user.id, email, name, student_id: studentId, year: year || null, faculty: faculty || null };
-
-    let { error: dbError } = await supabase.from("members").insert(profileFull);
+    // Use service-role client to bypass RLS
+    let { error: dbError } = await supabaseAdmin.from("members").insert(profileFull);
 
     if (dbError && (dbError.code === "42703" || dbError.message.includes("column") || dbError.message.includes("does not exist"))) {
-      console.warn("members table missing new columns — falling back to core insert. Run the migration:\nALTER TABLE members ADD COLUMN IF NOT EXISTS prefix TEXT;\nALTER TABLE members ADD COLUMN IF NOT EXISTS instagram TEXT;\nALTER TABLE members ADD COLUMN IF NOT EXISTS line_id TEXT;");
-      ({ error: dbError } = await supabase.from("members").insert(profileCore));
+      ({ error: dbError } = await supabaseAdmin.from("members").insert(profileCore));
     }
 
     if (dbError) {
       console.error("DB insert error:", dbError.code, dbError.message);
-      await supabaseAdmin.auth.admin.deleteUser(authData.user.id);
       if (dbError.code === "23505") {
         if (dbError.message.includes("student_id")) return res.status(400).json({ success: false, message: "This student ID is already registered." });
         if (dbError.message.includes("email")) return res.status(400).json({ success: false, message: "An account with this email already exists." });
@@ -515,33 +481,13 @@ app.post("/api/members/register", async (req, res) => {
       return res.status(500).json({ success: false, message: `Database error: ${dbError.message}` });
     }
 
-    // Async push to Google Sheets Webhook if configured
     const sheetsWebhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
     if (sheetsWebhookUrl) {
       fetch(sheetsWebhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          timestamp: new Date().toISOString(),
-          id: authData.user.id,
-          prefix: prefix || "—",
-          name,
-          email,
-          studentId,
-          year: year || "—",
-          faculty: faculty || "—",
-          instagram: instagram || "—",
-          lineId: lineId || "—"
-        })
-      }).then(response => {
-        if (!response.ok) {
-          console.warn("Google Sheets Sync returned non-OK status:", response.status);
-        } else {
-          console.log("Successfully synced registrant to Google Sheets.");
-        }
-      }).catch(fetchErr => {
-        console.error("Error sending registration to Google Sheets Webhook:", fetchErr.message);
-      });
+        body: JSON.stringify({ timestamp: new Date().toISOString(), id: memberId, prefix: prefix || "—", name, email, studentId, year: year || "—", faculty: faculty || "—", instagram: instagram || "—", lineId: lineId || "—" })
+      }).catch(e => console.error("Sheets webhook error:", e.message));
     }
 
     res.json({ success: true, message: "Member registration successful." });
@@ -552,44 +498,37 @@ app.post("/api/members/register", async (req, res) => {
 });
 
 app.post("/api/members/login", async (req, res) => {
-  const { email, password } = req.body;
+  const { email, studentId } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ success: false, message: "Email and password are required." });
+  if (!email || !studentId) {
+    return res.status(400).json({ success: false, message: "Email and student ID are required." });
+  }
+
+  if (!supabaseAdmin) {
+    return res.status(500).json({ success: false, message: "Login service unavailable." });
   }
 
   try {
-    const authResult = await signInDirect(email, password);
-
-    if ("error" in authResult) {
-      console.error("Supabase login error:", authResult.error);
-      return res.status(401).json({ success: false, message: "Invalid email or password." });
-    }
-
-    // Fetch user profile from the members table
-    const { data: profile, error: profileError } = await supabase
+    const { data: profile, error: profileError } = await supabaseAdmin
       .from("members")
       .select("*")
-      .eq("id", authResult.user.id)
+      .eq("email", email.trim().toLowerCase())
+      .eq("student_id", studentId.trim())
       .single();
 
-    if (profileError) {
-      console.warn("Could not retrieve member database profile:", profileError.message);
+    if (profileError || !profile) {
+      return res.status(401).json({ success: false, message: "Invalid email or student ID." });
     }
 
-    const formattedProfile = profile ? { ...profile, studentId: profile.student_id } : null;
-
     const adminEmails = await getAdminEmails();
+    const isAdmin = adminEmails.includes(profile.email.toLowerCase());
+    const token = signMemberToken({ id: profile.id, email: profile.email, studentId: profile.student_id, isAdmin });
+    const formattedProfile = { ...profile, studentId: profile.student_id };
+
     res.json({
       success: true,
-      token: authResult.access_token,
-      user: {
-        id: authResult.user.id,
-        email: authResult.user.email,
-        name: profile?.name || (authResult.user.user_metadata?.name as string) || "Member",
-        profile: formattedProfile,
-        isAdmin: adminEmails.includes(authResult.user.email.toLowerCase())
-      }
+      token,
+      user: { id: profile.id, email: profile.email, name: profile.name, profile: formattedProfile, isAdmin }
     });
   } catch (err: any) {
     console.error("Login endpoint crash:", err);
@@ -597,256 +536,45 @@ app.post("/api/members/login", async (req, res) => {
   }
 });
 
-app.post("/api/members/forgot-password", async (req, res) => {
-  const { email } = req.body;
-  if (!email) {
-    return res.status(400).json({ success: false, message: "Email is required." });
-  }
-
-  if (!supabaseAdmin) {
-    return res.status(500).json({ success: false, message: "Server configuration error." });
-  }
-
-  try {
-    const host = req.headers.host || "localhost:3000";
-    const protocol = (req.headers["x-forwarded-proto"] as string) || "http";
-    const appUrl = process.env.APP_URL || `${protocol}://${host}`;
-    const redirectTo = `${appUrl}/membership`;
-
-    // Generate a Supabase recovery link — no email sent by Supabase, no rate limit
-    const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
-      type: "recovery",
-      email,
-      options: { redirectTo }
-    });
-
-    if (linkError || !linkData?.properties?.action_link) {
-      // Don't reveal whether the email is registered
-      return res.json({ success: true });
-    }
-
-    // Send via SMTP (nodemailer)
-    const smtpHost = process.env.SMTP_HOST;
-    const smtpUser = process.env.SMTP_USER;
-    const smtpPass = process.env.SMTP_PASS;
-
-    if (!smtpHost || !smtpUser || !smtpPass) {
-      console.error("[forgot-password] SMTP not configured. Set SMTP_HOST, SMTP_USER, SMTP_PASS.");
-      return res.status(500).json({ success: false, message: "Email service not configured. Please contact an admin." });
-    }
-
-    const smtpFrom = process.env.SMTP_FROM || smtpUser;
-    const transporter = nodemailer.createTransport({
-      host: smtpHost,
-      port: Number(process.env.SMTP_PORT) || 587,
-      secure: Number(process.env.SMTP_PORT) === 465,
-      auth: { user: smtpUser, pass: smtpPass }
-    });
-
-    await transporter.sendMail({
-      from: `"CU Golf Club" <${smtpFrom}>`,
-      to: email,
-      subject: "Reset your CU Golf Club password",
-      html: `
-        <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:40px 32px;background:#fff">
-          <h1 style="font-size:20px;font-weight:700;margin:0 0 8px">Password Reset</h1>
-          <p style="color:#555;margin:0 0 28px;font-size:14px;line-height:1.6">
-            We received a request to reset the password for your CU Golf Club account.<br>
-            Click the button below — this link expires in <strong>1 hour</strong>.
-          </p>
-          <a href="${linkData.properties.action_link}"
-             style="display:inline-block;background:#111;color:#fff;padding:14px 28px;
-                    text-decoration:none;font-weight:700;font-size:13px;letter-spacing:1.5px">
-            RESET PASSWORD
-          </a>
-          <p style="color:#999;font-size:11px;margin-top:32px">
-            If you did not request this, ignore this email — your password will not change.
-          </p>
-        </div>
-      `
-    });
-
-    console.log(`[forgot-password] Reset email sent to ${email}`);
-    res.json({ success: true });
-  } catch (err: any) {
-    console.error("Forgot password crash:", err);
-    res.status(500).json({ success: false, message: err.message || "Failed to send reset email." });
-  }
-});
-
-app.post("/api/members/reset-password", async (req, res) => {
-  const authHeader = req.headers.authorization;
-  const { password } = req.body;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ success: false, message: "Access denied. Missing token." });
-  }
-  if (!password) {
-    return res.status(400).json({ success: false, message: "Password is required." });
-  }
-
-  const token = authHeader.split(" ")[1];
-
-  try {
-    // Validate token and get user info
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    if (authError || !user) {
-      return res.status(401).json({ success: false, message: "Session expired or invalid token." });
-    }
-
-    // Update user password via admin auth
-    if (!supabaseAdmin) {
-      return res.status(500).json({ success: false, message: "Password reset service is not available. Please contact the administrator." });
-    }
-    const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(user.id, {
-      password
-    });
-
-    if (updateError) {
-      console.error("Supabase reset-password error:", updateError.message);
-      return res.status(400).json({ success: false, message: updateError.message });
-    }
-
-    res.json({ success: true, message: "Your password has been reset successfully." });
-  } catch (err: any) {
-    console.error("Reset password endpoint crash:", err);
-    res.status(500).json({ success: false, message: err.message || "Internal server error." });
-  }
-});
-
-// Change password for a logged-in user — verifies old password first, no email required.
-app.post("/api/members/change-password", async (req, res) => {
-  const authHeader = req.headers.authorization;
-  const { oldPassword, newPassword } = req.body;
-
-  if (!authHeader?.startsWith("Bearer ")) {
-    return res.status(401).json({ success: false, message: "Access denied." });
-  }
-  if (!oldPassword || !newPassword) {
-    return res.status(400).json({ success: false, message: "Old and new passwords are required." });
-  }
-  if (newPassword.length < 6) {
-    return res.status(400).json({ success: false, message: "New password must be at least 6 characters." });
-  }
-
-  const token = authHeader.split(" ")[1];
-
-  try {
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-    if (authError || !user) {
-      return res.status(401).json({ success: false, message: "Session expired. Please log in again." });
-    }
-
-    // Verify the old password is correct before allowing the change
-    const verify = await signInDirect(user.email!, oldPassword);
-    if ("error" in verify) {
-      return res.status(401).json({ success: false, message: "Current password is incorrect." });
-    }
-
-    if (!supabaseAdmin) {
-      return res.status(500).json({ success: false, message: "Password service unavailable." });
-    }
-
-    const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(user.id, { password: newPassword });
-    if (updateError) {
-      return res.status(400).json({ success: false, message: updateError.message });
-    }
-
-    res.json({ success: true, message: "Password changed successfully." });
-  } catch (err: any) {
-    console.error("Change password crash:", err);
-    res.status(500).json({ success: false, message: err.message || "Internal server error." });
-  }
-});
-
 app.get("/api/members/me", async (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ success: false, message: "Access denied. Missing token." });
-  }
+  const token = req.headers.authorization?.split(" ")[1];
+  const decoded = token ? verifyMemberToken(token) : null;
+  if (!decoded) return res.status(401).json({ success: false, message: "Session expired or invalid token." });
 
-  const token = authHeader.split(" ")[1];
+  if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Service unavailable." });
 
   try {
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
-
-    if (authError || !user) {
-      return res.status(401).json({ success: false, message: "Session expired or invalid token." });
-    }
-
-    // Fetch user profile from the members table
-    const { data: profile, error: profileError } = await supabase
-      .from("members")
-      .select("*")
-      .eq("id", user.id)
-      .single();
-
+    const { data: profile } = await supabaseAdmin.from("members").select("*").eq("id", decoded.id).single();
     const formattedProfile = profile ? { ...profile, studentId: profile.student_id } : null;
-
-    const adminEmails = await getAdminEmails();
-    res.json({
-      success: true,
-      user: {
-        id: user.id,
-        email: user.email,
-        name: profile?.name || user.user_metadata?.name || "Member",
-        profile: formattedProfile,
-        isAdmin: adminEmails.includes(user.email.toLowerCase())
-      }
-    });
+    res.json({ success: true, user: { id: decoded.id, email: decoded.email, name: profile?.name || "Member", profile: formattedProfile, isAdmin: decoded.isAdmin } });
   } catch (err: any) {
-    console.error("Get member profile error:", err);
-    res.status(500).json({ success: false, message: "Internal server error retrieving profile." });
+    res.status(500).json({ success: false, message: "Internal server error." });
   }
 });
 
 app.get("/api/admin/members", async (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).json({ success: false, message: "Unauthorized admin access." });
-  }
-  
-  // Verify token via admin client
-  const token = authHeader.replace("Bearer ", "");
-  const { data: { user }, error } = await supabase.auth.getUser(token);
-  const adminEmails = await getAdminEmails();
-  if (error || !user || !adminEmails.includes(user.email.toLowerCase())) {
-    return res.status(403).json({ success: false, message: "Access denied. Admin credentials required." });
-  }
+  const token = req.headers.authorization?.replace("Bearer ", "");
+  const decoded = token ? verifyMemberToken(token) : null;
+  if (!decoded?.isAdmin) return res.status(403).json({ success: false, message: "Access denied. Admin credentials required." });
+
+  if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Service unavailable." });
 
   try {
-    const { data: membersList, error: listError } = await supabase
-      .from("members")
-      .select("*")
-      .order("created_at", { ascending: false });
-
+    const { data: membersList, error: listError } = await supabaseAdmin.from("members").select("*").order("created_at", { ascending: false });
     if (listError) throw listError;
-
-    const formattedMembers = (membersList || []).map((m: any) => ({
-      ...m,
-      studentId: m.student_id
-    }));
-
-    res.json({ success: true, members: formattedMembers });
+    res.json({ success: true, members: (membersList || []).map((m: any) => ({ ...m, studentId: m.student_id })) });
   } catch (err: any) {
-    console.error("Admin member list fetch error:", err);
     res.status(500).json({ success: false, message: err.message || "Failed to fetch member directory." });
   }
 });
 
 app.put("/api/admin/members/:id", async (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ success: false, message: "Unauthorized." });
-
-  const token = authHeader.replace("Bearer ", "");
-  const { data: { user }, error } = await supabase.auth.getUser(token);
-  const adminEmails = await getAdminEmails();
-  if (error || !user || !adminEmails.includes(user.email!.toLowerCase())) {
-    return res.status(403).json({ success: false, message: "Access denied." });
-  }
+  const decoded = verifyMemberToken(req.headers.authorization?.replace("Bearer ", "") || "");
+  if (!decoded?.isAdmin) return res.status(403).json({ success: false, message: "Access denied." });
+  if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Service unavailable." });
 
   const { id } = req.params;
-  const { name, prefix, studentId, year, faculty, email, instagram, lineId, newPassword } = req.body;
+  const { name, prefix, studentId, year, faculty, email, instagram, lineId } = req.body;
 
   try {
     const dbUpdates: any = {};
@@ -860,128 +588,62 @@ app.put("/api/admin/members/:id", async (req, res) => {
     if (lineId !== undefined) dbUpdates.line_id = lineId;
 
     if (Object.keys(dbUpdates).length > 0) {
-      const { error: dbError } = await supabase.from("members").update(dbUpdates).eq("id", id);
+      const { error: dbError } = await supabaseAdmin.from("members").update(dbUpdates).eq("id", id);
       if (dbError) return res.status(500).json({ success: false, message: dbError.message });
-    }
-
-    if ((email || newPassword) && supabaseAdmin) {
-      const authUpdates: any = {};
-      if (email) authUpdates.email = email;
-      if (newPassword) authUpdates.password = newPassword;
-      const { error: authError } = await supabaseAdmin.auth.admin.updateUserById(id, authUpdates);
-      if (authError) return res.status(500).json({ success: false, message: authError.message });
     }
 
     res.json({ success: true });
   } catch (err: any) {
-    console.error("Admin member update error:", err);
     res.status(500).json({ success: false, message: err.message || "Failed to update member." });
   }
 });
 
 app.delete("/api/admin/members/:id", async (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ success: false, message: "Unauthorized." });
-
-  const token = authHeader.replace("Bearer ", "");
-  const { data: { user }, error } = await supabase.auth.getUser(token);
-  const adminEmails = await getAdminEmails();
-  if (error || !user || !adminEmails.includes(user.email!.toLowerCase())) {
-    return res.status(403).json({ success: false, message: "Access denied." });
-  }
-
-  if (!supabaseAdmin) {
-    return res.status(500).json({ success: false, message: "Admin client not configured." });
-  }
-
-  const { id } = req.params;
+  const decoded = verifyMemberToken(req.headers.authorization?.replace("Bearer ", "") || "");
+  if (!decoded?.isAdmin) return res.status(403).json({ success: false, message: "Access denied." });
+  if (!supabaseAdmin) return res.status(500).json({ success: false, message: "Service unavailable." });
 
   try {
-    const { error: dbError } = await supabase.from("members").delete().eq("id", id);
+    const { error: dbError } = await supabaseAdmin.from("members").delete().eq("id", req.params.id);
     if (dbError) return res.status(500).json({ success: false, message: dbError.message });
-
-    const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(id);
-    if (authError) console.error("Auth delete error (DB already removed):", authError.message);
-
     res.json({ success: true });
   } catch (err: any) {
-    console.error("Admin member delete error:", err);
     res.status(500).json({ success: false, message: err.message || "Failed to delete member." });
   }
 });
 
 // ADMIN EMAILS MANAGEMENT ENDPOINTS
 app.get("/api/admin/emails", async (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ success: false, message: "Unauthorized." });
-
-  const token = authHeader.replace("Bearer ", "");
-  const { data: { user }, error } = await supabase.auth.getUser(token);
-  const currentAdmins = await getAdminEmails();
-  if (error || !user || !currentAdmins.includes(user.email.toLowerCase())) {
-    return res.status(403).json({ success: false, message: "Access denied." });
-  }
-
-  res.json({ success: true, emails: currentAdmins });
+  const decoded = verifyMemberToken(req.headers.authorization?.replace("Bearer ", "") || "");
+  if (!decoded?.isAdmin) return res.status(403).json({ success: false, message: "Access denied." });
+  res.json({ success: true, emails: await getAdminEmails() });
 });
 
 app.post("/api/admin/emails", async (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ success: false, message: "Unauthorized." });
-
-  const token = authHeader.replace("Bearer ", "");
-  const { data: { user }, error } = await supabase.auth.getUser(token);
-  const currentAdmins = await getAdminEmails();
-  if (error || !user || !currentAdmins.includes(user.email.toLowerCase())) {
-    return res.status(403).json({ success: false, message: "Access denied." });
-  }
+  const decoded = verifyMemberToken(req.headers.authorization?.replace("Bearer ", "") || "");
+  if (!decoded?.isAdmin) return res.status(403).json({ success: false, message: "Access denied." });
 
   const newEmail = req.body.email?.trim().toLowerCase();
-  if (!newEmail) {
-    return res.status(400).json({ success: false, message: "Email is required." });
-  }
+  if (!newEmail) return res.status(400).json({ success: false, message: "Email is required." });
 
-  if (currentAdmins.includes(newEmail)) {
-    return res.status(400).json({ success: false, message: "Email is already an administrator." });
-  }
+  const currentAdmins = await getAdminEmails();
+  if (currentAdmins.includes(newEmail)) return res.status(400).json({ success: false, message: "Email is already an administrator." });
 
   const updatedEmails = [...currentAdmins, newEmail];
-  const { error: upsertError } = await supabase.from("site_config").upsert({
-    key: "admin_emails",
-    data: { emails: updatedEmails },
-    updated_at: new Date().toISOString()
-  });
-
-  if (upsertError) {
-    return res.status(500).json({ success: false, message: upsertError.message });
-  }
-
+  const { error: upsertError } = await supabase.from("site_config").upsert({ key: "admin_emails", data: { emails: updatedEmails }, updated_at: new Date().toISOString() });
+  if (upsertError) return res.status(500).json({ success: false, message: upsertError.message });
   res.json({ success: true, emails: updatedEmails });
 });
 
 app.delete("/api/admin/emails", async (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ success: false, message: "Unauthorized." });
+  const decoded = verifyMemberToken(req.headers.authorization?.replace("Bearer ", "") || "");
+  if (!decoded?.isAdmin) return res.status(403).json({ success: false, message: "Access denied." });
 
-  const token = authHeader.replace("Bearer ", "");
-  const { data: { user }, error } = await supabase.auth.getUser(token);
   const currentAdmins = await getAdminEmails();
-  if (error || !user || !currentAdmins.includes(user.email.toLowerCase())) {
-    return res.status(403).json({ success: false, message: "Access denied." });
-  }
-
   const emailToRemove = req.body.email?.trim().toLowerCase();
-  if (!emailToRemove) {
-    return res.status(400).json({ success: false, message: "Email is required." });
-  }
-
-  if (emailToRemove === "admin@cugolfclub.com") {
-    return res.status(400).json({ success: false, message: "Default system administrator cannot be removed." });
-  }
-
-  if (!currentAdmins.includes(emailToRemove)) {
-    return res.status(400).json({ success: false, message: "Email is not an administrator." });
-  }
+  if (!emailToRemove) return res.status(400).json({ success: false, message: "Email is required." });
+  if (emailToRemove === "admin@cugolfclub.com") return res.status(400).json({ success: false, message: "Default system administrator cannot be removed." });
+  if (!currentAdmins.includes(emailToRemove)) return res.status(400).json({ success: false, message: "Email is not an administrator." });
 
   const updatedEmails = currentAdmins.filter(e => e !== emailToRemove);
   const { error: upsertError } = await supabase.from("site_config").upsert({
@@ -1282,19 +944,12 @@ async function syncAllMembersToSheets(): Promise<{ synced: number; total: number
 }
 
 app.post("/api/admin/sync-sheets", async (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ success: false, message: "Unauthorized." });
-
-  const token = authHeader.replace("Bearer ", "");
-  const { data: { user }, error } = await supabase.auth.getUser(token);
-  const adminEmails = await getAdminEmails();
-  if (error || !user || !adminEmails.includes(user.email!.toLowerCase())) {
-    return res.status(403).json({ success: false, message: "Access denied." });
-  }
+  const decoded = verifyMemberToken(req.headers.authorization?.replace("Bearer ", "") || "");
+  if (!decoded?.isAdmin) return res.status(403).json({ success: false, message: "Access denied." });
 
   try {
     const result = await syncAllMembersToSheets();
-    console.log(`[Sync] Manual trigger by ${user.email}: ${result.synced}/${result.total} synced.`);
+    console.log(`[Sync] Manual trigger: ${result.synced}/${result.total} synced.`);
     res.json({ success: true, ...result });
   } catch (err: any) {
     console.error("[Sync] Manual sync failed:", err.message);

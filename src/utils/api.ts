@@ -252,7 +252,7 @@ export async function registerMember(memberData: Partial<Member> & { password?: 
   return handleResponse(res, "Failed to register member");
 }
 
-export async function loginMember(credentials: { email?: string; password?: string }): Promise<{ success: boolean; token?: string; user?: any; message?: string }> {
+export async function loginMember(credentials: { email?: string; studentId?: string }): Promise<{ success: boolean; token?: string; user?: any; message?: string }> {
   const res = await fetch("/api/members/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },

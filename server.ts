@@ -23,8 +23,10 @@ if (!supabaseServiceRoleKey) {
   console.warn("⚠️ WARNING: SUPABASE_SERVICE_ROLE_KEY is not set. Member registration and admin auth operations will fail.");
 }
 
-// Regular client — persistSession: false prevents cached user JWTs from
-// leaking between requests and causing RLS violations on server-side inserts
+// DB-only client — NEVER call supabase.auth.signInWithPassword() on this client.
+// signInWithPassword stores the user JWT in the client's in-memory state, which
+// then leaks into subsequent DB requests and causes RLS violations.
+// Use signInDirect() for all login operations instead.
 const supabase = createClient(supabaseUrl, supabaseServiceRoleKey || supabaseAnonKey, {
   auth: { autoRefreshToken: false, persistSession: false }
 });
@@ -35,6 +37,22 @@ const supabaseAdmin = supabaseServiceRoleKey
       auth: { autoRefreshToken: false, persistSession: false }
     })
   : null;
+
+// Sign in via direct HTTP — no shared client state is modified, eliminating
+// the session-pollution that caused RLS violations on concurrent requests.
+async function signInDirect(email: string, password: string): Promise<{
+  access_token: string;
+  user: { id: string; email: string; user_metadata: Record<string, unknown> };
+} | { error: string }> {
+  const res = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", apikey: supabaseAnonKey },
+    body: JSON.stringify({ email, password })
+  });
+  const body = await res.json();
+  if (!res.ok) return { error: body.error_description || body.error || "Invalid credentials" };
+  return body;
+}
 
 async function getAdminEmails(): Promise<string[]> {
   try {
@@ -378,36 +396,26 @@ app.post("/api/admin/auth", async (req, res) => {
   const adminEmail = "admin@cugolfclub.com"; // Default admin email for the club
 
   try {
-    // Attempt to sign in with the provided password
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: adminEmail,
-      password: password,
-    });
+    let authResult = await signInDirect(adminEmail, password);
 
-    if (error) {
+    if ("error" in authResult) {
       // If user doesn't exist, try to create them (first-time setup)
-      if (error.message.includes("Invalid login credentials") && password === "cugolfx2026" && supabaseAdmin) {
-         const { error: signUpError } = await supabaseAdmin.auth.admin.createUser({
-           email: adminEmail,
-           password: password,
-           email_confirm: true
-         });
-
-         if (!signUpError) {
-           // Retry login after creation
-           const { data: retryData, error: retryError } = await supabase.auth.signInWithPassword({
-             email: adminEmail,
-             password: password,
-           });
-           if (!retryError) {
-             return res.json({ success: true, token: retryData.session?.access_token });
-           }
-         }
+      if (password === "cugolfx2026" && supabaseAdmin) {
+        const { error: signUpError } = await supabaseAdmin.auth.admin.createUser({
+          email: adminEmail,
+          password: password,
+          email_confirm: true
+        });
+        if (!signUpError) {
+          authResult = await signInDirect(adminEmail, password);
+        }
       }
-      return res.status(401).json({ success: false, message: "Invalid credentials." });
+      if ("error" in authResult) {
+        return res.status(401).json({ success: false, message: "Invalid credentials." });
+      }
     }
 
-    res.json({ success: true, token: data.session?.access_token });
+    res.json({ success: true, token: authResult.access_token });
   } catch (err: any) {
     console.error("Auth error:", err);
     res.status(500).json({ success: false, message: "Authentication service error." });
@@ -538,14 +546,10 @@ app.post("/api/members/login", async (req, res) => {
   }
 
   try {
-    // Authenticate user with Supabase Auth
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const authResult = await signInDirect(email, password);
 
-    if (error) {
-      console.error("Supabase login error:", error.message);
+    if ("error" in authResult) {
+      console.error("Supabase login error:", authResult.error);
       return res.status(401).json({ success: false, message: "Invalid email or password." });
     }
 
@@ -553,7 +557,7 @@ app.post("/api/members/login", async (req, res) => {
     const { data: profile, error: profileError } = await supabase
       .from("members")
       .select("*")
-      .eq("id", data.user.id)
+      .eq("id", authResult.user.id)
       .single();
 
     if (profileError) {
@@ -565,13 +569,13 @@ app.post("/api/members/login", async (req, res) => {
     const adminEmails = await getAdminEmails();
     res.json({
       success: true,
-      token: data.session?.access_token,
+      token: authResult.access_token,
       user: {
-        id: data.user.id,
-        email: data.user.email,
-        name: profile?.name || data.user.user_metadata?.name || "Member",
+        id: authResult.user.id,
+        email: authResult.user.email,
+        name: profile?.name || (authResult.user.user_metadata?.name as string) || "Member",
         profile: formattedProfile,
-        isAdmin: adminEmails.includes(data.user.email.toLowerCase())
+        isAdmin: adminEmails.includes(authResult.user.email.toLowerCase())
       }
     });
   } catch (err: any) {

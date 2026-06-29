@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
-    "sync:sheets": "tsx scripts/sync-all-to-sheets.ts"
+    "sync:sheets": "tsx scripts/sync-all-to-sheets.ts",
+    "stress:test": "tsx scripts/stress-test.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

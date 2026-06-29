@@ -409,6 +409,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  const [setsShowNavbarScores, setSetsShowNavbarScores] = useState(dbState.siteSettings?.showNavbarScores ?? true);
  const [setsShowNavbarSponsors, setSetsShowNavbarSponsors] = useState(dbState.siteSettings?.showNavbarSponsors ?? true);
  const [setsShowHomeSponsors, setSetsShowHomeSponsors] = useState(dbState.siteSettings?.showHomeSponsors ?? true);
+ const [setsDisableCms, setSetsDisableCms] = useState(dbState.siteSettings?.disableCms ?? false);
 
  // Home Sponsor Section states
  const [homeSponTitle, setHomeSponTitle] = useState(dbState.homeSponsorSection?.title ||"SUPPORTING EXCELLENCE");
@@ -605,6 +606,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
   setSetsShowNavbarScores(dbState.siteSettings?.showNavbarScores ?? true);
   setSetsShowNavbarSponsors(dbState.siteSettings?.showNavbarSponsors ?? true);
   setSetsShowHomeSponsors(dbState.siteSettings?.showHomeSponsors ?? true);
+  setSetsDisableCms(dbState.siteSettings?.disableCms ?? false);
   }
   if (dbState?.homeSponsorSection) {
   setHomeSponTitle(dbState.homeSponsorSection?.title ||"");
@@ -1544,7 +1546,8 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  showNavbarStaff: setsShowNavbarStaff,
  showNavbarScores: setsShowNavbarScores,
  showNavbarSponsors: setsShowNavbarSponsors,
- showHomeSponsors: setsShowHomeSponsors
+ showHomeSponsors: setsShowHomeSponsors,
+ disableCms: setsDisableCms
  });
 
  if (resVal.success) {
@@ -2468,6 +2471,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  <div className="flex items-center justify-between p-3 bg-brand-stone border border-stone-200"><span className="font-mono text-[9px] font-bold uppercase">Nav: Staff</span><input type="checkbox"checked={setsShowNavbarStaff} onChange={(e) => setSetsShowNavbarStaff(e.target.checked)} className="accent-brand-ink"/></div>
  <div className="flex items-center justify-between p-3 bg-brand-stone border border-stone-200"><span className="font-mono text-[9px] font-bold uppercase">Nav: Scores</span><input type="checkbox"checked={setsShowNavbarScores} onChange={(e) => setSetsShowNavbarScores(e.target.checked)} className="accent-brand-ink"/></div>
  <div className="flex items-center justify-between p-3 bg-brand-stone border border-stone-200"><span className="font-mono text-[9px] font-bold uppercase">Nav: Sponsors</span><input type="checkbox"checked={setsShowNavbarSponsors} onChange={(e) => setSetsShowNavbarSponsors(e.target.checked)} className="accent-brand-ink"/></div>
+ <div className="flex items-center justify-between p-3 bg-brand-stone border border-red-200"><span className="font-mono text-[9px] font-bold uppercase text-red-600">Disable CMS Access</span><input type="checkbox"checked={setsDisableCms} onChange={(e) => setSetsDisableCms(e.target.checked)} className="accent-brand-ink"/></div>
  </div>
 
  <div className="pt-8">

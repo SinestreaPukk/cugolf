@@ -264,10 +264,11 @@ function AppContent() {
                 setMemberUser={syncMemberUser}
                 memberToken={memberToken}
                 setMemberToken={syncMemberToken}
+                siteSettings={dbState?.siteSettings}
               />
             } />
             <Route path="/admin" element={
-              adminToken ? (
+              adminToken && (!dbState?.siteSettings?.disableCms || memberUser?.email?.toLowerCase() === "admin@cugolfclub.com") ? (
                 <AdminView
                   dbState={dbState}
                   refreshState={refreshState}

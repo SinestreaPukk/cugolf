@@ -119,6 +119,7 @@ export interface SiteSettings {
   showNavbarScores: boolean;
   showNavbarSponsors: boolean;
   showHomeSponsors: boolean;
+  disableCms?: boolean;
 }
 
 export interface HomeSponsorSection {

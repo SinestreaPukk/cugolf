@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { registerMember, loginMember, forgotPassword, resetPassword } from "../utils/api";
-import { Member } from "../types";
+import { Member, SiteSettings } from "../types";
 import { useLanguage } from "../utils/LanguageContext";
 import { useNavigate, Link } from "react-router-dom";
 import { Loader2, ShieldCheck, CheckCircle2 } from "lucide-react";
@@ -10,13 +10,15 @@ interface MemberAuthViewProps {
   setMemberUser: (user: any) => void;
   memberToken: string | null;
   setMemberToken: (token: string | null) => void;
+  siteSettings?: SiteSettings;
 }
 
 export default function MemberAuthView({
   memberUser,
   setMemberUser,
   memberToken,
-  setMemberToken
+  setMemberToken,
+  siteSettings
 }: MemberAuthViewProps) {
   const { language } = useLanguage();
   const navigate = useNavigate();
@@ -260,7 +262,7 @@ export default function MemberAuthView({
             </div>
           </div>
 
-          {memberUser.isAdmin && (
+          {memberUser.isAdmin && (!siteSettings?.disableCms || memberUser.email.toLowerCase() === "admin@cugolfclub.com") && (
             <div className="pt-2">
               <Link
                 to="/admin"

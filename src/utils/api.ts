@@ -301,3 +301,37 @@ export async function resetPassword(password: string, token: string): Promise<{ 
   });
   return handleResponse(res, "Failed to reset password");
 }
+
+export async function getAdminEmailsList(token: string): Promise<{ success: boolean; emails?: string[]; message?: string }> {
+  const res = await fetch("/api/admin/emails", {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  });
+  return handleResponse(res, "Failed to fetch admin list");
+}
+
+export async function addAdminEmail(email: string, token: string): Promise<{ success: boolean; emails?: string[]; message?: string }> {
+  const res = await fetch("/api/admin/emails", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify({ email })
+  });
+  return handleResponse(res, "Failed to add admin email");
+}
+
+export async function removeAdminEmail(email: string, token: string): Promise<{ success: boolean; emails?: string[]; message?: string }> {
+  const res = await fetch("/api/admin/emails", {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify({ email })
+  });
+  return handleResponse(res, "Failed to remove admin email");
+}

@@ -21,9 +21,32 @@ if (supabaseUrl === "https://placeholder.supabase.co") {
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || "admin@cugolfclub.com")
-  .split(",")
-  .map(e => e.trim().toLowerCase());
+async function getAdminEmails(): Promise<string[]> {
+  try {
+    const { data, error } = await supabase
+      .from("site_config")
+      .select("data")
+      .eq("key", "admin_emails")
+      .single();
+
+    if (error || !data || !data.data || !Array.isArray(data.data.emails)) {
+      const envEmails = (process.env.ADMIN_EMAILS || "admin@cugolfclub.com")
+        .split(",")
+        .map(e => e.trim().toLowerCase())
+        .filter(Boolean);
+
+      await supabase.from("site_config").upsert({
+        key: "admin_emails",
+        data: { emails: envEmails },
+        updated_at: new Date().toISOString()
+      });
+      return envEmails;
+    }
+    return data.data.emails;
+  } catch (e) {
+    return ["admin@cugolfclub.com"];
+  }
+}
 
 // Initialize Gemini client conditionally if API key exists
 const geminiApiKey = process.env.GEMINI_API_KEY;
@@ -484,6 +507,7 @@ app.post("/api/members/login", async (req, res) => {
 
     const formattedProfile = profile ? { ...profile, studentId: profile.student_id } : null;
 
+    const adminEmails = await getAdminEmails();
     res.json({
       success: true,
       token: data.session?.access_token,
@@ -492,7 +516,7 @@ app.post("/api/members/login", async (req, res) => {
         email: data.user.email,
         name: profile?.name || data.user.user_metadata?.name || "Member",
         profile: formattedProfile,
-        isAdmin: ADMIN_EMAILS.includes(data.user.email.toLowerCase())
+        isAdmin: adminEmails.includes(data.user.email.toLowerCase())
       }
     });
   } catch (err: any) {
@@ -589,6 +613,7 @@ app.get("/api/members/me", async (req, res) => {
 
     const formattedProfile = profile ? { ...profile, studentId: profile.student_id } : null;
 
+    const adminEmails = await getAdminEmails();
     res.json({
       success: true,
       user: {
@@ -596,7 +621,7 @@ app.get("/api/members/me", async (req, res) => {
         email: user.email,
         name: profile?.name || user.user_metadata?.name || "Member",
         profile: formattedProfile,
-        isAdmin: ADMIN_EMAILS.includes(user.email.toLowerCase())
+        isAdmin: adminEmails.includes(user.email.toLowerCase())
       }
     });
   } catch (err: any) {
@@ -614,7 +639,8 @@ app.get("/api/admin/members", async (req, res) => {
   // Verify token via admin client
   const token = authHeader.replace("Bearer ", "");
   const { data: { user }, error } = await supabase.auth.getUser(token);
-  if (error || !user || !ADMIN_EMAILS.includes(user.email.toLowerCase())) {
+  const adminEmails = await getAdminEmails();
+  if (error || !user || !adminEmails.includes(user.email.toLowerCase())) {
     return res.status(403).json({ success: false, message: "Access denied. Admin credentials required." });
   }
 
@@ -636,6 +662,93 @@ app.get("/api/admin/members", async (req, res) => {
     console.error("Admin member list fetch error:", err);
     res.status(500).json({ success: false, message: err.message || "Failed to fetch member directory." });
   }
+});
+
+// ADMIN EMAILS MANAGEMENT ENDPOINTS
+app.get("/api/admin/emails", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ success: false, message: "Unauthorized." });
+
+  const token = authHeader.replace("Bearer ", "");
+  const { data: { user }, error } = await supabase.auth.getUser(token);
+  const currentAdmins = await getAdminEmails();
+  if (error || !user || !currentAdmins.includes(user.email.toLowerCase())) {
+    return res.status(403).json({ success: false, message: "Access denied." });
+  }
+
+  res.json({ success: true, emails: currentAdmins });
+});
+
+app.post("/api/admin/emails", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ success: false, message: "Unauthorized." });
+
+  const token = authHeader.replace("Bearer ", "");
+  const { data: { user }, error } = await supabase.auth.getUser(token);
+  const currentAdmins = await getAdminEmails();
+  if (error || !user || !currentAdmins.includes(user.email.toLowerCase())) {
+    return res.status(403).json({ success: false, message: "Access denied." });
+  }
+
+  const newEmail = req.body.email?.trim().toLowerCase();
+  if (!newEmail) {
+    return res.status(400).json({ success: false, message: "Email is required." });
+  }
+
+  if (currentAdmins.includes(newEmail)) {
+    return res.status(400).json({ success: false, message: "Email is already an administrator." });
+  }
+
+  const updatedEmails = [...currentAdmins, newEmail];
+  const { error: upsertError } = await supabase.from("site_config").upsert({
+    key: "admin_emails",
+    data: { emails: updatedEmails },
+    updated_at: new Date().toISOString()
+  });
+
+  if (upsertError) {
+    return res.status(500).json({ success: false, message: upsertError.message });
+  }
+
+  res.json({ success: true, emails: updatedEmails });
+});
+
+app.delete("/api/admin/emails", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ success: false, message: "Unauthorized." });
+
+  const token = authHeader.replace("Bearer ", "");
+  const { data: { user }, error } = await supabase.auth.getUser(token);
+  const currentAdmins = await getAdminEmails();
+  if (error || !user || !currentAdmins.includes(user.email.toLowerCase())) {
+    return res.status(403).json({ success: false, message: "Access denied." });
+  }
+
+  const emailToRemove = req.body.email?.trim().toLowerCase();
+  if (!emailToRemove) {
+    return res.status(400).json({ success: false, message: "Email is required." });
+  }
+
+  if (emailToRemove === "admin@cugolfclub.com") {
+    return res.status(400).json({ success: false, message: "Default system administrator cannot be removed." });
+  }
+
+  if (!currentAdmins.includes(emailToRemove)) {
+    return res.status(400).json({ success: false, message: "Email is not an administrator." });
+  }
+
+  const updatedEmails = currentAdmins.filter(e => e !== emailToRemove);
+  const { error: upsertError } = await supabase.from("site_config").upsert({
+    key: "admin_emails",
+    data: { emails: updatedEmails },
+    updated_at: new Date().toISOString()
+  });
+
+  if (upsertError) {
+    return res.status(500).json({ success: false, message: upsertError.message });
+  }
+
+  res.json({ success: true, emails: updatedEmails });
 });
 
 // BLOGS CRUD

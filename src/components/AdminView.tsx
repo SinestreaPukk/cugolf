@@ -35,7 +35,10 @@ import {
  updateSiteLabelsThai,
  updateHomeSponsorSection,
  updateClubActivity,
- uploadPhoto
+ uploadPhoto,
+ getAdminEmailsList,
+ addAdminEmail,
+ removeAdminEmail
 } from"../utils/api";
 import {
  Plus, Trash2, Edit, Save, FileText, Sparkles, LogOut, Users,
@@ -195,7 +198,78 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
 
  // Visual CMS State
  const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
- const [activeView, setActiveView] = useState<"home"|"blog"|"club"|"roster"|"staff"|"scores"|"sponsors"|"settings"|"gallery"|"upcoming">("home");
+ const [activeView, setActiveView] = useState<"home"|"blog"|"club"|"roster"|"staff"|"scores"|"sponsors"|"settings"|"gallery"|"upcoming"|"admins">("home");
+
+ // Admin emails management states and handlers
+ const [adminEmails, setAdminEmails] = useState<string[]>([]);
+ const [newAdminEmail, setNewAdminEmail] = useState("");
+ const [isLoadingAdmins, setIsLoadingAdmins] = useState(false);
+
+ const loadAdmins = async () => {
+   setIsLoadingAdmins(true);
+   try {
+     const res = await getAdminEmailsList(adminToken || "");
+     if (res.success && res.emails) {
+       setAdminEmails(res.emails);
+     } else {
+       setErrorMsg(res.message || "Failed to load admin list.");
+     }
+   } catch (err: any) {
+     setErrorMsg(err.message || "Failed to load admin list.");
+   } finally {
+     setIsLoadingAdmins(false);
+   }
+ };
+
+ const handleAddAdmin = async (e: React.FormEvent) => {
+   e.preventDefault();
+   if (!newAdminEmail.trim()) return;
+   setIsLoadingAdmins(true);
+   try {
+     const res = await addAdminEmail(newAdminEmail.trim(), adminToken || "");
+     if (res.success && res.emails) {
+       setAdminEmails(res.emails);
+       setNewAdminEmail("");
+       setSuccessMsg("Admin email added successfully.");
+     } else {
+       setErrorMsg(res.message || "Failed to add admin email.");
+     }
+   } catch (err: any) {
+     setErrorMsg(err.message || "Failed to add admin email.");
+   } finally {
+     setIsLoadingAdmins(false);
+   }
+ };
+
+ const handleRemoveAdmin = async (email: string) => {
+   if (email === "admin@cugolfclub.com") {
+     setErrorMsg("Cannot remove default system administrator.");
+     return;
+   }
+   if (!window.confirm(`Are you sure you want to remove admin access for ${email}?`)) {
+     return;
+   }
+   setIsLoadingAdmins(true);
+   try {
+     const res = await removeAdminEmail(email, adminToken || "");
+     if (res.success && res.emails) {
+       setAdminEmails(res.emails);
+       setSuccessMsg("Admin email removed successfully.");
+     } else {
+       setErrorMsg(res.message || "Failed to remove admin email.");
+     }
+   } catch (err: any) {
+     setErrorMsg(err.message || "Failed to remove admin email.");
+   } finally {
+     setIsLoadingAdmins(false);
+   }
+ };
+
+ React.useEffect(() => {
+   if (activeView === "admins" && adminToken) {
+     loadAdmins();
+   }
+ }, [activeView, adminToken]);
 
  // Read ?edit query param to auto-open sidebar
  React.useEffect(() => {
@@ -2620,6 +2694,84 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  </div>
  );
 
+ case "admins":
+ return (
+   <div className="space-y-8 animate-fade-in max-w-2xl mx-auto py-6">
+     <div className="border-2 border-brand-ink bg-brand-neutral p-6 shadow-[6px_6px_0px_rgba(0,0,0,1)]">
+       <div className="border-b-2 border-brand-ink pb-4 mb-6">
+         <h2 className="font-display text-lg font-bold uppercase tracking-wider text-brand-ink flex items-center gap-2">
+           <Lock size={20} className="text-brand-pink" /> CMS ADMINISTRATOR EMAILS
+         </h2>
+         <p className="font-mono text-[9px] text-neutral-400 mt-1 uppercase font-bold">
+           MANAGE USER ACCOUNTS AUTHORIZED TO USE THE ADMIN PORTAL
+         </p>
+       </div>
+
+       <form onSubmit={handleAddAdmin} className="flex gap-3 mb-8">
+         <div className="flex-1 space-y-1.5">
+           <label className="font-mono text-[9px] font-black text-brand-ink/60 uppercase block">
+             ADD NEW ADMIN EMAIL ADDRESS
+           </label>
+           <input
+             type="email"
+             required
+             placeholder="e.g. member@chula.ac.th"
+             value={newAdminEmail}
+             onChange={(e) => setNewAdminEmail(e.target.value)}
+             className="w-full bg-neutral-50 border-2 border-brand-ink py-2 px-3 font-mono text-xs focus:outline-none focus:bg-brand-neutral text-brand-ink"
+           />
+         </div>
+         <div className="flex items-end">
+           <button
+             type="submit"
+             disabled={isLoadingAdmins || !newAdminEmail.trim()}
+             className="bg-brand-ink text-brand-neutral hover:bg-neutral-800 border-2 border-brand-ink py-2 px-4 font-mono text-xs font-black uppercase flex items-center gap-2 cursor-pointer transition-colors disabled:opacity-50 h-[38px]"
+           >
+             <Plus size={14} /> ADD ADMIN
+           </button>
+         </div>
+       </form>
+
+       {isLoadingAdmins && adminEmails.length === 0 ? (
+         <div className="flex items-center justify-center py-12">
+           <RefreshCw size={24} className="animate-spin text-neutral-400" />
+         </div>
+       ) : (
+         <div className="border-2 border-brand-ink bg-white divide-y-2 divide-brand-ink">
+           {adminEmails.map((email) => {
+             const isDefault = email === "admin@cugolfclub.com";
+             return (
+               <div key={email} className="flex items-center justify-between p-3.5 hover:bg-neutral-50 transition-colors">
+                 <span className="font-mono text-xs text-brand-ink font-bold">{email}</span>
+                 {isDefault ? (
+                   <span className="font-mono text-[8px] bg-neutral-100 text-neutral-400 px-2 py-0.5 border border-neutral-300 font-bold uppercase select-none">
+                     SYSTEM DEFAULT
+                   </span>
+                 ) : (
+                   <button
+                     type="button"
+                     onClick={() => handleRemoveAdmin(email)}
+                     disabled={isLoadingAdmins}
+                     className="text-stone-400 hover:text-red-600 p-1 cursor-pointer transition-colors"
+                     title="Remove administrator privilege"
+                   >
+                     <Trash2 size={16} />
+                   </button>
+                 )}
+               </div>
+             );
+           })}
+           {adminEmails.length === 0 && (
+             <div className="p-8 text-center font-mono text-xs text-stone-400">
+               NO ADMINISTRATOR EMAILS LOADED
+             </div>
+           )}
+         </div>
+       )}
+     </div>
+   </div>
+ );
+
  default:
  return (
  <div className="flex flex-col items-center justify-center h-64 text-stone-400 space-y-4 text-center">
@@ -2780,6 +2932,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  { id:"scores", label:"SCORES"},
  { id:"sponsors", label:"SPONSORS"},
  { id:"settings", label:"SETTINGS"},
+ { id:"admins", label:"ADMINS"},
  ].map((tab) => (
  <button
  key={tab.id}

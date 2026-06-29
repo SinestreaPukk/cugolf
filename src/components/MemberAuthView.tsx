@@ -11,6 +11,8 @@ interface MemberAuthViewProps {
   memberToken: string | null;
   setMemberToken: (token: string | null) => void;
   siteSettings?: SiteSettings;
+  adminToken: string | null;
+  setAdminToken: (token: string | null) => void;
 }
 
 export default function MemberAuthView({
@@ -18,7 +20,9 @@ export default function MemberAuthView({
   setMemberUser,
   memberToken,
   setMemberToken,
-  siteSettings
+  siteSettings,
+  adminToken,
+  setAdminToken
 }: MemberAuthViewProps) {
   const { language } = useLanguage();
   const navigate = useNavigate();
@@ -262,14 +266,55 @@ export default function MemberAuthView({
             </div>
           </div>
 
-          {memberUser.isAdmin && (!siteSettings?.disableCms || memberUser.email.toLowerCase() === "admin@cugolfclub.com") && (
-            <div className="pt-2">
-              <Link
-                to="/admin"
-                className="w-full inline-flex justify-center items-center bg-brand-pink hover:bg-brand-ink text-brand-neutral hover:text-brand-neutral py-2.5 border border-brand-ink text-xs font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer"
-              >
-                {language === "th" ? "⚡ เข้าสู่หน้าแอดมิน (CMS)" : "⚡ ACCESS ADMIN CMS"}
-              </Link>
+          {memberUser.isAdmin && (
+            <div className="space-y-3 pt-2 border-t border-brand-ink/10">
+              <span className="font-mono text-[9px] font-bold text-brand-pink tracking-[0.2em] uppercase block">
+                {language === "th" ? "สิทธิ์ผู้ดูแลระบบ (ADMIN)" : "ADMINISTRATOR PRIVILEGES"}
+              </span>
+              
+              {!adminToken ? (
+                <div className="space-y-2">
+                  <button
+                    onClick={() => {
+                      setAdminToken(memberToken);
+                      localStorage.setItem("cu-golf-club-admin-token", memberToken || "");
+                    }}
+                    className="w-full inline-flex justify-center items-center bg-brand-pink hover:bg-brand-ink text-brand-neutral hover:text-brand-neutral py-2.5 border border-brand-ink text-xs font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                  >
+                    ⚡ {language === "th" ? "เปิดโหมดแก้ไขข้อมูล" : "ACTIVATE EDITING MODE"}
+                  </button>
+                  <p className="text-[9.5px] text-stone-500 font-sans leading-normal">
+                    {language === "th" 
+                      ? "การเปิดโหมดแก้ไขจะแสดงแถบ CMS และปุ่มแก้ไขบนหน้าเว็บต่างๆ เพื่อให้คุณแก้ไขข้อมูลได้ทันที" 
+                      : "Activating editing mode displays the CMS active bar and edit actions on public pages to let you modify website content."}
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-2.5">
+                  <button
+                    onClick={() => {
+                      setAdminToken(null);
+                      localStorage.removeItem("cu-golf-club-admin-token");
+                    }}
+                    className="w-full inline-flex justify-center items-center bg-brand-neutral hover:bg-stone-100 text-brand-ink py-2.5 border-2 border-brand-ink text-xs font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                  >
+                    ❌ {language === "th" ? "ปิดโหมดแก้ไขข้อมูล" : "DEACTIVATE EDITING MODE"}
+                  </button>
+                  
+                  <Link
+                    to="/admin"
+                    className="w-full inline-flex justify-center items-center bg-brand-ink hover:bg-neutral-800 text-brand-neutral hover:text-brand-neutral py-2.5 border border-brand-ink text-xs font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                  >
+                    ⚙️ {language === "th" ? "เข้าสู่ระบบจัดการหลังบ้าน (CMS)" : "ENTER ADMIN CMS PANEL"}
+                  </Link>
+                  
+                  <p className="text-[9.5px] text-stone-500 font-sans leading-normal">
+                    {language === "th" 
+                      ? "คุณกำลังอยู่ในโหมดแก้ไขข้อมูล (แถบควบคุมถูกเปิดใช้งาน) ปิดโหมดแก้ไขหากต้องการพรีวิวหน้าเว็บแบบผู้เยี่ยมชมทั่วไป" 
+                      : "You are currently in editing mode (CMS is active). Deactivate editing mode to preview the site as a regular visitor."}
+                  </p>
+                </div>
+              )}
             </div>
           )}
 

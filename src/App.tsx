@@ -62,11 +62,7 @@ function AppContent() {
     setMemberUser(user);
     if (user) {
       localStorage.setItem("cu-golf-club-member-user", JSON.stringify(user));
-      if (user.isAdmin) {
-        const token = memberToken || localStorage.getItem("cu-golf-club-member-token");
-        setAdminToken(token);
-        localStorage.setItem("cu-golf-club-admin-token", token || "");
-      } else {
+      if (!user.isAdmin) {
         setAdminToken(null);
         localStorage.removeItem("cu-golf-club-admin-token");
       }
@@ -265,10 +261,12 @@ function AppContent() {
                 memberToken={memberToken}
                 setMemberToken={syncMemberToken}
                 siteSettings={dbState?.siteSettings}
+                adminToken={adminToken}
+                setAdminToken={syncAdminToken}
               />
             } />
             <Route path="/admin" element={
-              adminToken && (!dbState?.siteSettings?.disableCms || memberUser?.email?.toLowerCase() === "admin@cugolfclub.com") ? (
+              adminToken ? (
                 <AdminView
                   dbState={dbState}
                   refreshState={refreshState}

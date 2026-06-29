@@ -101,6 +101,30 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 // Serve static uploaded materials (Keep for backward compatibility during migration)
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
+// Health check — shows configuration status without exposing secrets
+app.get("/api/health", async (req, res) => {
+  const checks: Record<string, boolean | string> = {
+    supabase_url: !!process.env.VITE_SUPABASE_URL,
+    anon_key: !!(process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY),
+    service_role_key: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+    admin_client_ready: !!supabaseAdmin,
+    google_sheets_webhook: !!process.env.GOOGLE_SHEETS_WEBHOOK_URL,
+    app_url: process.env.APP_URL || "(not set — forgot-password redirect may be wrong)"
+  };
+
+  let db_columns = "untested";
+  try {
+    const { data, error } = await supabase.from("members").select("id, prefix, instagram, line_id").limit(1);
+    db_columns = error ? `error: ${error.message}` : "ok (prefix, instagram, line_id exist)";
+  } catch (e: any) {
+    db_columns = `exception: ${e.message}`;
+  }
+  checks.db_columns = db_columns;
+
+  const allOk = checks.supabase_url && checks.anon_key && checks.service_role_key && checks.admin_client_ready && db_columns === "ok (prefix, instagram, line_id exist)";
+  res.status(allOk ? 200 : 500).json({ ok: allOk, checks });
+});
+
 // Photo upload endpoint - Updated to use Supabase Storage
 app.post("/api/upload", async (req, res) => {
   const { filename, base64Data } = req.body;
@@ -429,14 +453,17 @@ app.post("/api/members/register", async (req, res) => {
   if (!email || !password || !name || !studentId) {
     return res.status(400).json({ success: false, message: "Email, password, name, and student ID are required." });
   }
+  if (password.length < 6) {
+    return res.status(400).json({ success: false, message: "Password must be at least 6 characters." });
+  }
 
   if (!supabaseAdmin) {
-    console.error("Registration blocked: SUPABASE_SERVICE_ROLE_KEY is not configured.");
-    return res.status(500).json({ success: false, message: "Server configuration error: registration service is not available. Please contact the administrator." });
+    console.error("Registration blocked: SUPABASE_SERVICE_ROLE_KEY is not configured on the server.");
+    return res.status(500).json({ success: false, message: "Registration is currently unavailable. Please contact the administrator. (Server missing SUPABASE_SERVICE_ROLE_KEY)" });
   }
 
   try {
-    // 1. Create the user in Supabase Auth using the dedicated admin client (requires service role key)
+    // 1. Create auth user
     const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
       email,
       password,
@@ -445,7 +472,7 @@ app.post("/api/members/register", async (req, res) => {
     });
 
     if (authError) {
-      console.error("Supabase Auth createUser error:", authError.message);
+      console.error("Auth createUser error:", authError.message, authError.status);
       if (authError.message.toLowerCase().includes("already registered") || authError.message.toLowerCase().includes("already been registered")) {
         return res.status(400).json({ success: false, message: "An account with this email already exists. Please log in instead." });
       }
@@ -453,51 +480,26 @@ app.post("/api/members/register", async (req, res) => {
     }
 
     if (!authData.user) {
-      return res.status(500).json({ success: false, message: "Failed to create user in auth system." });
+      return res.status(500).json({ success: false, message: "Auth user creation returned no data." });
     }
 
-    // 2. Insert profile information into the 'members' table
-    // Try full insert first; fall back to core fields if new columns don't exist yet in DB
-    let dbError: any = null;
+    // 2. Insert profile into members table — try with new columns first, fall back to core only
+    const profileFull = { id: authData.user.id, email, name, prefix: prefix || null, student_id: studentId, year: year || null, faculty: faculty || null, instagram: instagram || null, line_id: lineId || null };
+    const profileCore = { id: authData.user.id, email, name, student_id: studentId, year: year || null, faculty: faculty || null };
 
-    const fullInsert = await supabase.from("members").insert({
-      id: authData.user.id,
-      email,
-      name,
-      prefix: prefix || null,
-      student_id: studentId,
-      year: year || null,
-      faculty: faculty || null,
-      instagram: instagram || null,
-      line_id: lineId || null
-    });
-    dbError = fullInsert.error;
+    let { error: dbError } = await supabase.from("members").insert(profileFull);
 
-    if (dbError && (dbError.message.includes("column") || dbError.code === "42703")) {
-      // New columns not yet migrated — insert with core fields only
-      console.warn("New columns missing in members table, inserting core fields only. Run: ALTER TABLE members ADD COLUMN IF NOT EXISTS prefix TEXT; ADD COLUMN IF NOT EXISTS instagram TEXT; ADD COLUMN IF NOT EXISTS line_id TEXT;");
-      const coreInsert = await supabase.from("members").insert({
-        id: authData.user.id,
-        email,
-        name,
-        student_id: studentId,
-        year: year || null,
-        faculty: faculty || null
-      });
-      dbError = coreInsert.error;
+    if (dbError && (dbError.code === "42703" || dbError.message.includes("column") || dbError.message.includes("does not exist"))) {
+      console.warn("members table missing new columns — falling back to core insert. Run the migration:\nALTER TABLE members ADD COLUMN IF NOT EXISTS prefix TEXT;\nALTER TABLE members ADD COLUMN IF NOT EXISTS instagram TEXT;\nALTER TABLE members ADD COLUMN IF NOT EXISTS line_id TEXT;");
+      ({ error: dbError } = await supabase.from("members").insert(profileCore));
     }
 
     if (dbError) {
-      console.error("Supabase members table insert error:", dbError.message, dbError.code);
-      // Rollback Auth user if DB insert fails to maintain consistency
+      console.error("DB insert error:", dbError.code, dbError.message);
       await supabaseAdmin.auth.admin.deleteUser(authData.user.id);
       if (dbError.code === "23505") {
-        if (dbError.message.includes("student_id")) {
-          return res.status(400).json({ success: false, message: "This student ID is already registered." });
-        }
-        if (dbError.message.includes("email")) {
-          return res.status(400).json({ success: false, message: "An account with this email already exists." });
-        }
+        if (dbError.message.includes("student_id")) return res.status(400).json({ success: false, message: "This student ID is already registered." });
+        if (dbError.message.includes("email")) return res.status(400).json({ success: false, message: "An account with this email already exists." });
       }
       return res.status(500).json({ success: false, message: `Database error: ${dbError.message}` });
     }

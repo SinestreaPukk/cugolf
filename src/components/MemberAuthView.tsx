@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { registerMember, loginMember, forgotPassword, resetPassword, changePassword } from "../utils/api";
+import { supabase } from "../utils/supabaseClient";
 import { Member, SiteSettings } from "../types";
 import { useLanguage } from "../utils/LanguageContext";
 import { useNavigate, Link } from "react-router-dom";
@@ -56,16 +57,37 @@ export default function MemberAuthView({
   const [changePwSuccess, setChangePwSuccess] = useState("");
 
   useEffect(() => {
-    // Check if URL has a recovery token (e.g. from password reset redirect)
-    const hash = window.location.hash;
-    if (hash && hash.includes("type=recovery")) {
-      const params = new URLSearchParams(hash.replace("#", "?"));
-      const token = params.get("access_token");
-      if (token) {
-        setRecoveryToken(token);
-        setActiveTab("reset");
+    const handleRecovery = async () => {
+      // PKCE flow: Supabase puts ?code= in query string (default for newer Supabase)
+      const searchParams = new URLSearchParams(window.location.search);
+      const code = searchParams.get("code");
+      if (code) {
+        try {
+          const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+          if (!error && data?.session?.access_token) {
+            setRecoveryToken(data.session.access_token);
+            setActiveTab("reset");
+            // Clean the code from URL so refresh doesn't re-trigger
+            window.history.replaceState({}, "", window.location.pathname);
+          }
+        } catch {}
+        return;
       }
-    }
+
+      // Implicit flow fallback: Supabase puts #access_token=...&type=recovery in hash
+      const hash = window.location.hash;
+      if (hash && hash.includes("type=recovery")) {
+        const params = new URLSearchParams(hash.replace("#", "?"));
+        const token = params.get("access_token");
+        if (token) {
+          setRecoveryToken(token);
+          setActiveTab("reset");
+          window.history.replaceState({}, "", window.location.pathname);
+        }
+      }
+    };
+
+    handleRecovery();
   }, []);
 
   useEffect(() => {

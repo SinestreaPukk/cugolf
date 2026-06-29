@@ -280,3 +280,24 @@ export async function getAdminMembers(token: string): Promise<{ success: boolean
   });
   return handleResponse(res, "Failed to retrieve members directory");
 }
+
+export async function forgotPassword(email: string): Promise<{ success: boolean; message?: string }> {
+  const res = await fetch("/api/members/forgot-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email })
+  });
+  return handleResponse(res, "Failed to request password reset");
+}
+
+export async function resetPassword(password: string, token: string): Promise<{ success: boolean; message?: string }> {
+  const res = await fetch("/api/members/reset-password", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify({ password })
+  });
+  return handleResponse(res, "Failed to reset password");
+}

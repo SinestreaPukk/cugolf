@@ -496,6 +496,70 @@ app.post("/api/members/login", async (req, res) => {
   }
 });
 
+app.post("/api/members/forgot-password", async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ success: false, message: "Email is required." });
+  }
+
+  try {
+    const host = req.headers.host || "localhost:3000";
+    const protocol = req.headers["x-forwarded-proto"] || "http";
+    const redirectTo = `${protocol}://${host}/membership`;
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo,
+    });
+
+    if (error) {
+      console.error("Supabase forgot-password error:", error.message);
+      return res.status(400).json({ success: false, message: error.message });
+    }
+
+    res.json({ success: true, message: "Password reset instructions sent to your email." });
+  } catch (err: any) {
+    console.error("Forgot password endpoint crash:", err);
+    res.status(500).json({ success: false, message: err.message || "Internal server error." });
+  }
+});
+
+app.post("/api/members/reset-password", async (req, res) => {
+  const authHeader = req.headers.authorization;
+  const { password } = req.body;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ success: false, message: "Access denied. Missing token." });
+  }
+  if (!password) {
+    return res.status(400).json({ success: false, message: "Password is required." });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  try {
+    // Validate token and get user info
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    if (authError || !user) {
+      return res.status(401).json({ success: false, message: "Session expired or invalid token." });
+    }
+
+    // Update user password via admin auth
+    const { error: updateError } = await supabase.auth.admin.updateUserById(user.id, {
+      password
+    });
+
+    if (updateError) {
+      console.error("Supabase reset-password error:", updateError.message);
+      return res.status(400).json({ success: false, message: updateError.message });
+    }
+
+    res.json({ success: true, message: "Your password has been reset successfully." });
+  } catch (err: any) {
+    console.error("Reset password endpoint crash:", err);
+    res.status(500).json({ success: false, message: err.message || "Internal server error." });
+  }
+});
+
 app.get("/api/members/me", async (req, res) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {

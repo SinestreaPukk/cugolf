@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { registerMember, loginMember } from "../utils/api";
+import { registerMember, loginMember, forgotPassword, resetPassword } from "../utils/api";
 import { Member } from "../types";
 import { useLanguage } from "../utils/LanguageContext";
 import { useNavigate } from "react-router-dom";
@@ -20,7 +20,7 @@ export default function MemberAuthView({
 }: MemberAuthViewProps) {
   const { language } = useLanguage();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<"login" | "register">("login");
+  const [activeTab, setActiveTab] = useState<"login" | "register" | "forgot" | "reset">("login");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
@@ -33,6 +33,23 @@ export default function MemberAuthView({
   const [studentId, setStudentId] = useState("");
   const [faculty, setFaculty] = useState("");
   const [year, setYear] = useState("Year 1");
+
+  // Forgot/Reset password states
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [recoveryToken, setRecoveryToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Check if URL has a recovery token (e.g. from password reset redirect)
+    const hash = window.location.hash;
+    if (hash && hash.includes("type=recovery")) {
+      const params = new URLSearchParams(hash.replace("#", "?"));
+      const token = params.get("access_token");
+      if (token) {
+        setRecoveryToken(token);
+        setActiveTab("reset");
+      }
+    }
+  }, []);
 
   useEffect(() => {
     setErrorMsg("");
@@ -120,6 +137,84 @@ export default function MemberAuthView({
     }
   };
 
+  const handleRequestReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!forgotEmail) {
+      setErrorMsg(language === "th" ? "กรุณากรอกอีเมลของคุณ" : "Please enter your email address.");
+      return;
+    }
+
+    setLoading(true);
+    setErrorMsg("");
+    setSuccessMsg("");
+
+    try {
+      const res = await forgotPassword(forgotEmail);
+      if (res.success) {
+        setSuccessMsg(
+          language === "th"
+            ? "ส่งคำแนะนำการรีเซ็ตรหัสผ่านไปยังอีเมลของคุณแล้ว!"
+            : "Password reset instructions have been sent to your email!"
+        );
+      }
+    } catch (err: any) {
+      console.error(err);
+      setErrorMsg(err.message || (language === "th" ? "เกิดข้อผิดพลาดในการส่งคำขอ" : "Error requesting password reset."));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg("");
+    setSuccessMsg("");
+
+    if (!password || !confirmPassword) {
+      setErrorMsg(language === "th" ? "กรุณากรอกรหัสผ่านใหม่" : "Please fill in all password fields.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setErrorMsg(language === "th" ? "รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร" : "Password must be at least 6 characters.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setErrorMsg(language === "th" ? "รหัสผ่านไม่ตรงกัน" : "Passwords do not match.");
+      return;
+    }
+
+    if (!recoveryToken) {
+      setErrorMsg(language === "th" ? "โทเคนการกู้คืนไม่ถูกต้องหรือหมดอายุแล้ว" : "Recovery token is missing or expired.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await resetPassword(password, recoveryToken);
+      if (res.success) {
+        setSuccessMsg(
+          language === "th"
+            ? "รีเซ็ตรหัสผ่านสำเร็จ! กรุณาเข้าสู่ระบบด้วยรหัสผ่านใหม่ของคุณ"
+            : "Password reset successfully! Please log in with your new password."
+        );
+        // Clear recovery token and hash
+        setRecoveryToken(null);
+        window.location.hash = "";
+        setTimeout(() => {
+          setActiveTab("login");
+        }, 1500);
+      }
+    } catch (err: any) {
+      console.error(err);
+      setErrorMsg(err.message || (language === "th" ? "เกิดข้อผิดพลาดในการรีเซ็ตรหัสผ่าน" : "Failed to reset password."));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleLogout = () => {
     setMemberToken(null);
     setMemberUser(null);
@@ -182,29 +277,38 @@ export default function MemberAuthView({
     <div className="mx-auto max-w-md py-8 animate-fade-in text-brand-ink">
       <div className="bg-brand-neutral border border-brand-ink p-6 md:p-8 space-y-6 shadow-[4px_4px_0px_rgba(18,18,18,1)]">
         
-        {/* Simple Tab Navigation */}
-        <div className="flex border-b border-brand-ink/20 font-display text-xs font-black tracking-widest uppercase">
-          <button
-            onClick={() => setActiveTab("login")}
-            className={`flex-1 pb-3 text-center transition-all cursor-pointer border-b-2 ${
-              activeTab === "login"
-                ? "text-brand-ink border-brand-ink"
-                : "text-stone-400 border-transparent hover:text-brand-ink"
-            }`}
-          >
-            {language === "th" ? "เข้าสู่ระบบ" : "MEMBER LOG IN"}
-          </button>
-          <button
-            onClick={() => setActiveTab("register")}
-            className={`flex-1 pb-3 text-center transition-all cursor-pointer border-b-2 ${
-              activeTab === "register"
-                ? "text-brand-ink border-brand-ink"
-                : "text-stone-400 border-transparent hover:text-brand-ink"
-            }`}
-          >
-            {language === "th" ? "ลงทะเบียน" : "REGISTER NOW"}
-          </button>
-        </div>
+        {/* Simple Tab Navigation or Header */}
+        {activeTab === "login" || activeTab === "register" ? (
+          <div className="flex border-b border-brand-ink/20 font-display text-xs font-black tracking-widest uppercase">
+            <button
+              onClick={() => setActiveTab("login")}
+              className={`flex-1 pb-3 text-center transition-all cursor-pointer border-b-2 ${
+                activeTab === "login"
+                  ? "text-brand-ink border-brand-ink"
+                  : "text-stone-400 border-transparent hover:text-brand-ink"
+              }`}
+            >
+              {language === "th" ? "เข้าสู่ระบบ" : "MEMBER LOG IN"}
+            </button>
+            <button
+              onClick={() => setActiveTab("register")}
+              className={`flex-1 pb-3 text-center transition-all cursor-pointer border-b-2 ${
+                activeTab === "register"
+                  ? "text-brand-ink border-brand-ink"
+                  : "text-stone-400 border-transparent hover:text-brand-ink"
+              }`}
+            >
+              {language === "th" ? "ลงทะเบียน" : "REGISTER NOW"}
+            </button>
+          </div>
+        ) : (
+          <div className="border-b border-brand-ink/20 font-display text-xs font-black tracking-widest uppercase pb-3 text-center text-brand-ink font-bold">
+            {activeTab === "forgot" 
+              ? (language === "th" ? "ลืมรหัสผ่าน" : "PASSWORD RECOVERY")
+              : (language === "th" ? "ตั้งรหัสผ่านใหม่" : "RESET PASSWORD")
+            }
+          </div>
+        )}
 
         {/* Feedback Banners */}
         {errorMsg && (
@@ -219,7 +323,7 @@ export default function MemberAuthView({
           </div>
         )}
 
-        {activeTab === "login" ? (
+        {activeTab === "login" && (
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-1">
               <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
@@ -229,7 +333,7 @@ export default function MemberAuthView({
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="e.g. member@chula.ac.th"
+                placeholder="member@chula.ac.th"
                 className="w-full px-3 py-2.5 bg-white border border-brand-ink text-brand-ink text-xs font-semibold focus:outline-none focus:border-brand-pink transition-colors placeholder:text-neutral-300"
                 required
               />
@@ -255,12 +359,23 @@ export default function MemberAuthView({
               className="w-full bg-brand-ink hover:bg-brand-pink text-brand-neutral hover:text-brand-neutral py-3 text-xs font-mono font-bold uppercase tracking-widest transition-all duration-200 cursor-pointer flex justify-center items-center gap-2 disabled:opacity-50"
             >
               {loading && <Loader2 size={12} className="animate-spin" />}
-              {loading ? (language === "th" ? "กำลังตรวจสอบข้อมูล..." : "VERIFYING ACCOUNT...") : (language === "th" ? "เข้าสู่ระบบ" : "AUTHORIZE & LOGIN")}
+              {loading ? (language === "th" ? "กำลังตรวจสอบ..." : "VERIFYING...") : (language === "th" ? "เข้าสู่ระบบ" : "AUTHORIZE & LOGIN")}
             </button>
+
+            <div className="text-center pt-2">
+              <button
+                type="button"
+                onClick={() => setActiveTab("forgot")}
+                className="text-[10px] font-mono font-bold text-stone-400 hover:text-brand-ink uppercase tracking-wider transition-colors cursor-pointer bg-transparent border-none outline-none"
+              >
+                {language === "th" ? "ลืมรหัสผ่าน?" : "Forgot Password?"}
+              </button>
+            </div>
           </form>
-        ) : (
+        )}
+
+        {activeTab === "register" && (
           <form onSubmit={handleRegister} className="space-y-4">
-            
             <div className="space-y-1">
               <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
                 {language === "th" ? "ชื่อ-นามสกุลจริง *" : "FULL NAME *"}
@@ -269,7 +384,7 @@ export default function MemberAuthView({
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder={language === "th" ? "สมชาย รักกอล์ฟ" : "e.g. Somchai Rakgolf"}
+                placeholder={language === "th" ? "สมชาย รักกอล์ฟ" : "Somchai Rakgolf"}
                 className="w-full px-3 py-2.5 bg-white border border-brand-ink text-brand-ink text-xs font-semibold focus:outline-none focus:border-brand-pink transition-colors placeholder:text-neutral-300"
                 required
               />
@@ -283,7 +398,7 @@ export default function MemberAuthView({
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="e.g. user@domain.com"
+                placeholder="member@chula.ac.th"
                 className="w-full px-3 py-2.5 bg-white border border-brand-ink text-brand-ink text-xs font-semibold focus:outline-none focus:border-brand-pink transition-colors placeholder:text-neutral-300"
                 required
               />
@@ -297,7 +412,7 @@ export default function MemberAuthView({
                 type="text"
                 value={studentId}
                 onChange={(e) => setStudentId(e.target.value)}
-                placeholder="e.g. 66XXXXXXXX"
+                placeholder="66XXXXXXXX"
                 className="w-full px-3 py-2.5 bg-white border border-brand-ink text-brand-ink text-xs font-semibold focus:outline-none focus:border-brand-pink transition-colors placeholder:text-neutral-300"
                 required
               />
@@ -372,6 +487,98 @@ export default function MemberAuthView({
             >
               {loading && <Loader2 size={12} className="animate-spin" />}
               {loading ? (language === "th" ? "กำลังลงทะเบียน..." : "CREATING PROFILE...") : (language === "th" ? "สมัครสมาชิกชมรม" : "SUBMIT REGISTRATION")}
+            </button>
+          </form>
+        )}
+
+        {activeTab === "forgot" && (
+          <form onSubmit={handleRequestReset} className="space-y-4">
+            <p className="text-[11px] text-stone-500 font-sans leading-relaxed">
+              {language === "th" 
+                ? "ป้อนอีเมลที่ใช้สมัครสมาชิก แล้วระบบจะส่งลิงก์เพื่อกู้คืนและตั้งรหัสผ่านใหม่ไปยังอีเมลของคุณ" 
+                : "Enter your registered email address below, and we will send you a secure link to reset your password."
+              }
+            </p>
+            
+            <div className="space-y-1">
+              <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
+                {language === "th" ? "อีเมลสมาชิก" : "MEMBER EMAIL"}
+              </label>
+              <input
+                type="email"
+                value={forgotEmail}
+                onChange={(e) => setForgotEmail(e.target.value)}
+                placeholder="member@chula.ac.th"
+                className="w-full px-3 py-2.5 bg-white border border-brand-ink text-brand-ink text-xs font-semibold focus:outline-none focus:border-brand-pink transition-colors placeholder:text-neutral-300"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-brand-ink hover:bg-brand-pink text-brand-neutral hover:text-brand-neutral py-3 text-xs font-mono font-bold uppercase tracking-widest transition-all duration-200 cursor-pointer flex justify-center items-center gap-2 disabled:opacity-50"
+            >
+              {loading && <Loader2 size={12} className="animate-spin" />}
+              {loading ? (language === "th" ? "กำลังส่งคำขอ..." : "SENDING REQUEST...") : (language === "th" ? "ขอลิงก์รีเซ็ตรหัสผ่าน" : "SEND RECOVERY EMAIL")}
+            </button>
+
+            <div className="text-center pt-2">
+              <button
+                type="button"
+                onClick={() => setActiveTab("login")}
+                className="text-[10px] font-mono font-bold text-stone-400 hover:text-brand-ink uppercase tracking-wider transition-colors cursor-pointer bg-transparent border-none outline-none"
+              >
+                {language === "th" ? "← กลับไปหน้าเข้าสู่ระบบ" : "← Back to Login"}
+              </button>
+            </div>
+          </form>
+        )}
+
+        {activeTab === "reset" && (
+          <form onSubmit={handleResetPassword} className="space-y-4">
+            <p className="text-[11px] text-stone-500 font-sans leading-relaxed">
+              {language === "th" 
+                ? "กรอกรหัสผ่านใหม่ที่ต้องการใช้สำหรับเข้าสู่ระบบของชมรม" 
+                : "Please choose a new password below for your golf club membership."
+              }
+            </p>
+
+            <div className="space-y-1">
+              <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
+                {language === "th" ? "รหัสผ่านใหม่" : "NEW PASSWORD"}
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Min 6 chars"
+                className="w-full px-3 py-2.5 bg-white border border-brand-ink text-brand-ink text-xs font-semibold focus:outline-none focus:border-brand-pink transition-colors placeholder:text-neutral-300"
+                required
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
+                {language === "th" ? "ยืนยันรหัสผ่านใหม่" : "CONFIRM NEW PASSWORD"}
+              </label>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full px-3 py-2.5 bg-white border border-brand-ink text-brand-ink text-xs font-semibold focus:outline-none focus:border-brand-pink transition-colors placeholder:text-neutral-300"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-brand-ink hover:bg-brand-pink text-brand-neutral hover:text-brand-neutral py-3 text-xs font-mono font-bold uppercase tracking-widest transition-all duration-200 cursor-pointer flex justify-center items-center gap-2 disabled:opacity-50"
+            >
+              {loading && <Loader2 size={12} className="animate-spin" />}
+              {loading ? (language === "th" ? "กำลังบันทึก..." : "UPDATING PASSWORD...") : (language === "th" ? "ตั้งรหัสผ่านใหม่" : "CONFIRM PASSWORD RESET")}
             </button>
           </form>
         )}

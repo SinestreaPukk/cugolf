@@ -446,7 +446,10 @@ app.post("/api/members/register", async (req, res) => {
     }
 
     // 2. Insert profile information into the 'members' table
-    const { error: dbError } = await supabase.from("members").insert({
+    // Try full insert first; fall back to core fields if new columns don't exist yet in DB
+    let dbError: any = null;
+
+    const fullInsert = await supabase.from("members").insert({
       id: authData.user.id,
       email,
       name,
@@ -457,6 +460,21 @@ app.post("/api/members/register", async (req, res) => {
       instagram: instagram || null,
       line_id: lineId || null
     });
+    dbError = fullInsert.error;
+
+    if (dbError && (dbError.message.includes("column") || dbError.code === "42703")) {
+      // New columns not yet migrated — insert with core fields only
+      console.warn("New columns missing in members table, inserting core fields only. Run: ALTER TABLE members ADD COLUMN IF NOT EXISTS prefix TEXT; ADD COLUMN IF NOT EXISTS instagram TEXT; ADD COLUMN IF NOT EXISTS line_id TEXT;");
+      const coreInsert = await supabase.from("members").insert({
+        id: authData.user.id,
+        email,
+        name,
+        student_id: studentId,
+        year: year || null,
+        faculty: faculty || null
+      });
+      dbError = coreInsert.error;
+    }
 
     if (dbError) {
       console.error("Supabase members table insert error:", dbError.message, dbError.code);

@@ -421,31 +421,28 @@ export default function MemberAuthView({
             </div>
 
             {/* PDPA Consent */}
-            <div className="flex items-start gap-3 border border-brand-ink/20 bg-brand-stone/30 p-3">
+            <div className="flex items-start gap-2">
               <input
                 type="checkbox"
                 id="pdpa_consent"
                 checked={pdpaConsent}
                 onChange={(e) => setPdpaConsent(e.target.checked)}
-                className="h-4 w-4 mt-0.5 accent-brand-pink shrink-0 cursor-pointer"
-                required
+                className="h-3 w-3 mt-0.5 shrink-0 cursor-pointer"
               />
-              <label htmlFor="pdpa_consent" className="text-[11px] text-stone-600 leading-relaxed cursor-pointer">
+              <label htmlFor="pdpa_consent" className="text-[10px] text-stone-400 leading-relaxed cursor-pointer">
                 {language === "th" ? (
                   <>
-                    ข้าพเจ้ายอมรับ{" "}
-                    <Link to="/privacy" target="_blank" className="font-bold text-brand-ink underline underline-offset-2 hover:text-brand-pink transition-colors">
-                      นโยบายความเป็นส่วนตัว (PDPA)
-                    </Link>{" "}
-                    และยินยอมให้ชมรมกอล์ฟจุฬาฯ เก็บรวบรวมและประมวลผลข้อมูลส่วนบุคคลของข้าพเจ้าตามวัตถุประสงค์ที่ระบุไว้
+                    ยอมรับ{" "}
+                    <Link to="/privacy" target="_blank" className="underline underline-offset-2 hover:text-stone-600 transition-colors">
+                      นโยบายความเป็นส่วนตัว
+                    </Link>
                   </>
                 ) : (
                   <>
-                    I have read and accept the{" "}
-                    <Link to="/privacy" target="_blank" className="font-bold text-brand-ink underline underline-offset-2 hover:text-brand-pink transition-colors">
-                      Privacy Disclosure (PDPA)
-                    </Link>{" "}
-                    and consent to CU Golf Club collecting and processing my personal data for the stated purposes.
+                    I accept the{" "}
+                    <Link to="/privacy" target="_blank" className="underline underline-offset-2 hover:text-stone-600 transition-colors">
+                      Privacy Policy
+                    </Link>
                   </>
                 )}
               </label>

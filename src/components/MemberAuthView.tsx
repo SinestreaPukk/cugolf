@@ -4,6 +4,7 @@ import { Member, MemberEvent, SiteSettings } from "../types";
 import { useLanguage } from "../utils/LanguageContext";
 import { useNavigate, Link } from "react-router-dom";
 import { Loader2, CheckCircle2, Calendar, Clock, MapPin, ExternalLink } from "lucide-react";
+import { fmtDate } from "../utils/format";
 
 interface MemberAuthViewProps {
   memberUser: any;
@@ -290,7 +291,7 @@ export default function MemberAuthView({
                             {event.date && (
                               <div className="flex items-center gap-1.5 text-[10px] font-mono text-stone-500">
                                 <Calendar size={10} className="shrink-0" />
-                                <span>{event.date}{event.time ? ` · ${event.time}` : ""}</span>
+                                <span>{fmtDate(event.date)}{event.time ? ` · ${event.time}` : ""}</span>
                               </div>
                             )}
                             {!event.date && event.time && (

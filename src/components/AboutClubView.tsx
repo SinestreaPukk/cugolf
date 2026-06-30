@@ -1,5 +1,6 @@
 import { SiteLabels, SiteSettings, TournamentScore, ClubActivityContent, AdminEditProps } from "../types";
 import { Trophy, Edit, Calendar } from "lucide-react";
+import { fmtDate } from "../utils/format";
 import { useEffect } from "react";
 import { useLanguage } from "../utils/LanguageContext";
 
@@ -84,19 +85,7 @@ export default function AboutClubView({ clubActivity, siteLabels, isAdmin, onEdi
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {upcomingActivities.map((comp) => {
               // Format date nicely
-              let formattedDate = comp.date || "Upcoming";
-              try {
-                if (comp.date) {
-                  const d = new Date(comp.date);
-                  formattedDate = d.toLocaleDateString(language === "th" ? "th-TH" : "en-US", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric"
-                  }).toUpperCase();
-                }
-              } catch (e) {
-                // fallback
-              }
+              const formattedDate = comp.date ? fmtDate(comp.date) : "Upcoming";
 
               const diffVal = language === "th" && comp.difficultyThai ? comp.difficultyThai : comp.difficulty;
 

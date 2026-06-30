@@ -9,6 +9,7 @@ import StaffView from"./StaffView";
 import ScoresView from"./ScoresView";
 import SponsorsView from"./SponsorsView";
 import { DatabaseState, NewsItem, Player, Staff, TournamentScore, GalleryImage, PlayerScore, WelcomeSection, Sponsor, SiteSettings, Competition, ClubActivityContent, MemberEvent } from"../types";
+import { fmtDate } from"../utils/format";
 import {
  loginAdmin,
  createNews,
@@ -2542,7 +2543,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
                      </span>
                    </div>
                    <p className="font-mono text-[9px] text-stone-500">
-                     {evt.date ? evt.date : "No date"}{evt.time ? ` · ${evt.time}` : ""}{evt.location ? ` · ${evt.location}` : ""}
+                     {evt.date ? fmtDate(evt.date) : "No date"}{evt.time ? ` · ${evt.time}` : ""}{evt.location ? ` · ${evt.location}` : ""}
                    </p>
                    {evt.googleFormUrl && <p className="font-mono text-[9px] text-blue-500 truncate">{evt.googleFormUrl}</p>}
                  </div>
@@ -3353,7 +3354,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
                {evt.registrationStatus === "not_open" ? "NOT OPEN YET" : evt.registrationStatus === "delayed" ? "DELAYED" : evt.registrationOpen || evt.registrationStatus === "open" ? "OPEN" : "CLOSED"}
              </span>
            </div>
-           {evt.date && <p className="text-[10px] text-stone-500">{evt.date}{evt.time ? ` · ${evt.time}` : ""}</p>}
+           {evt.date && <p className="text-[10px] text-stone-500">{fmtDate(evt.date)}{evt.time ? ` · ${evt.time}` : ""}</p>}
            {evt.location && <p className="text-[10px] text-stone-500">{evt.location}</p>}
          </div>
        ))}

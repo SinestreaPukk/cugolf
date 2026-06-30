@@ -2,6 +2,7 @@ import { TournamentScore, SiteLabels, AdminEditProps } from "../types";
 import { useState } from "react";
 import { Award, Calendar, Users, Eye, EyeOff, ClipboardList, Target, Medal, Edit } from "lucide-react";
 import { useLanguage } from "../utils/LanguageContext";
+import { fmtDate } from "../utils/format";
 
 interface ScoresViewProps extends AdminEditProps {
   scores: TournamentScore[];
@@ -69,7 +70,7 @@ export default function ScoresView({ scores, siteLabels, isAdmin, onEditSection,
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="font-mono text-[9px] text-stone-400 flex items-center gap-1 font-bold uppercase tracking-wider">
                           <Calendar size={11} className="text-stone-300"/>
-                          {score.date}
+                          {fmtDate(score.date)}
                         </span>
                         <span className="h-1 w-1 bg-stone-300 hidden sm:inline"/>
                         <span className="font-mono text-[8.5px] text-emerald-700 font-bold tracking-wider uppercase bg-emerald-50 px-2 py-0.5 border border-emerald-500/10">

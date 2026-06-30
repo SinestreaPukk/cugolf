@@ -1,5 +1,6 @@
 import { NewsItem, TournamentScore, Player, WelcomeSection, UpcomingActivity, SiteLabels, SiteSettings, HomeSponsorSection, Sponsor, AdminEditProps, GalleryImage, ClubActivityContent } from "../types";
 import { ArrowRight, Calendar, User, ChevronRight, BookOpen, Clock, Trophy, Target, MapPin, ArrowUpRight, Edit, Image } from "lucide-react";
+import { fmtDate } from "../utils/format";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import WelcomeSectionView from "./WelcomeSectionView";
@@ -111,7 +112,7 @@ export default function HomeView({ news, scores, roster, gallery, welcomeSection
        {quickScores[0] ? (
          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start pt-2">
            <div className="md:col-span-1 space-y-2">
-             <span className="font-mono text-[9px] text-stone-400 block font-bold uppercase tracking-widest">{quickScores[0].date}</span>
+             <span className="font-mono text-[9px] text-stone-400 block font-bold uppercase tracking-widest">{fmtDate(quickScores[0].date)}</span>
              <h5 className="font-display text-xl md:text-2xl font-black text-brand-ink uppercase leading-tight">
                {language === "th" && quickScores[0].tournamentNameThai ? quickScores[0].tournamentNameThai : quickScores[0].tournamentName}
              </h5>

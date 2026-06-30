@@ -36,7 +36,7 @@ export default function BlogView({ news, siteLabels, siteSettings, isAdmin, onEd
  }}
  >
  {isAdmin && (
- <div className={`absolute top-4 left-4 z-50 bg-[#da5f8e] text-white px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+ <div className={`absolute top-4 left-4 z-50 bg-[#da5f8e] text-white px-3 py-1.5 font-display text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
  <Edit size={12} /> EDIT BLOG COLLECTION
  </div>
  )}
@@ -49,7 +49,7 @@ export default function BlogView({ news, siteLabels, siteSettings, isAdmin, onEd
      {siteLabels?.homeBlogTitle || "ACTIVITIES BLOG & STORIES"}
    </h1>
  </div>
- <span className="font-mono text-[10px] font-black text-neutral-400 tracking-[0.2em] uppercase">
+ <span className="font-display text-[10px] font-black text-neutral-400 tracking-[0.2em] uppercase">
  &nbsp;
  </span>
  </div>
@@ -88,7 +88,7 @@ export default function BlogView({ news, siteLabels, siteSettings, isAdmin, onEd
 
  <div className="mt-6 pt-4 border-t border-neutral-50 flex items-center justify-between">
  <span
- className="group inline-flex items-center gap-2 font-mono text-[10px] font-bold tracking-widest text-[#da5f8e] uppercase cursor-pointer hover:underline"
+ className="group inline-flex items-center gap-2 font-display text-[10px] font-bold tracking-widest text-[#da5f8e] uppercase cursor-pointer hover:underline"
  >
  {siteLabels?.homeReadStoryButton || "READ STORY"} <ChevronRight size={14} className="transition-transform group-hover:translate-x-1"/>
  </span>

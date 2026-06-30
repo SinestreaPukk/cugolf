@@ -65,7 +65,7 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
      <div className="pt-2">
        <Link
          to="/membership"
-         className="inline-flex items-center gap-3 bg-brand-neutral text-brand-ink px-10 py-5 font-mono text-xs font-black tracking-widest uppercase hover:bg-brand-pink hover:text-brand-neutral transition-all duration-350 shadow-[4px_4px_0px_rgba(218,95,142,1)] hover:shadow-none translate-y-0 hover:translate-y-1 hover:translate-x-1 border-2 border-transparent"
+         className="inline-flex items-center gap-3 bg-brand-neutral text-brand-ink px-10 py-5 font-display text-xs font-black tracking-widest uppercase hover:bg-brand-pink hover:text-brand-neutral transition-all duration-350 shadow-[4px_4px_0px_rgba(218,95,142,1)] hover:shadow-none translate-y-0 hover:translate-y-1 hover:translate-x-1 border-2 border-transparent"
        >
          {siteLabels?.homeMembershipButtonText || "REGISTER NOW"} <ArrowRight size={16} />
        </Link>
@@ -81,7 +81,7 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
        />
      </div>
      <div className="text-center space-y-0.5">
-       <p className="font-mono text-[10px] font-black tracking-widest uppercase text-brand-neutral/80">
+       <p className="font-display text-[10px] font-black tracking-widest uppercase text-brand-neutral/80">
          LINE OPENCHAT
        </p>
        <p className="font-sans text-[11px] text-stone-400">
@@ -104,7 +104,7 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
          </span>
          <Link
            to="/scores"
-           className="font-mono text-[10px] text-brand-pink hover:text-[#c24273] font-bold transition-colors uppercase tracking-widest bg-brand-stone/50 px-4 py-2 border border-brand-ink/10"
+           className="font-display text-[10px] text-brand-pink hover:text-[#c24273] font-bold transition-colors uppercase tracking-widest bg-brand-stone/50 px-4 py-2 border border-brand-ink/10"
          >
            {siteLabels?.homeFullLeaderboardButton || "FULL LEADERBOARD"}
          </Link>
@@ -113,17 +113,17 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
        {quickScores[0] ? (
          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start pt-2">
            <div className="md:col-span-1 space-y-2">
-             <span className="font-mono text-[9px] text-stone-400 block font-bold uppercase tracking-widest">{fmtDate(quickScores[0].date)}</span>
+             <span className="font-display text-[9px] text-stone-400 block font-bold uppercase tracking-widest">{fmtDate(quickScores[0].date)}</span>
              <h5 className="font-display text-xl md:text-2xl font-black text-brand-ink uppercase leading-tight">
                {language === "th" && quickScores[0].tournamentNameThai ? quickScores[0].tournamentNameThai : quickScores[0].tournamentName}
              </h5>
-             <div className="text-[9px] font-mono font-bold text-emerald-800 bg-emerald-50 py-1 px-2.5 border border-emerald-200 inline-block uppercase tracking-wider mt-2 shadow-[2px_2px_0_rgba(5,150,105,0.1)]">
+             <div className="text-[9px] font-display font-bold text-emerald-800 bg-emerald-50 py-1 px-2.5 border border-emerald-200 inline-block uppercase tracking-wider mt-2 shadow-[2px_2px_0_rgba(5,150,105,0.1)]">
                {siteLabels?.scoresOfficialStatsBadge || "UNOFFICIAL STATS"}
              </div>
            </div>
 
            <div className="md:col-span-2 space-y-2">
-             <div className="grid grid-cols-12 gap-4 pb-2 border-b border-brand-ink/20 font-mono text-[9px] font-bold text-stone-400 uppercase tracking-widest">
+             <div className="grid grid-cols-12 gap-4 pb-2 border-b border-brand-ink/20 font-display text-[9px] font-bold text-stone-400 uppercase tracking-widest">
                <div className="col-span-8">{siteLabels?.scoresTablePlayerHeader || "Player Name"}</div>
                <div className="col-span-2 text-center">{siteLabels?.scoresTableScoreHeader || "Score"}</div>
                <div className="col-span-2 text-right">{siteLabels?.scoresTablePositionHeader || "Pos"}</div>
@@ -134,8 +134,8 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
                    <span className="col-span-8 font-semibold uppercase text-brand-ink truncate">
                      {language === "th" && sl.playerNameThai ? sl.playerNameThai : sl.playerName}
                    </span>
-                   <span className="col-span-2 text-center font-mono font-black text-neutral-900">{sl.score}</span>
-                   <span className="col-span-2 text-right font-mono font-bold text-brand-pink">
+                   <span className="col-span-2 text-center font-display font-black text-neutral-900">{sl.score}</span>
+                   <span className="col-span-2 text-right font-display font-bold text-brand-pink">
                      {language === "th" && sl.positionThai ? sl.positionThai : sl.position}
                    </span>
                  </div>
@@ -144,7 +144,7 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
            </div>
          </div>
        ) : (
-         <div className="text-center py-8 text-stone-400 font-mono text-xs uppercase tracking-widest border border-dashed border-brand-ink/20 bg-brand-stone/20">
+         <div className="text-center py-8 text-stone-400 font-display text-xs uppercase tracking-widest border border-dashed border-brand-ink/20 bg-brand-stone/20">
            <span>{siteLabels?.homeNoScores || "No tournament scores listed yet."}</span>
          </div>
        )}
@@ -162,7 +162,7 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
        </h2>
        <Link
          to="/activities/blog"
-         className="font-mono text-[9px] md:text-[10px] font-bold text-brand-pink hover:text-[#c24273] tracking-widest uppercase cursor-pointer hover:underline underline-offset-4"
+         className="font-display text-[9px] md:text-[10px] font-bold text-brand-pink hover:text-[#c24273] tracking-widest uppercase cursor-pointer hover:underline underline-offset-4"
        >
          {siteLabels?.homeViewAllStoriesButton || "VIEW ALL STORIES"}
        </Link>
@@ -178,7 +178,7 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
                className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105" 
              />
              {idx === 0 && (
-               <div className="absolute top-3 left-3 bg-brand-pink text-brand-neutral font-mono text-[9px] font-black px-2 py-1 uppercase tracking-widest shadow-sm">
+               <div className="absolute top-3 left-3 bg-brand-pink text-brand-neutral font-display text-[9px] font-black px-2 py-1 uppercase tracking-widest shadow-sm">
                  {siteLabels?.homeFeaturedActivityBadge || "FEATURED ACTIVITY"}
                </div>
              )}
@@ -191,14 +191,14 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
                {language === "th" && blog.excerptThai ? blog.excerptThai : blog.excerpt}
              </p>
              <div className="pt-4 border-t border-brand-ink/10">
-               <span className="inline-flex items-center gap-1.5 font-mono text-[9px] font-black tracking-widest uppercase text-brand-ink group-hover:text-brand-pink transition-colors">
+               <span className="inline-flex items-center gap-1.5 font-display text-[9px] font-black tracking-widest uppercase text-brand-ink group-hover:text-brand-pink transition-colors">
                  {siteLabels?.homeReadStoryButton || "READ STORY"} <ChevronRight size={12} className="transition-transform group-hover:translate-x-1" />
                </span>
              </div>
            </div>
          </Link>
        )) : (
-         <div className="md:col-span-3 border border-dashed border-brand-ink flex flex-col items-center justify-center p-12 text-stone-400 font-mono text-xs uppercase tracking-widest bg-brand-neutral">
+         <div className="md:col-span-3 border border-dashed border-brand-ink flex flex-col items-center justify-center p-12 text-stone-400 font-display text-xs uppercase tracking-widest bg-brand-neutral">
            <BookOpen size={32} className="mb-4 text-stone-300" />
            <span>{siteLabels?.homeNoBlogs || "No activities blogs published yet."}</span>
          </div>
@@ -219,7 +219,7 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
      }}
    >
      {isAdmin && (
-       <div className={`absolute top-4 left-4 z-50 bg-brand-pink text-brand-neutral px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${activeSectionId === 'home_sponsors' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+       <div className={`absolute top-4 left-4 z-50 bg-brand-pink text-brand-neutral px-3 py-1.5 font-display text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${activeSectionId === 'home_sponsors' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
          <Edit size={12} /> EDIT SPONSORS SECTION
        </div>
      )}
@@ -229,7 +229,7 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
        {/* Text Side */}
        <div className="lg:w-1/2 p-8 md:p-12 flex flex-col justify-between order-2 lg:order-1">
          <div className="space-y-6">
-           <span className="font-mono text-[10px] font-bold text-brand-pink tracking-[0.3em] uppercase">
+           <span className="font-display text-[10px] font-bold text-brand-pink tracking-[0.3em] uppercase">
              {language === "th" && homeSponsorSection?.subtitleThai ? homeSponsorSection.subtitleThai : (homeSponsorSection?.subtitle || "CORPORATE PARTNERSHIP")}
            </span>
            <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tight text-brand-ink leading-none">
@@ -242,7 +242,7 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
          <div className="flex items-center gap-6 mt-8">
            <Link
              to={homeSponsorSection?.buttonUrl || "/sponsors"}
-             className="inline-flex items-center gap-2 bg-brand-ink text-brand-neutral px-8 py-4 font-mono text-xs font-black tracking-widest uppercase hover:bg-brand-pink transition-all duration-300 group/btn"
+             className="inline-flex items-center gap-2 bg-brand-ink text-brand-neutral px-8 py-4 font-display text-xs font-black tracking-widest uppercase hover:bg-brand-pink transition-all duration-300 group/btn"
            >
              {language === "th" && homeSponsorSection?.buttonTextThai ? homeSponsorSection.buttonTextThai : (homeSponsorSection?.buttonText || "LEARN MORE")}
              <ArrowRight size={14} className="transition-transform group-hover/btn:translate-x-1" />
@@ -265,7 +265,7 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
          {Array(6).fill(null).map((_, groupIdx) => (
            <div key={groupIdx} className="flex items-center gap-12 shrink-0">
              {(language === "th" && homeSponsorSection?.marqueeTextThai ? homeSponsorSection.marqueeTextThai : homeSponsorSection?.marqueeText) && (
-               <span className="font-mono text-xs font-black text-brand-ink/50 tracking-widest uppercase px-8 border-x border-brand-ink/20">
+               <span className="font-display text-xs font-black text-brand-ink/50 tracking-widest uppercase px-8 border-x border-brand-ink/20">
                  {language === "th" && homeSponsorSection?.marqueeTextThai ? homeSponsorSection.marqueeTextThai : homeSponsorSection?.marqueeText}
                </span>
              )}
@@ -288,7 +288,7 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
  {/* Instagram Feed Section */}
  <section className="border-t border-brand-ink/10 pt-16">
    <div className="flex flex-col items-center gap-2 mb-8 text-center">
-     <span className="font-mono text-[9px] font-bold tracking-[0.3em] text-stone-400 uppercase">
+     <span className="font-display text-[9px] font-bold tracking-[0.3em] text-stone-400 uppercase">
        {language === "th" ? "ติดตามเราได้ที่" : "FOLLOW US ON"}
      </span>
      <h2 className="font-display text-2xl md:text-3xl font-bold uppercase tracking-tight text-brand-ink">
@@ -323,7 +323,7 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-0.5">
        {Array.from({ length: 6 }).map((_, i) => (
          <div key={i} className="aspect-square bg-brand-stone border border-brand-ink/5 flex items-center justify-center">
-           <span className="font-mono text-[8px] text-stone-300 uppercase tracking-widest">PHOTO</span>
+           <span className="font-display text-[8px] text-stone-300 uppercase tracking-widest">PHOTO</span>
          </div>
        ))}
      </div>
@@ -334,7 +334,7 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
        href="https://www.instagram.com/cugolfclub/"
        target="_blank"
        rel="noopener noreferrer"
-       className="inline-flex items-center gap-2 bg-brand-ink hover:bg-brand-pink text-brand-neutral px-8 py-3 font-mono text-xs font-bold uppercase tracking-widest transition-colors"
+       className="inline-flex items-center gap-2 bg-brand-ink hover:bg-brand-pink text-brand-neutral px-8 py-3 font-display text-xs font-bold uppercase tracking-widest transition-colors"
      >
        <ArrowUpRight size={14} />
        {language === "th" ? "ติดตาม @cugolfclub บน Instagram" : "FOLLOW @CUGOLFCLUB ON INSTAGRAM"}

@@ -44,7 +44,7 @@ export default function Footer({ siteSettings, siteLabels }: FooterProps) {
  </div>
 
  <div>
- <h5 className="font-mono text-[10px] font-bold tracking-widest text-stone-400 uppercase mb-4">{siteLabels?.footerDirectoryTitle ||"DIRECTORY"}</h5>
+ <h5 className="font-display text-[10px] font-bold tracking-widest text-stone-400 uppercase mb-4">{siteLabels?.footerDirectoryTitle ||"DIRECTORY"}</h5>
  <ul className="flex flex-col gap-2.5 font-sans text-xs font-bold uppercase">
  <li>
  <Link to="/"className="text-stone-700 hover:text-brand-ink hover:underline transition-all cursor-pointer">
@@ -70,7 +70,7 @@ export default function Footer({ siteSettings, siteLabels }: FooterProps) {
  </div>
 
  <div>
- <h5 className="font-mono text-[10px] font-bold tracking-widest text-stone-400 uppercase mb-4">{siteLabels?.footerHeadquartersTitle ||"HEADQUARTERS"}</h5>
+ <h5 className="font-display text-[10px] font-bold tracking-widest text-stone-400 uppercase mb-4">{siteLabels?.footerHeadquartersTitle ||"HEADQUARTERS"}</h5>
  <div className="flex flex-col gap-3 text-xs text-stone-600 font-semibold uppercase">
  <div className="flex items-start gap-2">
  <MapPin size={14} className="text-stone-400 shrink-0 mt-0.5"/>
@@ -90,7 +90,7 @@ export default function Footer({ siteSettings, siteLabels }: FooterProps) {
  </div>
 
  <div>
- <h5 className="font-mono text-[10px] font-bold tracking-widest text-stone-400 uppercase mb-4">{siteLabels?.footerAffiliationsTitle ||"AFFILIATIONS"}</h5>
+ <h5 className="font-display text-[10px] font-bold tracking-widest text-stone-400 uppercase mb-4">{siteLabels?.footerAffiliationsTitle ||"AFFILIATIONS"}</h5>
  <ul className="flex flex-col gap-2 text-xs text-stone-600 font-semibold">
  <li className="flex items-center gap-1 uppercase">
  <Globe size={13} className="text-stone-400"/>
@@ -116,10 +116,10 @@ export default function Footer({ siteSettings, siteLabels }: FooterProps) {
  </div>
 
  <div className="border-t border-brand-ink mt-12 pt-6 flex flex-col items-center justify-between gap-4 md:flex-row">
- <p className="font-mono text-[9px] text-stone-400 font-bold uppercase">
+ <p className="font-display text-[9px] text-stone-400 font-bold uppercase">
  {(siteLabels?.footerRightsReserved ||"© {year} CHULALONGKORN UNIVERSITY GOLF CLUB. ALL RIGHTS RESERVED.").replace("{year}", new Date().getFullYear().toString())}
  </p>
- <div className="flex items-center gap-6 font-mono text-[9px] text-stone-400 font-bold uppercase">
+ <div className="flex items-center gap-6 font-display text-[9px] text-stone-400 font-bold uppercase">
  <Link to="/privacy" className="hover:text-brand-ink hover:underline transition-colors">
    {siteLabels?.footerPrivacyDisclosure || (language === "th" ? "นโยบายความเป็นส่วนตัว" : "PRIVACY DISCLOSURE")}
  </Link>

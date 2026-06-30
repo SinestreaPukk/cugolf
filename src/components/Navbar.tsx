@@ -107,7 +107,7 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  <span className="font-display text-2xl md:text-3xl font-extrabold tracking-tight text-brand-ink leading-none">
  {siteLabels?.navBrandTitle ||"cugolfclub."}
  </span>
- <span className="font-mono text-[7.5px] font-bold tracking-wider text-neutral-400 mt-1">
+ <span className="font-display text-[7.5px] font-bold tracking-wider text-neutral-400 mt-1">
  {siteLabels?.navBrandSubtitle ||"[Official] Chulalongkorn University Golf Club"}
  </span>
  </div>

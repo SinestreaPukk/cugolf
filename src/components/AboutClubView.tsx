@@ -30,7 +30,7 @@ export default function AboutClubView({ clubActivity, siteLabels, isAdmin, onEdi
           onEditSection(sectionId);
         }}
       >
-        <div className={`absolute top-4 left-4 bg-brand-pink text-brand-neutral px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+        <div className={`absolute top-4 left-4 bg-brand-pink text-brand-neutral px-3 py-1.5 font-display text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
           <Edit size={12} /> {label}
         </div>
       </div>
@@ -102,7 +102,7 @@ export default function AboutClubView({ clubActivity, siteLabels, isAdmin, onEdi
                       className="w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-105"
                     />
                     {diffVal && (
-                      <span className="absolute top-4 right-4 font-mono text-[9px] font-black bg-brand-ink px-2.5 py-1 text-brand-neutral uppercase tracking-wider z-10">
+                      <span className="absolute top-4 right-4 font-display text-[9px] font-black bg-brand-ink px-2.5 py-1 text-brand-neutral uppercase tracking-wider z-10">
                         {diffVal}
                       </span>
                     )}

@@ -38,7 +38,7 @@ export default function ScoresView({ scores, siteLabels, isAdmin, onEditSection,
       }}
     >
       {isAdmin && (
-        <div className={`absolute top-4 left-4 z-50 bg-brand-pink text-brand-neutral px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+        <div className={`absolute top-4 left-4 z-50 bg-brand-pink text-brand-neutral px-3 py-1.5 font-display text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
           <Edit size={12} /> EDIT SCORES COLLECTION
         </div>
       )}
@@ -68,19 +68,19 @@ export default function ScoresView({ scores, siteLabels, isAdmin, onEditSection,
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="space-y-2">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-mono text-[9px] text-stone-400 flex items-center gap-1 font-bold uppercase tracking-wider">
+                        <span className="font-display text-[9px] text-stone-400 flex items-center gap-1 font-bold uppercase tracking-wider">
                           <Calendar size={11} className="text-stone-300"/>
                           {fmtDate(score.date)}
                         </span>
                         <span className="h-1 w-1 bg-stone-300 hidden sm:inline"/>
-                        <span className="font-mono text-[8.5px] text-emerald-700 font-bold tracking-wider uppercase bg-emerald-50 px-2 py-0.5 border border-emerald-500/10">
+                        <span className="font-display text-[8.5px] text-emerald-700 font-bold tracking-wider uppercase bg-emerald-50 px-2 py-0.5 border border-emerald-500/10">
                           {siteLabels?.scoresOfficialStatsBadge || "UNOFFICIAL STATS"}
                         </span>
                       </div>
                       <h3 className="font-display text-lg font-bold text-brand-ink uppercase tracking-tight leading-none">
                         {language === "th" && score.tournamentNameThai ? score.tournamentNameThai : score.tournamentName}
                       </h3>
-                      <p className="text-xs text-stone-600 font-mono font-bold uppercase tracking-wider flex items-center gap-1.5">
+                      <p className="text-xs text-stone-600 font-display font-bold uppercase tracking-wider flex items-center gap-1.5">
                         <Award size={13} className="text-stone-500"/>
                         {language === "th" && score.resultThai ? score.resultThai : score.result}
                       </p>
@@ -88,7 +88,7 @@ export default function ScoresView({ scores, siteLabels, isAdmin, onEditSection,
 
                     <button
                       onClick={() => toggleExpand(score.id)}
-                      className="inline-flex items-center gap-1.5 border border-neutral-300 bg-neutral-900 px-4 py-2 font-mono text-[9px] font-bold text-stone-100 uppercase hover:bg-neutral-800 transition-all cursor-pointer self-start sm:self-center tracking-wider"
+                      className="inline-flex items-center gap-1.5 border border-neutral-300 bg-neutral-900 px-4 py-2 font-display text-[9px] font-bold text-stone-100 uppercase hover:bg-neutral-800 transition-all cursor-pointer self-start sm:self-center tracking-wider"
                     >
                       {isExpanded ? (
                         <>
@@ -105,7 +105,7 @@ export default function ScoresView({ scores, siteLabels, isAdmin, onEditSection,
                   {/* Expanded Leaderboard details */}
                   {isExpanded && (
                     <div className="border border-brand-ink overflow-hidden animate-slide-down bg-brand-neutral">
-                      <div className="bg-[#18181b] text-stone-200 px-4 py-2.5 font-mono text-[8.5px] tracking-wider uppercase flex items-center gap-1.5 font-bold border-b border-stone-800">
+                      <div className="bg-[#18181b] text-stone-200 px-4 py-2.5 font-display text-[8.5px] tracking-wider uppercase flex items-center gap-1.5 font-bold border-b border-stone-800">
                         <ClipboardList size={11} className="text-stone-450"/>
                         {siteLabels?.scoresDetailedLeaderboardTitle || "DETAILED COMPETITIVE LEADERBOARD"} ({score.playersCount} ATTESTED)
                       </div>
@@ -113,7 +113,7 @@ export default function ScoresView({ scores, siteLabels, isAdmin, onEditSection,
                       <div className="overflow-x-auto">
                         <table className="w-full text-left font-sans text-xs">
                           <thead>
-                            <tr className="bg-brand-stone border-b border-brand-ink font-mono text-[8.5px] text-stone-400 uppercase tracking-wider font-semibold">
+                            <tr className="bg-brand-stone border-b border-brand-ink font-display text-[8.5px] text-stone-400 uppercase tracking-wider font-semibold">
                               <th className="px-4 py-3">{siteLabels?.scoresTablePlayerHeader || "PLAYER NAME"}</th>
                               <th className="px-4 py-3 text-center">{siteLabels?.scoresTableScoreHeader || "STROKE SCORE"}</th>
                               <th className="px-4 py-3 text-right">{siteLabels?.scoresTablePositionHeader || "POSITION"}</th>
@@ -126,10 +126,10 @@ export default function ScoresView({ scores, siteLabels, isAdmin, onEditSection,
                                   <Medal size={11} className={index === 0 ? "text-amber-500 shrink-0" : index === 1 ? "text-stone-400 shrink-0" : "text-stone-350 shrink-0"} />
                                   {language === "th" && sl.playerNameThai ? sl.playerNameThai : sl.playerName}
                                 </td>
-                                <td className="px-4 py-3 text-center font-mono font-bold text-neutral-900">
+                                <td className="px-4 py-3 text-center font-display font-bold text-neutral-900">
                                   {sl.score}
                                 </td>
-                                <td className="px-4 py-3 text-right font-mono font-bold text-neutral-900">
+                                <td className="px-4 py-3 text-right font-display font-bold text-neutral-900">
                                   {language === "th" && sl.positionThai ? sl.positionThai : sl.position}
                                 </td>
                               </tr>
@@ -138,7 +138,7 @@ export default function ScoresView({ scores, siteLabels, isAdmin, onEditSection,
                         </table>
                       </div>
 
-                      <div className="bg-brand-stone border-t border-brand-ink p-3 flex justify-between items-center text-[8.5px] font-mono text-stone-400 font-bold uppercase">
+                      <div className="bg-brand-stone border-t border-brand-ink p-3 flex justify-between items-center text-[8.5px] font-display text-stone-400 font-bold uppercase">
                         <span>{siteLabels?.scoresAttestationLabel || "CU UNOFFICIAL GOLF SCORECARD ATTESTATION"}</span>
                         <span>{siteLabels?.scoresVerifiedDirectoryLabel || "COACH VERIFIED DIRECTORY"}</span>
                       </div>

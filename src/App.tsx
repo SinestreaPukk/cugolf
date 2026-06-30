@@ -131,7 +131,7 @@ function AppContent() {
               setLoading(true);
               refreshState();
             }}
-            className="inline-flex items-center gap-2 bg-brand-ink text-brand-neutral px-5 py-2 text-xs font-mono uppercase font-bold hover:bg-brand-pink transition-all cursor-pointer"
+            className="inline-flex items-center gap-2 bg-brand-ink text-brand-neutral px-5 py-2 text-xs font-display uppercase font-bold hover:bg-brand-pink transition-all cursor-pointer"
           >
             RETRY DIRECTORY SYNC
           </button>
@@ -150,7 +150,7 @@ function AppContent() {
           </div>
           <div className="space-y-3">
             <h2 className="font-display text-xs font-bold uppercase tracking-[0.2em]">Waking Up Squad Registry</h2>
-            <p className="text-[9px] font-mono uppercase text-brand-ink/40 tracking-tight leading-relaxed">
+            <p className="text-[9px] font-display uppercase text-brand-ink/40 tracking-tight leading-relaxed">
               Establishing secure datalink connection to archive...<br/>
               Free-tier instances may require ~30s to initialize.
             </p>
@@ -214,7 +214,7 @@ function AppContent() {
       <main className="flex-grow py-8 md:py-12 bg-brand-neutral">
         <div className="mx-auto max-w-7xl px-4 md:px-6">
           {adminToken && (
-            <div className="mb-8 border-2 border-brand-ink text-brand-ink bg-neutral-100 p-4 flex items-center justify-between font-mono text-[10px] uppercase font-bold tracking-wider">
+            <div className="mb-8 border-2 border-brand-ink text-brand-ink bg-neutral-100 p-4 flex items-center justify-between font-display text-[10px] uppercase font-bold tracking-wider">
               <div className="flex items-center gap-2">
                 <ShieldCheck size={14} className="text-[#000000]" />
                 <span>CHULALONGKORN GOLF SQUAD CMS ACTIVE</span>

@@ -41,7 +41,7 @@ export default function RosterView({ roster, siteLabels, isAdmin, onEditSection,
  }}
  >
  {isAdmin && (
- <div className={`absolute top-4 left-4 z-50 bg-[#da5f8e] text-white px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+ <div className={`absolute top-4 left-4 z-50 bg-[#da5f8e] text-white px-3 py-1.5 font-display text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
  <Edit size={12} /> EDIT ROSTER COLLECTION
  </div>
  )}
@@ -76,7 +76,7 @@ export default function RosterView({ roster, siteLabels, isAdmin, onEditSection,
 
  {/* Filter items */}
   <div className="md:col-span-6 flex flex-wrap gap-2 justify-start md:justify-end">
-  <div className="flex items-center gap-1.5 mr-2 text-stone-400 font-mono text-[9px] uppercase font-bold tracking-widest">
+  <div className="flex items-center gap-1.5 mr-2 text-stone-400 font-display text-[9px] uppercase font-bold tracking-widest">
   <Filter size={11} className="text-stone-400"/>
   <span>{siteLabels?.rosterFilterLabel ||"CLASS YEAR:"}</span>
   </div>
@@ -93,7 +93,7 @@ export default function RosterView({ roster, siteLabels, isAdmin, onEditSection,
       <button
       key={year}
       onClick={() => setSelectedYear(year)}
-      className={`px-3 py-1.5 font-mono text-[9px] uppercase font-bold tracking-wider border transition-all duration-200 cursor-pointer ${
+      className={`px-3 py-1.5 font-display text-[9px] uppercase font-bold tracking-wider border transition-all duration-200 cursor-pointer ${
       selectedYear.toLowerCase() === year.toLowerCase()
       ?"border-neutral-900 bg-neutral-900 text-stone-100"
       :"border-[#121212] bg-white text-stone-500 hover:bg-stone-50 hover:text-neutral-950"
@@ -127,7 +127,7 @@ export default function RosterView({ roster, siteLabels, isAdmin, onEditSection,
  
  {/* Featured Badge */}
  {player.isFeatured && (
- <div className="absolute top-3 left-3 bg-brand-ink text-brand-neutral border border-brand-ink font-mono text-[8px] font-bold px-2 py-0.5 tracking-wider uppercase flex items-center gap-1 z-10">
+ <div className="absolute top-3 left-3 bg-brand-ink text-brand-neutral border border-brand-ink font-display text-[8px] font-bold px-2 py-0.5 tracking-wider uppercase flex items-center gap-1 z-10">
  <ShieldCheck size={10} />
  {siteLabels?.rosterSquadLeadBadge ||"SQUAD LEAD"}
  </div>
@@ -140,7 +140,7 @@ export default function RosterView({ roster, siteLabels, isAdmin, onEditSection,
  <h3 className="font-display text-sm font-bold text-brand-ink tracking-tight hover:underline transition-colors uppercase leading-tight">
  {language === "th" && player.nameThai ? player.nameThai : player.name}
  </h3>
- <div className="flex justify-between items-center text-[9.5px] font-mono font-bold text-stone-500 uppercase">
+ <div className="flex justify-between items-center text-[9.5px] font-display font-bold text-stone-500 uppercase">
  <span>{language === "th" && player.yearThai ? player.yearThai : `${player.year} class`}</span>
  <span className="text-right truncate max-w-[120px]">{language === "th" && player.facultyThai ? player.facultyThai : (player.faculty || "Faculty of Sports Science")}</span>
  </div>
@@ -148,7 +148,7 @@ export default function RosterView({ roster, siteLabels, isAdmin, onEditSection,
 
  <hr className="border-stone-100 my-4"/>
 
- <div className="flex items-center justify-between font-mono text-[8.5px] uppercase tracking-wider text-stone-500 bg-brand-stone/50 py-1.5 px-3 border border-brand-ink">
+ <div className="flex items-center justify-between font-display text-[8.5px] uppercase tracking-wider text-stone-500 bg-brand-stone/50 py-1.5 px-3 border border-brand-ink">
  <span>{siteLabels?.rosterStatusActive ||"STATUS: ACTIVE SQUAD"}</span>
  <ChevronRight size={10} className="text-stone-400"/>
  </div>

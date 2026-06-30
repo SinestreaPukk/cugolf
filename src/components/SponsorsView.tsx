@@ -28,7 +28,7 @@ export default function SponsorsView({ sponsors, siteLabels, isAdmin, onEditSect
  }}
  >
  {isAdmin && (
- <div className={`absolute top-4 left-4 z-50 bg-[#da5f8e] text-white px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+ <div className={`absolute top-4 left-4 z-50 bg-[#da5f8e] text-white px-3 py-1.5 font-display text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
  <Edit size={12} /> EDIT SPONSORS COLLECTION
  </div>
  )}
@@ -41,7 +41,7 @@ export default function SponsorsView({ sponsors, siteLabels, isAdmin, onEditSect
      {siteLabels?.sponsorsTitle || "OUR SPONSORS & PARTNERS"}
    </h1>
  </div>
- <span className="font-mono text-[9.5px] font-bold text-stone-400 tracking-wider uppercase">
+ <span className="font-display text-[9.5px] font-bold text-stone-400 tracking-wider uppercase">
  &nbsp;
  </span>
  </div>
@@ -91,7 +91,7 @@ export default function SponsorsView({ sponsors, siteLabels, isAdmin, onEditSect
  {language === "th" && brand.descriptionThai ? brand.descriptionThai : brand.description}
  </p>
 
- <div className="pt-4 border-t border-stone-100 flex items-center gap-2 font-mono text-[9px] text-stone-400 uppercase font-bold tracking-wider">
+ <div className="pt-4 border-t border-stone-100 flex items-center gap-2 font-display text-[9px] text-stone-400 uppercase font-bold tracking-wider">
  <CheckCircle size={11} className="text-emerald-500"/>
  <span>{siteLabels?.sponsorsOfficiallyAssociatedLabel ||"OFFICIALLY ASSOCIATED 2026"}</span>
  </div>

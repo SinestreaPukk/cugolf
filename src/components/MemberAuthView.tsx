@@ -148,7 +148,7 @@ export default function MemberAuthView({
               <h3 className="font-display text-base font-bold uppercase tracking-wider text-brand-ink">
                 {language === "th" ? "พอร์ทัลสมาชิก" : "MEMBER PORTAL"}
               </h3>
-              <p className="text-[9px] text-neutral-400 font-mono tracking-widest uppercase">
+              <p className="text-[9px] text-neutral-400 font-display tracking-widest uppercase">
                 ID: CUGC-{memberUser.id?.substring(0, 8).toUpperCase()}
               </p>
             </div>
@@ -156,41 +156,41 @@ export default function MemberAuthView({
             <div className="space-y-3 font-sans text-xs">
               {profile.prefix && (
                 <div className="flex justify-between border-b border-brand-ink/10 pb-2">
-                  <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "คำนำหน้า" : "PREFIX"}</span>
+                  <span className="font-display text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "คำนำหน้า" : "PREFIX"}</span>
                   <span className="font-bold text-brand-ink">{profile.prefix}</span>
                 </div>
               )}
               <div className="flex justify-between border-b border-brand-ink/10 pb-2">
-                <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "ชื่อ-นามสกุล" : "NAME"}</span>
+                <span className="font-display text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "ชื่อ-นามสกุล" : "NAME"}</span>
                 <span className="font-bold text-brand-ink uppercase">{memberUser.name}</span>
               </div>
               <div className="flex justify-between border-b border-brand-ink/10 pb-2">
-                <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "อีเมล" : "EMAIL"}</span>
+                <span className="font-display text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "อีเมล" : "EMAIL"}</span>
                 <span className="font-bold text-brand-ink text-right break-all">{memberUser.email}</span>
               </div>
               <div className="flex justify-between border-b border-brand-ink/10 pb-2">
-                <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "รหัสนิสิต" : "STUDENT ID"}</span>
+                <span className="font-display text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "รหัสนิสิต" : "STUDENT ID"}</span>
                 <span className="font-bold text-brand-ink">{profile.studentId || "—"}</span>
               </div>
               <div className="flex justify-between border-b border-brand-ink/10 pb-2">
-                <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "ชั้นปี" : "YEAR"}</span>
+                <span className="font-display text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "ชั้นปี" : "YEAR"}</span>
                 <span className="font-bold text-brand-ink uppercase">
                   {profile.year ? (language === "th" ? profile.year.replace("Year", "ชั้นปีที่") : profile.year) : "—"}
                 </span>
               </div>
               <div className="flex justify-between border-b border-brand-ink/10 pb-2">
-                <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "คณะ" : "FACULTY"}</span>
+                <span className="font-display text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "คณะ" : "FACULTY"}</span>
                 <span className="font-bold text-brand-ink uppercase">{profile.faculty || "—"}</span>
               </div>
               {profile.instagram && (
                 <div className="flex justify-between border-b border-brand-ink/10 pb-2">
-                  <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Instagram</span>
+                  <span className="font-display text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Instagram</span>
                   <span className="font-bold text-brand-ink">{profile.instagram}</span>
                 </div>
               )}
               {profile.lineId && (
                 <div className="flex justify-between border-b border-brand-ink/10 pb-2">
-                  <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Line ID</span>
+                  <span className="font-display text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Line ID</span>
                   <span className="font-bold text-brand-ink">{profile.lineId}</span>
                 </div>
               )}
@@ -198,7 +198,7 @@ export default function MemberAuthView({
 
             {memberUser.isAdmin && (
               <div className="space-y-3 pt-2 border-t border-brand-ink/10">
-                <span className="font-mono text-[9px] font-bold text-brand-pink tracking-[0.2em] uppercase block">
+                <span className="font-display text-[9px] font-bold text-brand-pink tracking-[0.2em] uppercase block">
                   {language === "th" ? "สิทธิ์ผู้ดูแลระบบ (ADMIN)" : "ADMINISTRATOR PRIVILEGES"}
                 </span>
                 {!adminToken ? (
@@ -208,7 +208,7 @@ export default function MemberAuthView({
                         setAdminToken(memberToken);
                         localStorage.setItem("cu-golf-club-admin-token", memberToken || "");
                       }}
-                      className="w-full inline-flex justify-center items-center bg-brand-pink hover:bg-brand-ink text-brand-neutral hover:text-brand-neutral py-2.5 border border-brand-ink text-xs font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                      className="w-full inline-flex justify-center items-center bg-brand-pink hover:bg-brand-ink text-brand-neutral hover:text-brand-neutral py-2.5 border border-brand-ink text-xs font-display font-bold uppercase tracking-wider transition-colors cursor-pointer"
                     >
                       ⚡ {language === "th" ? "เปิดโหมดแก้ไขข้อมูล" : "ACTIVATE EDITING MODE"}
                     </button>
@@ -225,13 +225,13 @@ export default function MemberAuthView({
                         setAdminToken(null);
                         localStorage.removeItem("cu-golf-club-admin-token");
                       }}
-                      className="w-full inline-flex justify-center items-center bg-brand-neutral hover:bg-stone-100 text-brand-ink py-2.5 border-2 border-brand-ink text-xs font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                      className="w-full inline-flex justify-center items-center bg-brand-neutral hover:bg-stone-100 text-brand-ink py-2.5 border-2 border-brand-ink text-xs font-display font-bold uppercase tracking-wider transition-colors cursor-pointer"
                     >
                       ❌ {language === "th" ? "ปิดโหมดแก้ไขข้อมูล" : "DEACTIVATE EDITING MODE"}
                     </button>
                     <Link
                       to="/admin"
-                      className="w-full inline-flex justify-center items-center bg-brand-ink hover:bg-neutral-800 text-brand-neutral hover:text-brand-neutral py-2.5 border border-brand-ink text-xs font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                      className="w-full inline-flex justify-center items-center bg-brand-ink hover:bg-neutral-800 text-brand-neutral hover:text-brand-neutral py-2.5 border border-brand-ink text-xs font-display font-bold uppercase tracking-wider transition-colors cursor-pointer"
                     >
                       ⚙️ {language === "th" ? "เข้าสู่ระบบจัดการหลังบ้าน (CMS)" : "ENTER ADMIN CMS PANEL"}
                     </Link>
@@ -248,7 +248,7 @@ export default function MemberAuthView({
             <div className="pt-2">
               <button
                 onClick={handleLogout}
-                className="w-full bg-brand-stone hover:bg-red-50 hover:text-red-600 text-brand-ink py-2.5 border border-brand-ink text-xs font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                className="w-full bg-brand-stone hover:bg-red-50 hover:text-red-600 text-brand-ink py-2.5 border border-brand-ink text-xs font-display font-bold uppercase tracking-wider transition-colors cursor-pointer"
               >
                 {language === "th" ? "ออกจากระบบ" : "DISCONNECT SESSION"}
               </button>
@@ -261,14 +261,14 @@ export default function MemberAuthView({
               <h3 className="font-display text-base font-bold uppercase tracking-wider text-brand-ink">
                 {language === "th" ? "กิจกรรมชมรม" : "CLUB ACTIVITIES"}
               </h3>
-              <p className="font-mono text-[9px] text-neutral-400 uppercase tracking-widest mt-1">
+              <p className="font-display text-[9px] text-neutral-400 uppercase tracking-widest mt-1">
                 {language === "th" ? "กิจกรรมสำหรับสมาชิกเท่านั้น" : "MEMBER-EXCLUSIVE EVENTS"}
               </p>
             </div>
 
             {visibleEvents.length === 0 ? (
               <div className="border border-brand-ink/10 bg-brand-neutral p-10 text-center">
-                <p className="font-mono text-[10px] text-neutral-400 uppercase tracking-widest">
+                <p className="font-display text-[10px] text-neutral-400 uppercase tracking-widest">
                   {language === "th" ? "ยังไม่มีกิจกรรมในขณะนี้" : "No activities scheduled yet."}
                 </p>
               </div>
@@ -289,19 +289,19 @@ export default function MemberAuthView({
                         {(event.date || event.time || event.location) && (
                           <div className="mt-2 space-y-1">
                             {event.date && (
-                              <div className="flex items-center gap-1.5 text-[10px] font-mono text-stone-500">
+                              <div className="flex items-center gap-1.5 text-[10px] font-display text-stone-500">
                                 <Calendar size={10} className="shrink-0" />
                                 <span>{fmtDate(event.date)}{event.time ? ` · ${event.time}` : ""}</span>
                               </div>
                             )}
                             {!event.date && event.time && (
-                              <div className="flex items-center gap-1.5 text-[10px] font-mono text-stone-500">
+                              <div className="flex items-center gap-1.5 text-[10px] font-display text-stone-500">
                                 <Clock size={10} className="shrink-0" />
                                 <span>{event.time}</span>
                               </div>
                             )}
                             {event.location && (
-                              <div className="flex items-center gap-1.5 text-[10px] font-mono text-stone-500">
+                              <div className="flex items-center gap-1.5 text-[10px] font-display text-stone-500">
                                 <MapPin size={10} className="shrink-0" />
                                 <span>{language === "th" && event.locationThai ? event.locationThai : event.location}</span>
                               </div>
@@ -319,7 +319,7 @@ export default function MemberAuthView({
                         if (status === "open" && event.googleFormUrl) {
                           return (
                             <a href={event.googleFormUrl} target="_blank" rel="noopener noreferrer"
-                              className="mt-1 w-full inline-flex items-center justify-center gap-1.5 bg-brand-ink hover:bg-brand-pink text-brand-neutral py-2 text-[10px] font-mono font-bold uppercase tracking-wider transition-colors">
+                              className="mt-1 w-full inline-flex items-center justify-center gap-1.5 bg-brand-ink hover:bg-brand-pink text-brand-neutral py-2 text-[10px] font-display font-bold uppercase tracking-wider transition-colors">
                               <ExternalLink size={10} />
                               {language === "th" ? "ลงทะเบียน" : "REGISTER NOW"}
                             </a>
@@ -327,27 +327,27 @@ export default function MemberAuthView({
                         }
                         if (status === "open") {
                           return (
-                            <div className="mt-1 w-full inline-flex items-center justify-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 py-2 text-[10px] font-mono font-bold uppercase tracking-wider">
+                            <div className="mt-1 w-full inline-flex items-center justify-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 py-2 text-[10px] font-display font-bold uppercase tracking-wider">
                               {language === "th" ? "เปิดรับสมัคร" : "REGISTRATION OPEN"}
                             </div>
                           );
                         }
                         if (status === "not_open") {
                           return (
-                            <div className="mt-1 w-full inline-flex items-center justify-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 py-2 text-[10px] font-mono font-bold uppercase tracking-wider">
+                            <div className="mt-1 w-full inline-flex items-center justify-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 py-2 text-[10px] font-display font-bold uppercase tracking-wider">
                               {language === "th" ? "ยังไม่เปิดรับสมัคร" : "REGISTRATION NOT OPEN YET"}
                             </div>
                           );
                         }
                         if (status === "delayed") {
                           return (
-                            <div className="mt-1 w-full inline-flex items-center justify-center gap-1.5 bg-yellow-50 text-yellow-700 border border-yellow-200 py-2 text-[10px] font-mono font-bold uppercase tracking-wider">
+                            <div className="mt-1 w-full inline-flex items-center justify-center gap-1.5 bg-yellow-50 text-yellow-700 border border-yellow-200 py-2 text-[10px] font-display font-bold uppercase tracking-wider">
                               {language === "th" ? "การลงทะเบียนล่าช้า" : "REGISTRATION DELAYED"}
                             </div>
                           );
                         }
                         return (
-                          <div className="mt-1 w-full inline-flex items-center justify-center gap-1.5 bg-stone-100 text-stone-400 py-2 text-[10px] font-mono font-bold uppercase tracking-wider cursor-not-allowed">
+                          <div className="mt-1 w-full inline-flex items-center justify-center gap-1.5 bg-stone-100 text-stone-400 py-2 text-[10px] font-display font-bold uppercase tracking-wider cursor-not-allowed">
                             {language === "th" ? "ปิดรับสมัคร" : "REGISTRATION CLOSED"}
                           </div>
                         );
@@ -384,12 +384,12 @@ export default function MemberAuthView({
         </div>
 
         {errorMsg && (
-          <div className="border border-red-500/30 bg-red-50 text-red-700 text-xs p-3 font-mono font-bold uppercase">
+          <div className="border border-red-500/30 bg-red-50 text-red-700 text-xs p-3 font-display font-bold uppercase">
             ⚠️ {errorMsg}
           </div>
         )}
         {successMsg && (
-          <div className="border border-emerald-500/30 bg-emerald-50 text-emerald-700 text-xs p-3 font-mono font-bold uppercase flex items-center gap-2">
+          <div className="border border-emerald-500/30 bg-emerald-50 text-emerald-700 text-xs p-3 font-display font-bold uppercase flex items-center gap-2">
             <CheckCircle2 size={12} /> {successMsg}
           </div>
         )}
@@ -397,7 +397,7 @@ export default function MemberAuthView({
         {activeTab === "login" && (
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-1">
-              <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
+              <label className="font-display text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
                 {language === "th" ? "อีเมล" : "EMAIL ADDRESS"}
               </label>
               <input
@@ -410,7 +410,7 @@ export default function MemberAuthView({
               />
             </div>
             <div className="space-y-1">
-              <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
+              <label className="font-display text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
                 {language === "th" ? "รหัสนิสิต" : "STUDENT ID"}
               </label>
               <input
@@ -425,7 +425,7 @@ export default function MemberAuthView({
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-brand-ink hover:bg-brand-pink text-brand-neutral hover:text-brand-neutral py-3 text-xs font-mono font-bold uppercase tracking-widest transition-all duration-200 cursor-pointer flex justify-center items-center gap-2 disabled:opacity-50"
+              className="w-full bg-brand-ink hover:bg-brand-pink text-brand-neutral hover:text-brand-neutral py-3 text-xs font-display font-bold uppercase tracking-widest transition-all duration-200 cursor-pointer flex justify-center items-center gap-2 disabled:opacity-50"
             >
               {loading && <Loader2 size={12} className="animate-spin" />}
               {loading ? (language === "th" ? "กำลังตรวจสอบ..." : "VERIFYING...") : (language === "th" ? "เข้าสู่ระบบ" : "LOG IN")}
@@ -436,7 +436,7 @@ export default function MemberAuthView({
         {activeTab === "register" && (
           <form onSubmit={handleRegister} className="space-y-4">
             <div className="space-y-1">
-              <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
+              <label className="font-display text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
                 {language === "th" ? "คำนำหน้า *" : "PREFIX *"}
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -445,7 +445,7 @@ export default function MemberAuthView({
                     key={opt.th}
                     type="button"
                     onClick={() => setPrefix(opt.th)}
-                    className={`py-2.5 text-xs font-mono font-bold border transition-colors cursor-pointer ${prefix === opt.th ? "bg-brand-ink text-brand-neutral border-brand-ink" : "bg-white text-brand-ink border-brand-ink hover:bg-brand-stone"}`}
+                    className={`py-2.5 text-xs font-display font-bold border transition-colors cursor-pointer ${prefix === opt.th ? "bg-brand-ink text-brand-neutral border-brand-ink" : "bg-white text-brand-ink border-brand-ink hover:bg-brand-stone"}`}
                   >
                     {language === "th" ? opt.th : `${opt.th} / ${opt.en}`}
                   </button>
@@ -454,7 +454,7 @@ export default function MemberAuthView({
             </div>
 
             <div className="space-y-1">
-              <label className={`font-mono text-[9px] font-bold uppercase tracking-wider block ${fieldErrors.name ? "text-red-500" : "text-neutral-400"}`}>
+              <label className={`font-display text-[9px] font-bold uppercase tracking-wider block ${fieldErrors.name ? "text-red-500" : "text-neutral-400"}`}>
                 {language === "th" ? "ชื่อ-นามสกุลจริง *" : "FULL NAME *"}{fieldErrors.name && (language === "th" ? " — กรุณากรอก" : " — required")}
               </label>
               <input
@@ -467,7 +467,7 @@ export default function MemberAuthView({
             </div>
 
             <div className="space-y-1">
-              <label className={`font-mono text-[9px] font-bold uppercase tracking-wider block ${fieldErrors.regEmail ? "text-red-500" : "text-neutral-400"}`}>
+              <label className={`font-display text-[9px] font-bold uppercase tracking-wider block ${fieldErrors.regEmail ? "text-red-500" : "text-neutral-400"}`}>
                 {language === "th" ? "อีเมล *" : "EMAIL ADDRESS *"}{fieldErrors.regEmail && (language === "th" ? " — กรุณากรอก" : " — required")}
               </label>
               <input
@@ -480,7 +480,7 @@ export default function MemberAuthView({
             </div>
 
             <div className="space-y-1">
-              <label className={`font-mono text-[9px] font-bold uppercase tracking-wider block ${fieldErrors.regStudentId ? "text-red-500" : "text-neutral-400"}`}>
+              <label className={`font-display text-[9px] font-bold uppercase tracking-wider block ${fieldErrors.regStudentId ? "text-red-500" : "text-neutral-400"}`}>
                 {language === "th" ? "รหัสนิสิต *" : "STUDENT ID *"}{fieldErrors.regStudentId && (language === "th" ? " — กรุณากรอก" : " — required")}
               </label>
               <input
@@ -494,7 +494,7 @@ export default function MemberAuthView({
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
+                <label className="font-display text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
                   {language === "th" ? "ระดับชั้นปี" : "CLASS YEAR"}
                 </label>
                 <select
@@ -508,7 +508,7 @@ export default function MemberAuthView({
                 </select>
               </div>
               <div className="space-y-1">
-                <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
+                <label className="font-display text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
                   {language === "th" ? "คณะ" : "FACULTY"}
                 </label>
                 <input
@@ -523,7 +523,7 @@ export default function MemberAuthView({
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
-                <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">Instagram</label>
+                <label className="font-display text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">Instagram</label>
                 <input
                   type="text"
                   value={instagram}
@@ -533,7 +533,7 @@ export default function MemberAuthView({
                 />
               </div>
               <div className="space-y-1">
-                <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">Line ID</label>
+                <label className="font-display text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">Line ID</label>
                 <input
                   type="text"
                   value={lineId}
@@ -546,7 +546,7 @@ export default function MemberAuthView({
 
             {/* Line OpenChat QR */}
             <div className="border-t border-brand-ink/10 pt-4 flex flex-col items-center gap-3">
-              <p className="font-mono text-[9px] font-bold text-neutral-400 uppercase text-center" style={{ letterSpacing: language === "th" ? "normal" : "0.15em" }}>
+              <p className="font-display text-[9px] font-bold text-neutral-400 uppercase text-center" style={{ letterSpacing: language === "th" ? "normal" : "0.15em" }}>
                 {language === "th" ? "เข้าร่วมกลุ่ม Line OpenChat สมาชิก CU Golf Club" : "Join the CU Golf Club Member Line OpenChat"}
               </p>
               <div className="bg-white p-2 border border-brand-ink/20 shadow-[2px_2px_0px_rgba(218,95,142,0.3)]">
@@ -594,7 +594,7 @@ export default function MemberAuthView({
             <button
               type="submit"
               disabled={loading}
-              className={`mt-2 w-full bg-brand-ink text-brand-neutral py-3 text-xs font-mono font-bold uppercase tracking-widest transition-all duration-200 flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${!pdpaConsent ? "opacity-50 cursor-not-allowed" : "hover:bg-brand-pink cursor-pointer"}`}
+              className={`mt-2 w-full bg-brand-ink text-brand-neutral py-3 text-xs font-display font-bold uppercase tracking-widest transition-all duration-200 flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${!pdpaConsent ? "opacity-50 cursor-not-allowed" : "hover:bg-brand-pink cursor-pointer"}`}
             >
               {loading && <Loader2 size={12} className="animate-spin" />}
               {loading ? (language === "th" ? "กำลังลงทะเบียน..." : "CREATING PROFILE...") : (language === "th" ? "สมัครสมาชิกชมรม" : "SUBMIT REGISTRATION")}

@@ -29,7 +29,7 @@ export default function StaffView({ staff, siteLabels, isAdmin, onEditSection, a
  }}
  >
  {isAdmin && (
- <div className={`absolute top-4 left-4 z-50 bg-[#da5f8e] text-white px-3 py-1.5 font-mono text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+ <div className={`absolute top-4 left-4 z-50 bg-[#da5f8e] text-white px-3 py-1.5 font-display text-[10px] font-bold tracking-widest flex items-center gap-2 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
  <Edit size={12} /> EDIT STAFF COLLECTION
  </div>
  )}
@@ -66,7 +66,7 @@ export default function StaffView({ staff, siteLabels, isAdmin, onEditSection, a
  </div>
 
  <div className="space-y-2">
- <span className="font-mono text-[9px] text-stone-400 font-bold uppercase tracking-wider block">
+ <span className="font-display text-[9px] text-stone-400 font-bold uppercase tracking-wider block">
  {language === "th" && person.roleThai ? person.roleThai : person.role}
  </span>
  <h3 className="font-display text-base font-bold text-brand-ink uppercase leading-snug hover:underline">
@@ -75,7 +75,7 @@ export default function StaffView({ staff, siteLabels, isAdmin, onEditSection, a
  </div>
  </div>
 
- <div className="mt-8 pt-4 border-t border-brand-ink/10 flex justify-between items-center text-[10px] font-mono tracking-wider text-stone-450 uppercase font-bold">
+ <div className="mt-8 pt-4 border-t border-brand-ink/10 flex justify-between items-center text-[10px] font-display tracking-wider text-stone-450 uppercase font-bold">
  <span>{language === "th" && person.yearThai ? person.yearThai : person.year}</span>
  </div>
  </div>

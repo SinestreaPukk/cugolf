@@ -29,7 +29,7 @@ export default function ActivityDetailView({ news, siteLabels }: ActivityDetailV
  <article className="max-w-3xl mx-auto py-12 px-4 md:px-0 animate-fade-in">
  <Link
  to="/activities/blog"
- className="inline-flex items-center gap-2 text-brand-pink font-mono text-xs font-bold uppercase tracking-widest hover:underline mb-12 group"
+ className="inline-flex items-center gap-2 text-brand-pink font-display text-xs font-bold uppercase tracking-widest hover:underline mb-12 group"
  >
  <ArrowLeft size={14} className="transition-transform group-hover:-translate-x-1"/>
  {siteLabels?.blogBackToBlog || "BACK TO BLOG"}
@@ -63,14 +63,14 @@ export default function ActivityDetailView({ news, siteLabels }: ActivityDetailV
 
  <footer className="mt-20 pt-10 border-t border-stone-100 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
  <div className="space-y-1">
- <span className="block font-mono text-[10px] font-black text-stone-300 uppercase tracking-[0.2em]">{siteLabels?.blogPublishedBy || "PUBLISHED BY"}</span>
- <span className="block font-mono text-[11px] font-bold text-stone-600 uppercase tracking-widest">
+ <span className="block font-display text-[10px] font-black text-stone-300 uppercase tracking-[0.2em]">{siteLabels?.blogPublishedBy || "PUBLISHED BY"}</span>
+ <span className="block font-display text-[11px] font-bold text-stone-600 uppercase tracking-widest">
  {siteLabels?.homeModalEditorialBoard ||"CU GOLF CLUB SPORTS EDITORIAL BOARD"}
  </span>
  </div>
  <div className="space-y-1 text-left sm:text-right">
- <span className="block font-mono text-[10px] font-black text-stone-300 uppercase tracking-[0.2em]">{siteLabels?.blogLocation || "LOCATION"}</span>
- <span className="block font-mono text-[11px] font-bold text-stone-600 uppercase tracking-widest">
+ <span className="block font-display text-[10px] font-black text-stone-300 uppercase tracking-[0.2em]">{siteLabels?.blogLocation || "LOCATION"}</span>
+ <span className="block font-display text-[11px] font-bold text-stone-600 uppercase tracking-widest">
  {siteLabels?.homeModalLocation ||"BANGKOK, THAILAND"}
  </span>
  </div>

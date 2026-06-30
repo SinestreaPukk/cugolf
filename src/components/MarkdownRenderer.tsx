@@ -18,7 +18,7 @@ export default function MarkdownRenderer({ text }: { text: string }) {
  className="w-full h-auto border border-stone-100"
  />
  {imgMatch[1] && (
- <p className="text-[10px] text-center text-stone-400 mt-2 font-mono uppercase tracking-widest">
+ <p className="text-[10px] text-center text-stone-400 mt-2 font-display uppercase tracking-widest">
  {imgMatch[1]}
  </p>
  )}

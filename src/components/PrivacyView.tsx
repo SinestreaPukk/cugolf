@@ -35,13 +35,13 @@ export default function PrivacyView() {
 
         {/* Header */}
         <header className="space-y-4 border-b border-brand-ink pb-8">
-          <div className="flex items-center gap-2 font-mono text-[10px] font-bold text-brand-pink uppercase tracking-widest">
+          <div className="flex items-center gap-2 font-display text-[10px] font-bold text-brand-pink uppercase tracking-widest">
             <ShieldCheck size={14} /> นโยบายความเป็นส่วนตัว · PDPA
           </div>
           <h1 className="font-display text-4xl md:text-5xl font-black uppercase tracking-tight leading-none">
             นโยบายการคุ้มครอง<br />ข้อมูลส่วนบุคคล
           </h1>
-          <div className="text-xs text-stone-500 font-mono space-y-0.5">
+          <div className="text-xs text-stone-500 font-display space-y-0.5">
             <p>มีผลบังคับใช้: 1 มกราคม พ.ศ. 2568 &nbsp;|&nbsp; เวอร์ชัน 2.0</p>
             <p>จัดทำตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562</p>
           </div>
@@ -75,10 +75,10 @@ export default function PrivacyView() {
 
           <div className="space-y-3">
             <div>
-              <p className="text-xs font-mono font-bold uppercase tracking-wider text-stone-400 mb-1">ข้อมูลบังคับ</p>
+              <p className="text-xs font-display font-bold uppercase tracking-wider text-stone-400 mb-1">ข้อมูลบังคับ</p>
               <table className="w-full text-xs border border-brand-ink/20 border-collapse">
                 <thead>
-                  <tr className="bg-brand-ink text-brand-neutral font-mono uppercase">
+                  <tr className="bg-brand-ink text-brand-neutral font-display uppercase">
                     <th className="p-2.5 text-left border border-brand-ink/20">ประเภทข้อมูล</th>
                     <th className="p-2.5 text-left border border-brand-ink/20">รายละเอียด</th>
                     <th className="p-2.5 text-left border border-brand-ink/20">เหตุผลที่จำเป็น</th>
@@ -104,10 +104,10 @@ export default function PrivacyView() {
             </div>
 
             <div>
-              <p className="text-xs font-mono font-bold uppercase tracking-wider text-stone-400 mb-1">ข้อมูลเพิ่มเติม (ไม่บังคับ)</p>
+              <p className="text-xs font-display font-bold uppercase tracking-wider text-stone-400 mb-1">ข้อมูลเพิ่มเติม (ไม่บังคับ)</p>
               <table className="w-full text-xs border border-brand-ink/20 border-collapse">
                 <thead>
-                  <tr className="bg-brand-ink/70 text-brand-neutral font-mono uppercase">
+                  <tr className="bg-brand-ink/70 text-brand-neutral font-display uppercase">
                     <th className="p-2.5 text-left border border-brand-ink/20">ประเภทข้อมูล</th>
                     <th className="p-2.5 text-left border border-brand-ink/20">วัตถุประสงค์</th>
                   </tr>
@@ -135,7 +135,7 @@ export default function PrivacyView() {
           <div className="overflow-x-auto">
             <table className="w-full text-xs border border-brand-ink/20 border-collapse">
               <thead>
-                <tr className="bg-brand-ink text-brand-neutral font-mono uppercase tracking-wider">
+                <tr className="bg-brand-ink text-brand-neutral font-display uppercase tracking-wider">
                   <th className="p-3 text-left border border-brand-ink/20">วัตถุประสงค์</th>
                   <th className="p-3 text-left border border-brand-ink/20">ข้อมูลที่ใช้</th>
                   <th className="p-3 text-left border border-brand-ink/20">ฐานกฎหมาย</th>
@@ -189,7 +189,7 @@ export default function PrivacyView() {
           </P>
           <table className="w-full text-xs border border-brand-ink/20 border-collapse">
             <thead>
-              <tr className="bg-brand-ink text-brand-neutral font-mono uppercase tracking-wider">
+              <tr className="bg-brand-ink text-brand-neutral font-display uppercase tracking-wider">
                 <th className="p-3 text-left border border-brand-ink/20">ผู้รับข้อมูล</th>
                 <th className="p-3 text-left border border-brand-ink/20">วัตถุประสงค์</th>
                 <th className="p-3 text-left border border-brand-ink/20">ข้อมูลที่แบ่งปัน</th>
@@ -233,7 +233,7 @@ export default function PrivacyView() {
               <div key={i} className="border border-brand-ink/10 p-3 space-y-1">
                 <div className="flex items-start justify-between gap-2">
                   <p className="text-xs font-semibold text-brand-ink">{right}</p>
-                  <span className="font-mono text-[9px] text-brand-pink shrink-0">{section}</span>
+                  <span className="font-display text-[9px] text-brand-pink shrink-0">{section}</span>
                 </div>
                 <p className="text-xs text-stone-600 leading-relaxed">{desc}</p>
               </div>
@@ -315,20 +315,20 @@ export default function PrivacyView() {
 
         {/* Contact */}
         <section className="bg-brand-ink text-brand-neutral p-6 space-y-3">
-          <div className="flex items-center gap-2 font-mono text-[10px] font-bold text-brand-pink uppercase tracking-widest">
+          <div className="flex items-center gap-2 font-display text-[10px] font-bold text-brand-pink uppercase tracking-widest">
             <Mail size={12} /> ติดต่อเรา
           </div>
           <p className="text-sm leading-relaxed">
             หากมีคำถามเกี่ยวกับนโยบายนี้ ต้องการใช้สิทธิตาม PDPA หรือต้องการรายงานปัญหาด้านความเป็นส่วนตัว
             กรุณาติดต่อเราที่:
           </p>
-          <a href={`mailto:${CONTACT_EMAIL}`} className="inline-flex items-center gap-2 font-mono text-sm font-bold text-brand-pink hover:underline">
+          <a href={`mailto:${CONTACT_EMAIL}`} className="inline-flex items-center gap-2 font-display text-sm font-bold text-brand-pink hover:underline">
             <Mail size={14} /> {CONTACT_EMAIL}
           </a>
           <p className="text-xs text-stone-400">เราจะตอบกลับภายใน 3 วันทำการ</p>
         </section>
 
-        <div className="border-t border-brand-ink/20 pt-6 text-xs text-stone-400 font-mono space-y-1">
+        <div className="border-t border-brand-ink/20 pt-6 text-xs text-stone-400 font-display space-y-1">
           <p>เอกสารนี้จัดทำขึ้นเพื่อให้เป็นไปตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 แห่งราชอาณาจักรไทย</p>
           <p>© {new Date().getFullYear()} ชมรมกอล์ฟจุฬาลงกรณ์มหาวิทยาลัย · สงวนลิขสิทธิ์</p>
         </div>
@@ -341,13 +341,13 @@ export default function PrivacyView() {
     <div className="mx-auto max-w-3xl py-12 animate-fade-in text-brand-ink font-sans space-y-10">
 
       <header className="space-y-4 border-b border-brand-ink pb-8">
-        <div className="flex items-center gap-2 font-mono text-[10px] font-bold text-brand-pink uppercase tracking-widest">
+        <div className="flex items-center gap-2 font-display text-[10px] font-bold text-brand-pink uppercase tracking-widest">
           <ShieldCheck size={14} /> Privacy Policy · PDPA
         </div>
         <h1 className="font-display text-4xl md:text-5xl font-black uppercase tracking-tight leading-none">
           Privacy<br />Disclosure (PDPA)
         </h1>
-        <div className="text-xs text-stone-500 font-mono space-y-0.5">
+        <div className="text-xs text-stone-500 font-display space-y-0.5">
           <p>Effective: 1 January 2025 &nbsp;|&nbsp; Version 2.0</p>
           <p>Prepared under the Personal Data Protection Act B.E. 2562 (PDPA), Kingdom of Thailand</p>
         </div>
@@ -374,10 +374,10 @@ export default function PrivacyView() {
         <P>We collect personal data directly from you when you register as a member through the club website. The data collected is as follows:</P>
         <div className="space-y-3">
           <div>
-            <p className="text-xs font-mono font-bold uppercase tracking-wider text-stone-400 mb-1">Required Data</p>
+            <p className="text-xs font-display font-bold uppercase tracking-wider text-stone-400 mb-1">Required Data</p>
             <table className="w-full text-xs border border-brand-ink/20 border-collapse">
               <thead>
-                <tr className="bg-brand-ink text-brand-neutral font-mono uppercase">
+                <tr className="bg-brand-ink text-brand-neutral font-display uppercase">
                   <th className="p-2.5 text-left border border-brand-ink/20">Data Type</th>
                   <th className="p-2.5 text-left border border-brand-ink/20">Detail</th>
                   <th className="p-2.5 text-left border border-brand-ink/20">Why Required</th>
@@ -402,10 +402,10 @@ export default function PrivacyView() {
             </table>
           </div>
           <div>
-            <p className="text-xs font-mono font-bold uppercase tracking-wider text-stone-400 mb-1">Optional Data</p>
+            <p className="text-xs font-display font-bold uppercase tracking-wider text-stone-400 mb-1">Optional Data</p>
             <table className="w-full text-xs border border-brand-ink/20 border-collapse">
               <thead>
-                <tr className="bg-brand-ink/70 text-brand-neutral font-mono uppercase">
+                <tr className="bg-brand-ink/70 text-brand-neutral font-display uppercase">
                   <th className="p-2.5 text-left border border-brand-ink/20">Data Type</th>
                   <th className="p-2.5 text-left border border-brand-ink/20">Purpose</th>
                 </tr>
@@ -431,7 +431,7 @@ export default function PrivacyView() {
         <div className="overflow-x-auto">
           <table className="w-full text-xs border border-brand-ink/20 border-collapse">
             <thead>
-              <tr className="bg-brand-ink text-brand-neutral font-mono uppercase tracking-wider">
+              <tr className="bg-brand-ink text-brand-neutral font-display uppercase tracking-wider">
                 <th className="p-3 text-left border border-brand-ink/20">Purpose</th>
                 <th className="p-3 text-left border border-brand-ink/20">Data Used</th>
                 <th className="p-3 text-left border border-brand-ink/20">Legal Basis</th>
@@ -474,7 +474,7 @@ export default function PrivacyView() {
         <P><strong>We do not sell, rent, or share your personal data for commercial purposes.</strong> We may share data only in the following circumstances, limited to what is strictly necessary:</P>
         <table className="w-full text-xs border border-brand-ink/20 border-collapse">
           <thead>
-            <tr className="bg-brand-ink text-brand-neutral font-mono uppercase tracking-wider">
+            <tr className="bg-brand-ink text-brand-neutral font-display uppercase tracking-wider">
               <th className="p-3 text-left border border-brand-ink/20">Recipient</th>
               <th className="p-3 text-left border border-brand-ink/20">Purpose</th>
               <th className="p-3 text-left border border-brand-ink/20">Data Shared</th>
@@ -514,7 +514,7 @@ export default function PrivacyView() {
             <div key={i} className="border border-brand-ink/10 p-3 space-y-1">
               <div className="flex items-start justify-between gap-2">
                 <p className="text-xs font-semibold text-brand-ink">{right}</p>
-                <span className="font-mono text-[9px] text-brand-pink shrink-0">{section}</span>
+                <span className="font-display text-[9px] text-brand-pink shrink-0">{section}</span>
               </div>
               <p className="text-xs text-stone-600 leading-relaxed">{desc}</p>
             </div>
@@ -591,19 +591,19 @@ export default function PrivacyView() {
 
       {/* Contact block */}
       <section className="bg-brand-ink text-brand-neutral p-6 space-y-3">
-        <div className="flex items-center gap-2 font-mono text-[10px] font-bold text-brand-pink uppercase tracking-widest">
+        <div className="flex items-center gap-2 font-display text-[10px] font-bold text-brand-pink uppercase tracking-widest">
           <Mail size={12} /> Contact Us
         </div>
         <p className="text-sm leading-relaxed">
           For questions about this policy, to exercise your PDPA rights, or to report a privacy concern, contact us at:
         </p>
-        <a href={`mailto:${CONTACT_EMAIL}`} className="inline-flex items-center gap-2 font-mono text-sm font-bold text-brand-pink hover:underline">
+        <a href={`mailto:${CONTACT_EMAIL}`} className="inline-flex items-center gap-2 font-display text-sm font-bold text-brand-pink hover:underline">
           <Mail size={14} /> {CONTACT_EMAIL}
         </a>
         <p className="text-xs text-stone-400">We aim to respond within 3 business days.</p>
       </section>
 
-      <div className="border-t border-brand-ink/20 pt-6 text-xs text-stone-400 font-mono space-y-1">
+      <div className="border-t border-brand-ink/20 pt-6 text-xs text-stone-400 font-display space-y-1">
         <p>This document is prepared in compliance with the Personal Data Protection Act B.E. 2562 (PDPA) of the Kingdom of Thailand.</p>
         <p>© {new Date().getFullYear()} Chulalongkorn University Golf Club · All rights reserved.</p>
       </div>

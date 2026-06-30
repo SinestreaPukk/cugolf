@@ -235,6 +235,7 @@ function AppContent() {
                 scores={dbState.scores || []}
                 roster={dbState.roster || []}
                 gallery={dbState.gallery || []}
+                instagramPosts={dbState.instagramPosts || []}
                 welcomeSection={dbState.welcomeSection}
                 upcomingActivity={dbState.upcomingActivity}
                 clubActivity={dbState.clubActivity}
@@ -287,6 +288,7 @@ function AppContent() {
                 scores={dbState.scores || []}
                 roster={dbState.roster || []}
                 gallery={dbState.gallery || []}
+                instagramPosts={dbState.instagramPosts || []}
                 welcomeSection={dbState.welcomeSection}
                 upcomingActivity={dbState.upcomingActivity}
                 clubActivity={dbState.clubActivity}

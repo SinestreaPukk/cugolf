@@ -1,4 +1,4 @@
-import { DatabaseState, NewsItem, Player, Staff, TournamentScore, GalleryImage, WelcomeSection, UpcomingActivity, Sponsor, SiteSettings, SiteLabels, HomeSponsorSection, ClubActivityContent, Member, MemberEvent } from "../types";
+import { DatabaseState, NewsItem, Player, Staff, TournamentScore, GalleryImage, WelcomeSection, UpcomingActivity, Sponsor, SiteSettings, SiteLabels, HomeSponsorSection, ClubActivityContent, Member, MemberEvent, InstagramPost } from "../types";
 
 async function handleResponse(res: Response, defaultError: string) {
   const text = await res.text();
@@ -364,6 +364,24 @@ export async function changePassword(oldPassword: string, newPassword: string, t
     body: JSON.stringify({ oldPassword, newPassword })
   });
   return handleResponse(res, "Failed to change password");
+}
+
+// INSTAGRAM POSTS CRUD (admin-protected)
+export async function createInstagramPost(item: Partial<InstagramPost>, token: string): Promise<{ success: boolean; item: InstagramPost }> {
+  const res = await fetch("/api/instagram-posts", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+    body: JSON.stringify(item)
+  });
+  return handleResponse(res, "Failed to create Instagram post");
+}
+
+export async function deleteInstagramPost(id: string, token: string): Promise<{ success: boolean }> {
+  const res = await fetch(`/api/instagram-posts/${id}`, {
+    method: "DELETE",
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+  return handleResponse(res, "Failed to delete Instagram post");
 }
 
 // MEMBER EVENTS CRUD (admin-protected)

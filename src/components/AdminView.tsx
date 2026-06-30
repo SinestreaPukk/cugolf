@@ -46,7 +46,9 @@ import {
  deleteAdminMember,
  createMemberEvent,
  updateMemberEvent,
- deleteMemberEvent
+ deleteMemberEvent,
+ createInstagramPost,
+ deleteInstagramPost
 } from"../utils/api";
 import {
  Plus, Trash2, Edit, Save, FileText, Sparkles, LogOut, Users,
@@ -206,7 +208,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
 
  // Visual CMS State
  const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
- const [activeView, setActiveView] = useState<"home"|"blog"|"club"|"roster"|"staff"|"scores"|"sponsors"|"settings"|"gallery"|"upcoming"|"admins"|"members"|"portal-events">("home");
+ const [activeView, setActiveView] = useState<"home"|"blog"|"club"|"roster"|"staff"|"scores"|"sponsors"|"settings"|"gallery"|"upcoming"|"admins"|"members"|"portal-events"|"instagram">("home");
 
  // Admin emails management states and handlers
  const [adminEmails, setAdminEmails] = useState<string[]>([]);
@@ -531,6 +533,26 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
   const [galTitle, setGalTitle] = useState("");
   const [galUrl, setGalUrl] = useState("");
   const [galCategory, setGalCategory] = useState("Tournament");
+
+  // Instagram posts states
+  const [igImageUrl, setIgImageUrl] = useState("");
+  const [igPostUrl, setIgPostUrl] = useState("");
+  const [igCaption, setIgCaption] = useState("");
+
+  const handleSaveIgPost = async () => {
+    if (!igImageUrl) { triggerErrorMsg("Please upload an image first."); return; }
+    try {
+      await createInstagramPost({ imageUrl: igImageUrl, postUrl: igPostUrl || undefined, caption: igCaption || undefined }, adminToken!);
+      setIgImageUrl(""); setIgPostUrl(""); setIgCaption("");
+      refreshState();
+    } catch (err: any) { triggerErrorMsg(err.message || "Failed to add post."); }
+  };
+
+  const handleDeleteIgPost = async (id: string) => {
+    if (!confirm("Remove this post from the feed?")) return;
+    try { await deleteInstagramPost(id, adminToken!); refreshState(); }
+    catch (err: any) { triggerErrorMsg(err.message || "Failed to delete post."); }
+  };
 
   // Welcome page CMS states
   const [welcomeImageUrl, setWelcomeImageUrl] = useState(dbState.welcomeSection?.imageUrl || "");
@@ -2677,6 +2699,44 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
      </div>
    );
 
+ case "instagram":
+   return (
+     <div className="space-y-12">
+       <div className="space-y-6">
+         <h2 className="font-display text-lg font-bold uppercase tracking-wider text-brand-ink flex items-center gap-2 border-b border-brand-ink/10 pb-2">
+           <Image size={20} className="text-brand-pink" /> INSTAGRAM FEED
+         </h2>
+         <p className="font-sans text-[11px] text-stone-500 leading-relaxed">
+           Upload screenshots or photos from @cugolfclub posts. Paste the Instagram post URL so clicking the image opens the real post. Posts display on the homepage in a grid below the sponsor section.
+         </p>
+         <div className="space-y-4">
+           <ImageUploadWidget id="ig_img" label="POST IMAGE / SCREENSHOT" value={igImageUrl} onChange={setIgImageUrl} />
+           <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Instagram Post URL (optional — makes image clickable)</label><input type="url" value={igPostUrl} onChange={e => setIgPostUrl(e.target.value)} placeholder="https://www.instagram.com/p/..." className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
+           <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Caption / Alt Text (optional)</label><input type="text" value={igCaption} onChange={e => setIgCaption(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
+         </div>
+         <button onClick={handleSaveIgPost} className="w-full bg-brand-ink text-brand-neutral py-3 font-mono text-[10px] font-bold uppercase flex items-center justify-center gap-2 hover:bg-brand-pink">
+           <Plus size={14} /> ADD TO FEED
+         </button>
+
+         <div className="pt-12">
+           <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2 mb-4">FEED POSTS ({(dbState.instagramPosts || []).length})</h3>
+           <div className="grid grid-cols-3 gap-3">
+             {(dbState.instagramPosts || []).map(post => (
+               <div key={post.id} className="group relative aspect-square border border-brand-ink/10 bg-brand-stone overflow-hidden">
+                 <img src={post.imageUrl} alt={post.caption || "IG post"} className="w-full h-full object-cover" />
+                 <div className="absolute inset-0 bg-brand-ink/80 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-2">
+                   {post.postUrl && <p className="text-[7px] text-brand-neutral font-mono truncate w-full text-center">{post.postUrl}</p>}
+                   <button onClick={() => handleDeleteIgPost(post.id)} className="text-red-400 text-[8px] font-bold flex items-center gap-1 hover:text-red-300"><Trash2 size={8} /> REMOVE</button>
+                 </div>
+               </div>
+             ))}
+             {(dbState.instagramPosts || []).length === 0 && <p className="col-span-3 text-[10px] font-mono text-stone-400 text-center py-8">No posts yet.</p>}
+           </div>
+         </div>
+       </div>
+     </div>
+   );
+
  case "upcoming":
    return (
      <div className="space-y-12">
@@ -3338,6 +3398,20 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
    return (
      <SponsorsView sponsors={dbState.sponsors || []} siteLabels={dbState.siteLabels} isAdmin={false} />
    );
+ case "instagram":
+   return (
+     <div className="p-6">
+       <p className="font-mono text-[9px] uppercase tracking-widest text-stone-400 mb-4">INSTAGRAM FEED PREVIEW — {(dbState.instagramPosts || []).length} post(s)</p>
+       <div className="grid grid-cols-3 gap-0.5">
+         {(dbState.instagramPosts || []).map(post => (
+           <div key={post.id} className="aspect-square bg-brand-stone overflow-hidden">
+             <img src={post.imageUrl} alt={post.caption || ""} className="w-full h-full object-cover" />
+           </div>
+         ))}
+       </div>
+     </div>
+   );
+
  case "portal-events":
    return (
      <div className="p-6 space-y-4 font-sans text-xs text-brand-ink">
@@ -3418,6 +3492,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  { id:"upcoming", label:"UPCOMING"},
  { id:"portal-events", label:"PORTAL EVENTS"},
  { id:"gallery", label:"GALLERY"},
+ { id:"instagram", label:"INSTAGRAM"},
  { id:"roster", label:"ROSTER"},
  { id:"staff", label:"STAFF"},
  { id:"scores", label:"SCORES"},

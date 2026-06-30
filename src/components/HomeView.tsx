@@ -1,4 +1,4 @@
-import { NewsItem, TournamentScore, Player, WelcomeSection, UpcomingActivity, SiteLabels, SiteSettings, HomeSponsorSection, Sponsor, AdminEditProps, GalleryImage, ClubActivityContent } from "../types";
+import { NewsItem, TournamentScore, Player, WelcomeSection, UpcomingActivity, SiteLabels, SiteSettings, HomeSponsorSection, Sponsor, AdminEditProps, GalleryImage, ClubActivityContent, InstagramPost } from "../types";
 import { ArrowRight, Calendar, User, ChevronRight, BookOpen, Clock, Trophy, Target, MapPin, ArrowUpRight, Edit, Image } from "lucide-react";
 import { fmtDate } from "../utils/format";
 import { useState } from "react";
@@ -11,6 +11,7 @@ interface HomeViewProps extends AdminEditProps {
   scores: TournamentScore[];
   roster: Player[];
   gallery: GalleryImage[];
+  instagramPosts?: InstagramPost[];
   welcomeSection: WelcomeSection;
   upcomingActivity: UpcomingActivity;
   clubActivity?: ClubActivityContent;
@@ -20,7 +21,7 @@ interface HomeViewProps extends AdminEditProps {
   siteSettings?: SiteSettings;
 }
 
-export default function HomeView({ news, scores, roster, gallery, welcomeSection, upcomingActivity, clubActivity, homeSponsorSection, sponsors, siteLabels, siteSettings, isAdmin, onEditSection, activeSectionId }: HomeViewProps) {
+export default function HomeView({ news, scores, roster, gallery, instagramPosts = [], welcomeSection, upcomingActivity, clubActivity, homeSponsorSection, sponsors, siteLabels, siteSettings, isAdmin, onEditSection, activeSectionId }: HomeViewProps) {
  const { language } = useLanguage();
  // Sort by rank (descending) and then by date (descending)
 
@@ -283,6 +284,63 @@ export default function HomeView({ news, scores, roster, gallery, welcomeSection
      </div>
    </section>
  )}
+
+ {/* Instagram Feed Section */}
+ <section className="border-t border-brand-ink/10 pt-16">
+   <div className="flex flex-col items-center gap-2 mb-8 text-center">
+     <span className="font-mono text-[9px] font-bold tracking-[0.3em] text-stone-400 uppercase">
+       {language === "th" ? "ติดตามเราได้ที่" : "FOLLOW US ON"}
+     </span>
+     <h2 className="font-display text-2xl md:text-3xl font-bold uppercase tracking-tight text-brand-ink">
+       @cugolfclub
+     </h2>
+     <p className="font-sans text-xs text-stone-500 max-w-xs">
+       {language === "th"
+         ? "อัปเดตกิจกรรมและไฮไลท์ล่าสุดจากทีมกอล์ฟจุฬาฯ"
+         : "Latest highlights, match day moments, and squad updates from the pink blazer squad."}
+     </p>
+   </div>
+
+   {instagramPosts.length > 0 ? (
+     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-0.5">
+       {instagramPosts.map(post => (
+         post.postUrl ? (
+           <a key={post.id} href={post.postUrl} target="_blank" rel="noopener noreferrer"
+             className="relative aspect-square overflow-hidden group bg-brand-stone">
+             <img src={post.imageUrl} alt={post.caption || "Instagram post"} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+             <div className="absolute inset-0 bg-brand-ink/0 group-hover:bg-brand-ink/30 transition-all duration-300 flex items-center justify-center">
+               <ArrowUpRight size={20} className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+             </div>
+           </a>
+         ) : (
+           <div key={post.id} className="relative aspect-square overflow-hidden bg-brand-stone">
+             <img src={post.imageUrl} alt={post.caption || "Instagram post"} className="w-full h-full object-cover" />
+           </div>
+         )
+       ))}
+     </div>
+   ) : (
+     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-0.5">
+       {Array.from({ length: 6 }).map((_, i) => (
+         <div key={i} className="aspect-square bg-brand-stone border border-brand-ink/5 flex items-center justify-center">
+           <span className="font-mono text-[8px] text-stone-300 uppercase tracking-widest">PHOTO</span>
+         </div>
+       ))}
+     </div>
+   )}
+
+   <div className="flex justify-center mt-8">
+     <a
+       href="https://www.instagram.com/cugolfclub/"
+       target="_blank"
+       rel="noopener noreferrer"
+       className="inline-flex items-center gap-2 bg-brand-ink hover:bg-brand-pink text-brand-neutral px-8 py-3 font-mono text-xs font-bold uppercase tracking-widest transition-colors"
+     >
+       <ArrowUpRight size={14} />
+       {language === "th" ? "ติดตาม @cugolfclub บน Instagram" : "FOLLOW @CUGOLFCLUB ON INSTAGRAM"}
+     </a>
+   </div>
+ </section>
 
  </div>
  );

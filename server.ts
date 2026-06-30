@@ -193,12 +193,12 @@ app.post("/api/upload", async (req, res) => {
 // REST endpoints for the Database Layer
 app.get("/api/db", async (req, res) => {
   try {
-    const collections = ["news", "roster", "staff", "scores", "gallery", "sponsors", "member_events"];
+    const collections = ["news", "roster", "staff", "scores", "gallery", "sponsors", "member_events", "instagram_posts"];
     const results = await Promise.all(collections.map(c => supabase.from(c).select("*")));
 
     const db: any = {};
     collections.forEach((name, index) => {
-      const key = name === "member_events" ? "memberEvents" : name;
+      const key = name === "member_events" ? "memberEvents" : name === "instagram_posts" ? "instagramPosts" : name;
       db[key] = results[index].data || [];
     });
 
@@ -827,6 +827,29 @@ app.delete("/api/member-events/:id", async (req, res) => {
   const decoded = verifyMemberToken(req.headers.authorization?.replace("Bearer ", "") || "");
   if (!decoded?.isAdmin) return res.status(403).json({ success: false, message: "Access denied." });
   const { error } = await supabase.from("member_events").delete().eq("id", req.params.id);
+  if (error) return res.status(500).json({ success: false, message: error.message });
+  res.json({ success: true });
+});
+
+// INSTAGRAM POSTS CRUD (admin-only)
+app.post("/api/instagram-posts", async (req, res) => {
+  const decoded = verifyMemberToken(req.headers.authorization?.replace("Bearer ", "") || "");
+  if (!decoded?.isAdmin) return res.status(403).json({ success: false, message: "Access denied." });
+  const newItem = {
+    id: `ig-${Date.now()}`,
+    imageUrl: req.body.imageUrl || "",
+    postUrl: req.body.postUrl || null,
+    caption: req.body.caption || null
+  };
+  const { error } = await supabase.from("instagram_posts").insert(newItem);
+  if (error) return res.status(500).json({ success: false, message: error.message });
+  res.json({ success: true, item: newItem });
+});
+
+app.delete("/api/instagram-posts/:id", async (req, res) => {
+  const decoded = verifyMemberToken(req.headers.authorization?.replace("Bearer ", "") || "");
+  if (!decoded?.isAdmin) return res.status(403).json({ success: false, message: "Access denied." });
+  const { error } = await supabase.from("instagram_posts").delete().eq("id", req.params.id);
   if (error) return res.status(500).json({ success: false, message: error.message });
   res.json({ success: true });
 });

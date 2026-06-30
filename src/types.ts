@@ -327,6 +327,7 @@ export interface DatabaseState {
   staff: Staff[];
   scores: TournamentScore[];
   gallery: GalleryImage[];
+  instagramPosts: InstagramPost[];
   memberEvents: MemberEvent[];
   welcomeSection: WelcomeSection;
   upcomingActivity: UpcomingActivity;
@@ -336,6 +337,14 @@ export interface DatabaseState {
   siteSettings: SiteSettings;
   siteLabels: SiteLabels;
   siteLabelsThai?: SiteLabels;
+}
+
+export interface InstagramPost {
+  id: string;
+  imageUrl: string;
+  postUrl?: string;
+  caption?: string;
+  created_at?: string;
 }
 
 export interface MemberEvent {

@@ -122,11 +122,6 @@ export default function AboutClubView({ clubActivity, siteLabels, isAdmin, onEdi
                   {/* Activity Info Details */}
                   <div className="p-6 flex-grow flex flex-col justify-between space-y-6">
                     <div className="space-y-3">
-                      <div className="flex items-center gap-1.5 font-mono text-[10px] text-brand-pink font-bold uppercase tracking-wider">
-                        <Calendar size={12} />
-                        <span>{formattedDate}</span>
-                      </div>
-                      
                       <h3 className="font-display text-xl font-bold text-brand-ink uppercase leading-tight group-hover:text-brand-pink transition-colors">
                         {language === "th" && comp.titleThai ? comp.titleThai : comp.title}
                       </h3>

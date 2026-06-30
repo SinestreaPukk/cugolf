@@ -45,9 +45,10 @@ export default function MemberAuthView({
   const [instagram, setInstagram] = useState("");
   const [lineId, setLineId] = useState("");
   const [pdpaConsent, setPdpaConsent] = useState(false);
+  const [pdpaError, setPdpaError] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, boolean>>({});
 
-  const clearErrors = () => { setErrorMsg(""); setSuccessMsg(""); setFieldErrors({}); };
+  const clearErrors = () => { setErrorMsg(""); setSuccessMsg(""); setFieldErrors({}); setPdpaError(false); };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,12 +67,13 @@ export default function MemberAuthView({
         setTimeout(() => navigate("/"), 1000);
       }
     } catch (err: any) {
-      setErrorMsg(
-        (err.message || (language === "th" ? "อีเมลหรือรหัสนิสิตไม่ถูกต้อง" : "Invalid email or student ID.")) +
-        (language === "th"
-          ? " — กรุณาติดต่อเจ้าหน้าที่ชมรม IG: @cugolfclub"
-          : " — Please contact CU Golf Club staff via IG: @cugolfclub")
-      );
+      const base = language === "th"
+        ? "อีเมลหรือรหัสนิสิตไม่ถูกต้อง"
+        : (err.message || "Invalid email or student ID.");
+      const contact = language === "th"
+        ? " — กรุณาติดต่อเจ้าหน้าที่ชมรม IG: @cugolfclub"
+        : " — Please contact CU Golf Club staff via IG: @cugolfclub";
+      setErrorMsg(base + contact);
     } finally {
       setLoading(false);
     }
@@ -90,7 +92,8 @@ export default function MemberAuthView({
       return;
     }
     if (!pdpaConsent) {
-      setErrorMsg(language === "th" ? "กรุณายอมรับนโยบายความเป็นส่วนตัว (PDPA) ก่อนสมัครสมาชิก" : "Please accept the Privacy Disclosure (PDPA) before registering.");
+      setPdpaError(true);
+      setErrorMsg(language === "th" ? "กรุณายอมรับนโยบายความเป็นส่วนตัวด้านล่าง" : "Please tick the privacy policy box below.");
       return;
     }
     setLoading(true);
@@ -448,15 +451,15 @@ export default function MemberAuthView({
             </div>
 
             {/* PDPA Consent */}
-            <div className="flex items-start gap-2">
+            <div className={`flex items-start gap-2 rounded transition-all ${pdpaError ? "bg-red-50 border border-red-400 px-2 py-1.5 -mx-2" : ""}`}>
               <input
                 type="checkbox"
                 id="pdpa_consent"
                 checked={pdpaConsent}
-                onChange={(e) => setPdpaConsent(e.target.checked)}
+                onChange={(e) => { setPdpaConsent(e.target.checked); if (e.target.checked) setPdpaError(false); }}
                 className="h-3 w-3 mt-0.5 shrink-0 cursor-pointer"
               />
-              <label htmlFor="pdpa_consent" className="text-[10px] text-stone-400 leading-relaxed cursor-pointer">
+              <label htmlFor="pdpa_consent" className={`text-[10px] leading-relaxed cursor-pointer transition-colors ${pdpaError ? "text-red-600 font-semibold" : "text-stone-400"}`}>
                 {language === "th" ? (
                   <>
                     ยอมรับ{" "}

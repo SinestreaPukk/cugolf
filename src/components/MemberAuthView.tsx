@@ -45,8 +45,9 @@ export default function MemberAuthView({
   const [instagram, setInstagram] = useState("");
   const [lineId, setLineId] = useState("");
   const [pdpaConsent, setPdpaConsent] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, boolean>>({});
 
-  const clearErrors = () => { setErrorMsg(""); setSuccessMsg(""); };
+  const clearErrors = () => { setErrorMsg(""); setSuccessMsg(""); setFieldErrors({}); };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,7 +66,12 @@ export default function MemberAuthView({
         setTimeout(() => navigate("/"), 1000);
       }
     } catch (err: any) {
-      setErrorMsg(err.message || (language === "th" ? "อีเมลหรือรหัสนิสิตไม่ถูกต้อง" : "Invalid email or student ID."));
+      setErrorMsg(
+        (err.message || (language === "th" ? "อีเมลหรือรหัสนิสิตไม่ถูกต้อง" : "Invalid email or student ID.")) +
+        (language === "th"
+          ? " — กรุณาติดต่อเจ้าหน้าที่ชมรม IG: @cugolfclub"
+          : " — Please contact CU Golf Club staff via IG: @cugolfclub")
+      );
     } finally {
       setLoading(false);
     }
@@ -74,8 +80,13 @@ export default function MemberAuthView({
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     clearErrors();
-    if (!regEmail || !regStudentId || !name) {
-      setErrorMsg(language === "th" ? "กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน" : "Please fill in all required fields.");
+    const missing: Record<string, boolean> = {};
+    if (!name) missing.name = true;
+    if (!regEmail) missing.regEmail = true;
+    if (!regStudentId) missing.regStudentId = true;
+    if (Object.keys(missing).length > 0) {
+      setFieldErrors(missing);
+      setErrorMsg(language === "th" ? "กรุณากรอกข้อมูลที่ไฮไลต์ด้านล่างให้ครบถ้วน" : "Please complete the highlighted fields below.");
       return;
     }
     if (!pdpaConsent) {
@@ -327,44 +338,41 @@ export default function MemberAuthView({
             </div>
 
             <div className="space-y-1">
-              <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
-                {language === "th" ? "ชื่อ-นามสกุลจริง *" : "FULL NAME *"}
+              <label className={`font-mono text-[9px] font-bold uppercase tracking-wider block ${fieldErrors.name ? "text-red-500" : "text-neutral-400"}`}>
+                {language === "th" ? "ชื่อ-นามสกุลจริง *" : "FULL NAME *"}{fieldErrors.name && (language === "th" ? " — กรุณากรอก" : " — required")}
               </label>
               <input
                 type="text"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => { setName(e.target.value); if (e.target.value) setFieldErrors(p => ({ ...p, name: false })); }}
                 placeholder={language === "th" ? "สมชาย รักกอล์ฟ" : "Somchai Rakgolf"}
-                className="w-full px-3 py-2.5 bg-white border border-brand-ink text-brand-ink text-xs font-semibold focus:outline-none focus:border-brand-pink transition-colors placeholder:text-neutral-300"
-                required
+                className={`w-full px-3 py-2.5 bg-white text-brand-ink text-xs font-semibold focus:outline-none transition-colors placeholder:text-neutral-300 border ${fieldErrors.name ? "border-red-400 bg-red-50" : "border-brand-ink focus:border-brand-pink"}`}
               />
             </div>
 
             <div className="space-y-1">
-              <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
-                {language === "th" ? "อีเมล *" : "EMAIL ADDRESS *"}
+              <label className={`font-mono text-[9px] font-bold uppercase tracking-wider block ${fieldErrors.regEmail ? "text-red-500" : "text-neutral-400"}`}>
+                {language === "th" ? "อีเมล *" : "EMAIL ADDRESS *"}{fieldErrors.regEmail && (language === "th" ? " — กรุณากรอก" : " — required")}
               </label>
               <input
                 type="email"
                 value={regEmail}
-                onChange={(e) => setRegEmail(e.target.value)}
+                onChange={(e) => { setRegEmail(e.target.value); if (e.target.value) setFieldErrors(p => ({ ...p, regEmail: false })); }}
                 placeholder="member@chula.ac.th"
-                className="w-full px-3 py-2.5 bg-white border border-brand-ink text-brand-ink text-xs font-semibold focus:outline-none focus:border-brand-pink transition-colors placeholder:text-neutral-300"
-                required
+                className={`w-full px-3 py-2.5 bg-white text-brand-ink text-xs font-semibold focus:outline-none transition-colors placeholder:text-neutral-300 border ${fieldErrors.regEmail ? "border-red-400 bg-red-50" : "border-brand-ink focus:border-brand-pink"}`}
               />
             </div>
 
             <div className="space-y-1">
-              <label className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">
-                {language === "th" ? "รหัสนิสิต *" : "STUDENT ID *"}
+              <label className={`font-mono text-[9px] font-bold uppercase tracking-wider block ${fieldErrors.regStudentId ? "text-red-500" : "text-neutral-400"}`}>
+                {language === "th" ? "รหัสนิสิต *" : "STUDENT ID *"}{fieldErrors.regStudentId && (language === "th" ? " — กรุณากรอก" : " — required")}
               </label>
               <input
                 type="text"
                 value={regStudentId}
-                onChange={(e) => setRegStudentId(e.target.value)}
+                onChange={(e) => { setRegStudentId(e.target.value); if (e.target.value) setFieldErrors(p => ({ ...p, regStudentId: false })); }}
                 placeholder="66XXXXXXXX"
-                className="w-full px-3 py-2.5 bg-white border border-brand-ink text-brand-ink text-xs font-semibold focus:outline-none focus:border-brand-pink transition-colors placeholder:text-neutral-300"
-                required
+                className={`w-full px-3 py-2.5 bg-white text-brand-ink text-xs font-semibold focus:outline-none transition-colors placeholder:text-neutral-300 border ${fieldErrors.regStudentId ? "border-red-400 bg-red-50" : "border-brand-ink focus:border-brand-pink"}`}
               />
             </div>
 

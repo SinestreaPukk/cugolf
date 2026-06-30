@@ -45,10 +45,9 @@ export default function MemberAuthView({
   const [instagram, setInstagram] = useState("");
   const [lineId, setLineId] = useState("");
   const [pdpaConsent, setPdpaConsent] = useState(false);
-  const [pdpaError, setPdpaError] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, boolean>>({});
 
-  const clearErrors = () => { setErrorMsg(""); setSuccessMsg(""); setFieldErrors({}); setPdpaError(false); };
+  const clearErrors = () => { setErrorMsg(""); setSuccessMsg(""); setFieldErrors({}); };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,11 +90,7 @@ export default function MemberAuthView({
       setErrorMsg(language === "th" ? "กรุณากรอกข้อมูลที่ไฮไลต์ด้านล่างให้ครบถ้วน" : "Please complete the highlighted fields below.");
       return;
     }
-    if (!pdpaConsent) {
-      setPdpaError(true);
-      setErrorMsg(language === "th" ? "กรุณายอมรับนโยบายความเป็นส่วนตัวด้านล่าง" : "Please tick the privacy policy box below.");
-      return;
-    }
+    if (!pdpaConsent) return;
     setLoading(true);
     try {
       const res = await registerMember({
@@ -451,15 +446,15 @@ export default function MemberAuthView({
             </div>
 
             {/* PDPA Consent */}
-            <div className={`flex items-start gap-2 rounded transition-all ${pdpaError ? "bg-red-50 border border-red-400 px-2 py-1.5 -mx-2" : ""}`}>
+            <div className="flex items-start gap-2">
               <input
                 type="checkbox"
                 id="pdpa_consent"
                 checked={pdpaConsent}
-                onChange={(e) => { setPdpaConsent(e.target.checked); if (e.target.checked) setPdpaError(false); }}
+                onChange={(e) => setPdpaConsent(e.target.checked)}
                 className="h-3 w-3 mt-0.5 shrink-0 cursor-pointer"
               />
-              <label htmlFor="pdpa_consent" className={`text-[10px] leading-relaxed cursor-pointer transition-colors ${pdpaError ? "text-red-600 font-semibold" : "text-stone-400"}`}>
+              <label htmlFor="pdpa_consent" className="text-[10px] text-stone-400 leading-relaxed cursor-pointer">
                 {language === "th" ? (
                   <>
                     ยอมรับ{" "}

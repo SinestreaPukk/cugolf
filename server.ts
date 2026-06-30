@@ -759,8 +759,11 @@ app.post("/api/staff", async (req, res) => {
   const newItem = {
     id: `staff-${Date.now()}`,
     name: req.body.name || "Staff Member",
+    nameThai: req.body.nameThai || null,
     role: req.body.role || "Committee Member",
+    roleThai: req.body.roleThai || null,
     year: req.body.year || "Club Operations",
+    yearThai: req.body.yearThai || null,
     imageUrl: req.body.imageUrl || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400",
     order: typeof req.body.order === "number" ? req.body.order : 0,
     isVisible: req.body.isVisible ?? true
@@ -771,7 +774,9 @@ app.post("/api/staff", async (req, res) => {
 });
 
 app.put("/api/staff/:id", async (req, res) => {
-  const { error } = await supabase.from("staff").update(req.body).eq("id", req.params.id);
+  const { name, nameThai, role, roleThai, year, yearThai, imageUrl, order, isVisible } = req.body;
+  const update: Record<string, any> = { name, nameThai, role, roleThai, year, yearThai, imageUrl, order, isVisible };
+  const { error } = await supabase.from("staff").update(update).eq("id", req.params.id);
   if (error) return res.status(500).json({ success: false, message: error.message });
   res.json({ success: true });
 });

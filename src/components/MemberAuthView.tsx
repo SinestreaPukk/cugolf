@@ -44,6 +44,7 @@ export default function MemberAuthView({
   const [year, setYear] = useState("Year 1");
   const [instagram, setInstagram] = useState("");
   const [lineId, setLineId] = useState("");
+  const [pdpaConsent, setPdpaConsent] = useState(false);
 
   const clearErrors = () => { setErrorMsg(""); setSuccessMsg(""); };
 
@@ -75,6 +76,10 @@ export default function MemberAuthView({
     clearErrors();
     if (!regEmail || !regStudentId || !name) {
       setErrorMsg(language === "th" ? "กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน" : "Please fill in all required fields.");
+      return;
+    }
+    if (!pdpaConsent) {
+      setErrorMsg(language === "th" ? "กรุณายอมรับนโยบายความเป็นส่วนตัว (PDPA) ก่อนสมัครสมาชิก" : "Please accept the Privacy Disclosure (PDPA) before registering.");
       return;
     }
     setLoading(true);
@@ -415,10 +420,41 @@ export default function MemberAuthView({
               </div>
             </div>
 
+            {/* PDPA Consent */}
+            <div className="flex items-start gap-3 border border-brand-ink/20 bg-brand-stone/30 p-3">
+              <input
+                type="checkbox"
+                id="pdpa_consent"
+                checked={pdpaConsent}
+                onChange={(e) => setPdpaConsent(e.target.checked)}
+                className="h-4 w-4 mt-0.5 accent-brand-pink shrink-0 cursor-pointer"
+                required
+              />
+              <label htmlFor="pdpa_consent" className="text-[11px] text-stone-600 leading-relaxed cursor-pointer">
+                {language === "th" ? (
+                  <>
+                    ข้าพเจ้ายอมรับ{" "}
+                    <Link to="/privacy" target="_blank" className="font-bold text-brand-ink underline underline-offset-2 hover:text-brand-pink transition-colors">
+                      นโยบายความเป็นส่วนตัว (PDPA)
+                    </Link>{" "}
+                    และยินยอมให้ชมรมกอล์ฟจุฬาฯ เก็บรวบรวมและประมวลผลข้อมูลส่วนบุคคลของข้าพเจ้าตามวัตถุประสงค์ที่ระบุไว้
+                  </>
+                ) : (
+                  <>
+                    I have read and accept the{" "}
+                    <Link to="/privacy" target="_blank" className="font-bold text-brand-ink underline underline-offset-2 hover:text-brand-pink transition-colors">
+                      Privacy Disclosure (PDPA)
+                    </Link>{" "}
+                    and consent to CU Golf Club collecting and processing my personal data for the stated purposes.
+                  </>
+                )}
+              </label>
+            </div>
+
             <button
               type="submit"
-              disabled={loading}
-              className="mt-2 w-full bg-brand-ink hover:bg-brand-pink text-brand-neutral hover:text-brand-neutral py-3 text-xs font-mono font-bold uppercase tracking-widest transition-all duration-200 cursor-pointer flex justify-center items-center gap-2 disabled:opacity-50"
+              disabled={loading || !pdpaConsent}
+              className="mt-2 w-full bg-brand-ink hover:bg-brand-pink text-brand-neutral hover:text-brand-neutral py-3 text-xs font-mono font-bold uppercase tracking-widest transition-all duration-200 cursor-pointer flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading && <Loader2 size={12} className="animate-spin" />}
               {loading ? (language === "th" ? "กำลังลงทะเบียน..." : "CREATING PROFILE...") : (language === "th" ? "สมัครสมาชิกชมรม" : "SUBMIT REGISTRATION")}

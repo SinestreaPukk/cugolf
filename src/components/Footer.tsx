@@ -120,7 +120,9 @@ export default function Footer({ siteSettings, siteLabels }: FooterProps) {
  {(siteLabels?.footerRightsReserved ||"© {year} CHULALONGKORN UNIVERSITY GOLF CLUB. ALL RIGHTS RESERVED.").replace("{year}", new Date().getFullYear().toString())}
  </p>
  <div className="flex items-center gap-6 font-mono text-[9px] text-stone-400 font-bold uppercase">
- <span>{siteLabels?.footerPrivacyDisclosure ||"PRIVACY DISCLOSURE"}</span>
+ <Link to="/privacy" className="hover:text-brand-ink hover:underline transition-colors">
+   {siteLabels?.footerPrivacyDisclosure || (language === "th" ? "นโยบายความเป็นส่วนตัว" : "PRIVACY DISCLOSURE")}
+ </Link>
  <span>•</span>
  <span>{siteLabels?.footerTermsOfTradition ||"TERMS OF TRADITION"}</span>
  </div>

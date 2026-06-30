@@ -14,6 +14,7 @@ import AboutClubView from "./components/AboutClubView";
 import ActivityDetailView from "./components/ActivityDetailView";
 import AdminView from "./components/AdminView";
 import MemberAuthView from "./components/MemberAuthView";
+import PrivacyView from "./components/PrivacyView";
 import { ShieldCheck, RefreshCw, AlertCircle } from "lucide-react";
 import { LanguageProvider, useLanguage } from "./utils/LanguageContext";
 
@@ -277,6 +278,7 @@ function AppContent() {
                 <Navigate to="/membership" replace />
               )
             } />
+            <Route path="/privacy" element={<PrivacyView />} />
             {/* Fallback */}
             <Route path="*" element={
               <HomeView

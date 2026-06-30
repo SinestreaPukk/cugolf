@@ -725,9 +725,12 @@ app.post("/api/roster", async (req, res) => {
   const newItem = {
     id: `player-${Date.now()}`,
     name: req.body.name || "Anonymous Player",
+    nameThai: req.body.nameThai || null,
     handicap: typeof req.body.handicap === "number" ? req.body.handicap : 2.0,
     year: req.body.year || "Freshman",
+    yearThai: req.body.yearThai || null,
     faculty: req.body.faculty || "Faculty of Sports Science",
+    facultyThai: req.body.facultyThai || null,
     imageUrl: req.body.imageUrl || "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400",
     isFeatured: !!req.body.isFeatured,
     isVisible: req.body.isVisible ?? true
@@ -738,7 +741,9 @@ app.post("/api/roster", async (req, res) => {
 });
 
 app.put("/api/roster/:id", async (req, res) => {
-  const { error } = await supabase.from("roster").update(req.body).eq("id", req.params.id);
+  const { name, nameThai, handicap, year, yearThai, faculty, facultyThai, imageUrl, isFeatured, isVisible } = req.body;
+  const update: Record<string, any> = { name, nameThai, handicap, year, yearThai, faculty, facultyThai, imageUrl, isFeatured, isVisible };
+  const { error } = await supabase.from("roster").update(update).eq("id", req.params.id);
   if (error) return res.status(500).json({ success: false, message: error.message });
   res.json({ success: true });
 });

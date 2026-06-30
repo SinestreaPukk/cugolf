@@ -804,6 +804,7 @@ app.post("/api/member-events", async (req, res) => {
     locationThai: req.body.locationThai || null,
     imageUrl: req.body.imageUrl || null,
     registrationOpen: req.body.registrationOpen ?? false,
+    registrationStatus: req.body.registrationStatus || "closed",
     googleFormUrl: req.body.googleFormUrl || null,
     isVisible: req.body.isVisible ?? true
   };
@@ -815,8 +816,8 @@ app.post("/api/member-events", async (req, res) => {
 app.put("/api/member-events/:id", async (req, res) => {
   const decoded = verifyMemberToken(req.headers.authorization?.replace("Bearer ", "") || "");
   if (!decoded?.isAdmin) return res.status(403).json({ success: false, message: "Access denied." });
-  const { title, titleThai, description, descriptionThai, date, time, location, locationThai, imageUrl, registrationOpen, googleFormUrl, isVisible } = req.body;
-  const update: Record<string, any> = { title, titleThai, description, descriptionThai, date, time, location, locationThai, imageUrl, registrationOpen, googleFormUrl, isVisible };
+  const { title, titleThai, description, descriptionThai, date, time, location, locationThai, imageUrl, registrationOpen, registrationStatus, googleFormUrl, isVisible } = req.body;
+  const update: Record<string, any> = { title, titleThai, description, descriptionThai, date, time, location, locationThai, imageUrl, registrationOpen, registrationStatus, googleFormUrl, isVisible };
   const { error } = await supabase.from("member_events").update(update).eq("id", req.params.id);
   if (error) return res.status(500).json({ success: false, message: error.message });
   res.json({ success: true });

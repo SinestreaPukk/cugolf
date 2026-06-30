@@ -350,6 +350,7 @@ export interface MemberEvent {
   locationThai?: string;
   imageUrl?: string;
   registrationOpen: boolean;
+  registrationStatus?: "open" | "not_open" | "closed" | "delayed";
   googleFormUrl?: string;
   isVisible: boolean;
   created_at?: string;

@@ -240,14 +240,14 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  const [evtLocation, setEvtLocation] = useState("");
  const [evtLocationThai, setEvtLocationThai] = useState("");
  const [evtImageUrl, setEvtImageUrl] = useState("");
- const [evtRegistrationOpen, setEvtRegistrationOpen] = useState(false);
+ const [evtRegistrationStatus, setEvtRegistrationStatus] = useState<"open"|"not_open"|"closed"|"delayed">("closed");
  const [evtGoogleFormUrl, setEvtGoogleFormUrl] = useState("");
  const [evtIsVisible, setEvtIsVisible] = useState(true);
 
  const clearEventForm = () => {
    setEditingEventId(null); setEvtTitle(""); setEvtTitleThai(""); setEvtDescription(""); setEvtDescriptionThai("");
    setEvtDate(""); setEvtTime(""); setEvtLocation(""); setEvtLocationThai(""); setEvtImageUrl("");
-   setEvtRegistrationOpen(false); setEvtGoogleFormUrl(""); setEvtIsVisible(true);
+   setEvtRegistrationStatus("closed"); setEvtGoogleFormUrl(""); setEvtIsVisible(true);
  };
 
  const handleEditEventTrigger = (evt: MemberEvent) => {
@@ -255,7 +255,8 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
    setEvtDescription(evt.description || ""); setEvtDescriptionThai(evt.descriptionThai || "");
    setEvtDate(evt.date || ""); setEvtTime(evt.time || ""); setEvtLocation(evt.location || "");
    setEvtLocationThai(evt.locationThai || ""); setEvtImageUrl(evt.imageUrl || "");
-   setEvtRegistrationOpen(evt.registrationOpen); setEvtGoogleFormUrl(evt.googleFormUrl || "");
+   setEvtRegistrationStatus((evt.registrationStatus || (evt.registrationOpen ? "open" : "closed")) as any);
+   setEvtGoogleFormUrl(evt.googleFormUrl || "");
    setEvtIsVisible(evt.isVisible); window.scrollTo({ top: 0, behavior: "smooth" });
  };
 
@@ -265,7 +266,9 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
      title: evtTitle, titleThai: evtTitleThai || null, description: evtDescription || null,
      descriptionThai: evtDescriptionThai || null, date: evtDate || null, time: evtTime || null,
      location: evtLocation || null, locationThai: evtLocationThai || null,
-     imageUrl: evtImageUrl || null, registrationOpen: evtRegistrationOpen,
+     imageUrl: evtImageUrl || null,
+     registrationOpen: evtRegistrationStatus === "open",
+     registrationStatus: evtRegistrationStatus,
      googleFormUrl: evtGoogleFormUrl || null, isVisible: evtIsVisible
    };
    try {
@@ -2497,15 +2500,18 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
              <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Description (TH)</label><textarea rows={3} value={evtDescriptionThai} onChange={e => setEvtDescriptionThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
              <ImageUploadWidget id="evt_img" label="EVENT IMAGE" value={evtImageUrl} onChange={setEvtImageUrl} />
              <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Google Form URL (Registration Link)</label><input type="url" value={evtGoogleFormUrl} onChange={e => setEvtGoogleFormUrl(e.target.value)} placeholder="https://docs.google.com/forms/..." className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
-             <div className="flex flex-col gap-2">
-               <div className="flex items-center gap-2">
-                 <input type="checkbox" id="evt_reg_open" checked={evtRegistrationOpen} onChange={e => setEvtRegistrationOpen(e.target.checked)} className="h-4 w-4 accent-brand-pink" />
-                 <label htmlFor="evt_reg_open" className="font-mono text-[9px] font-bold uppercase">REGISTRATION OPEN (Shows register button)</label>
-               </div>
-               <div className="flex items-center gap-2">
-                 <input type="checkbox" id="evt_visible" checked={evtIsVisible} onChange={e => setEvtIsVisible(e.target.checked)} className="h-4 w-4 accent-brand-pink" />
-                 <label htmlFor="evt_visible" className="font-mono text-[9px] font-bold uppercase">VISIBLE TO MEMBERS</label>
-               </div>
+             <div className="space-y-1.5">
+               <label className="font-mono text-[9px] font-bold uppercase">Registration Status</label>
+               <select value={evtRegistrationStatus} onChange={e => setEvtRegistrationStatus(e.target.value as any)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-bold">
+                 <option value="open">Open — shows Register Now button</option>
+                 <option value="not_open">Not Open Yet — coming soon</option>
+                 <option value="delayed">Delayed — postponed</option>
+                 <option value="closed">Closed — registration ended</option>
+               </select>
+             </div>
+             <div className="flex items-center gap-2">
+               <input type="checkbox" id="evt_visible" checked={evtIsVisible} onChange={e => setEvtIsVisible(e.target.checked)} className="h-4 w-4 accent-brand-pink" />
+               <label htmlFor="evt_visible" className="font-mono text-[9px] font-bold uppercase">VISIBLE TO MEMBERS</label>
              </div>
            </div>
            <div className="flex gap-4 pt-4 border-t border-brand-ink/10">
@@ -2522,8 +2528,14 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
                  <div className="flex-grow space-y-1">
                    <div className="flex items-center gap-2 flex-wrap">
                      <h4 className="font-display text-xs font-bold uppercase">{evt.title}</h4>
-                     <span className={`text-[8px] font-mono font-bold px-1.5 py-0.5 ${evt.registrationOpen ? "bg-emerald-100 text-emerald-700" : "bg-stone-100 text-stone-500"}`}>
-                       {evt.registrationOpen ? "REG OPEN" : "REG CLOSED"}
+                     <span className={`text-[8px] font-mono font-bold px-1.5 py-0.5 ${
+                       (evt.registrationStatus || (evt.registrationOpen ? "open" : "closed")) === "open" ? "bg-emerald-100 text-emerald-700" :
+                       (evt.registrationStatus === "not_open") ? "bg-amber-100 text-amber-700" :
+                       (evt.registrationStatus === "delayed") ? "bg-yellow-100 text-yellow-700" :
+                       "bg-stone-100 text-stone-500"}`}>
+                       {evt.registrationStatus === "not_open" ? "NOT OPEN YET" :
+                        evt.registrationStatus === "delayed" ? "DELAYED" :
+                        evt.registrationOpen || evt.registrationStatus === "open" ? "REG OPEN" : "REG CLOSED"}
                      </span>
                      <span className={`text-[8px] font-mono font-bold px-1.5 py-0.5 ${evt.isVisible ? "bg-blue-100 text-blue-700" : "bg-stone-100 text-stone-500"}`}>
                        {evt.isVisible ? "VISIBLE" : "HIDDEN"}
@@ -3333,7 +3345,13 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
          <div key={evt.id} className="border border-brand-ink/20 p-4 bg-brand-neutral space-y-1">
            <div className="flex items-center gap-2">
              <span className="font-bold uppercase">{evt.title}</span>
-             <span className={`text-[8px] font-mono px-1.5 py-0.5 ${evt.registrationOpen ? "bg-emerald-100 text-emerald-700" : "bg-stone-100 text-stone-400"}`}>{evt.registrationOpen ? "OPEN" : "CLOSED"}</span>
+             <span className={`text-[8px] font-mono px-1.5 py-0.5 ${
+               (evt.registrationStatus || (evt.registrationOpen ? "open" : "closed")) === "open" ? "bg-emerald-100 text-emerald-700" :
+               evt.registrationStatus === "not_open" ? "bg-amber-100 text-amber-700" :
+               evt.registrationStatus === "delayed" ? "bg-yellow-100 text-yellow-700" :
+               "bg-stone-100 text-stone-400"}`}>
+               {evt.registrationStatus === "not_open" ? "NOT OPEN YET" : evt.registrationStatus === "delayed" ? "DELAYED" : evt.registrationOpen || evt.registrationStatus === "open" ? "OPEN" : "CLOSED"}
+             </span>
            </div>
            {evt.date && <p className="text-[10px] text-stone-500">{evt.date}{evt.time ? ` · ${evt.time}` : ""}</p>}
            {evt.location && <p className="text-[10px] text-stone-500">{evt.location}</p>}

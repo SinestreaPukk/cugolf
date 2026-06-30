@@ -313,28 +313,44 @@ export default function MemberAuthView({
                           {language === "th" && event.descriptionThai ? event.descriptionThai : event.description}
                         </p>
                       )}
-                      {event.googleFormUrl && (
-                        event.registrationOpen ? (
-                          <a
-                            href={event.googleFormUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="mt-1 w-full inline-flex items-center justify-center gap-1.5 bg-brand-ink hover:bg-brand-pink text-brand-neutral py-2 text-[10px] font-mono font-bold uppercase tracking-wider transition-colors"
-                          >
-                            <ExternalLink size={10} />
-                            {language === "th" ? "ลงทะเบียน" : "REGISTER NOW"}
-                          </a>
-                        ) : (
+                      {(() => {
+                        const status = event.registrationStatus || (event.registrationOpen ? "open" : "closed");
+                        if (status === "open" && event.googleFormUrl) {
+                          return (
+                            <a href={event.googleFormUrl} target="_blank" rel="noopener noreferrer"
+                              className="mt-1 w-full inline-flex items-center justify-center gap-1.5 bg-brand-ink hover:bg-brand-pink text-brand-neutral py-2 text-[10px] font-mono font-bold uppercase tracking-wider transition-colors">
+                              <ExternalLink size={10} />
+                              {language === "th" ? "ลงทะเบียน" : "REGISTER NOW"}
+                            </a>
+                          );
+                        }
+                        if (status === "open") {
+                          return (
+                            <div className="mt-1 w-full inline-flex items-center justify-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 py-2 text-[10px] font-mono font-bold uppercase tracking-wider">
+                              {language === "th" ? "เปิดรับสมัคร" : "REGISTRATION OPEN"}
+                            </div>
+                          );
+                        }
+                        if (status === "not_open") {
+                          return (
+                            <div className="mt-1 w-full inline-flex items-center justify-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 py-2 text-[10px] font-mono font-bold uppercase tracking-wider">
+                              {language === "th" ? "ยังไม่เปิดรับสมัคร" : "REGISTRATION NOT OPEN YET"}
+                            </div>
+                          );
+                        }
+                        if (status === "delayed") {
+                          return (
+                            <div className="mt-1 w-full inline-flex items-center justify-center gap-1.5 bg-yellow-50 text-yellow-700 border border-yellow-200 py-2 text-[10px] font-mono font-bold uppercase tracking-wider">
+                              {language === "th" ? "การลงทะเบียนล่าช้า" : "REGISTRATION DELAYED"}
+                            </div>
+                          );
+                        }
+                        return (
                           <div className="mt-1 w-full inline-flex items-center justify-center gap-1.5 bg-stone-100 text-stone-400 py-2 text-[10px] font-mono font-bold uppercase tracking-wider cursor-not-allowed">
                             {language === "th" ? "ปิดรับสมัคร" : "REGISTRATION CLOSED"}
                           </div>
-                        )
-                      )}
-                      {!event.googleFormUrl && event.registrationOpen && (
-                        <div className="mt-1 w-full inline-flex items-center justify-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 py-2 text-[10px] font-mono font-bold uppercase tracking-wider">
-                          {language === "th" ? "เปิดรับสมัคร" : "REGISTRATION OPEN"}
-                        </div>
-                      )}
+                        );
+                      })()}
                     </div>
                   </div>
                 ))}

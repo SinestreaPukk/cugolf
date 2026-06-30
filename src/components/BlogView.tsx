@@ -78,10 +78,6 @@ export default function BlogView({ news, siteLabels, siteSettings, isAdmin, onEd
  {/* Info parameters */}
  <div className="p-6 flex-grow flex flex-col justify-between">
  <div className="space-y-3">
- <div className="flex items-center gap-1.5 font-mono text-[10px] text-stone-400 font-semibold uppercase">
- <Calendar size={12} className="text-stone-300"/>
- <span>{blog.publishDate}</span>
- </div>
  <h3 className="font-display text-lg font-bold text-neutral-950 tracking-tight hover:underline transition-colors uppercase leading-tight line-clamp-2">
  {language === "th" && blog.titleThai ? blog.titleThai : blog.title}
  </h3>

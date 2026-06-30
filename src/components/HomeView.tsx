@@ -182,9 +182,6 @@ export default function HomeView({ news, scores, roster, gallery, welcomeSection
              )}
            </div>
            <div className="p-6 space-y-4 flex flex-col flex-grow">
-             <div className="flex items-center gap-2 text-stone-400 font-mono text-[9px] font-bold uppercase tracking-widest">
-               <Calendar size={10} /> {blog.publishDate}
-             </div>
              <h3 className="font-display text-lg font-black tracking-tight text-brand-ink leading-tight group-hover:text-brand-pink transition-colors line-clamp-2">
                {language === "th" && blog.titleThai ? blog.titleThai : blog.title}
              </h3>

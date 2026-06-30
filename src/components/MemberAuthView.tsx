@@ -236,7 +236,7 @@ export default function MemberAuthView({
     <div className="mx-auto max-w-md py-8 animate-fade-in text-brand-ink">
       <div className="bg-brand-neutral border border-brand-ink p-6 md:p-8 space-y-6 shadow-[4px_4px_0px_rgba(18,18,18,1)]">
 
-        <div className="flex border-b border-brand-ink/20 font-display text-xs font-black uppercase" style={{ letterSpacing: language === "th" ? "normal" : "0.15em" }}>
+        <div className={`flex border-b border-brand-ink/20 text-xs font-black uppercase ${language === "th" ? "font-sans tracking-normal" : "font-display tracking-widest"}`}>
           <button
             onClick={() => { setActiveTab("login"); clearErrors(); }}
             className={`flex-1 pb-3 text-center transition-all cursor-pointer border-b-2 ${activeTab === "login" ? "text-brand-ink border-brand-ink" : "text-stone-400 border-transparent hover:text-brand-ink"}`}

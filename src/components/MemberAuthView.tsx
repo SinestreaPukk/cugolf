@@ -141,8 +141,8 @@ export default function MemberAuthView({
       <div className="animate-fade-in text-brand-ink py-8">
         <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 items-start">
 
-          {/* LEFT — Member Card */}
-          <div className="bg-brand-neutral border border-brand-ink p-6 space-y-6 shadow-[4px_4px_0px_rgba(18,18,18,1)]">
+          {/* LEFT — Member Card (below activities on mobile) */}
+          <div className="order-2 lg:order-1 bg-brand-neutral border border-brand-ink p-6 space-y-6 shadow-[4px_4px_0px_rgba(18,18,18,1)]">
             <div className="border-b border-brand-ink/10 pb-4 text-center space-y-1">
               <h3 className="font-display text-base font-bold uppercase tracking-wider text-brand-ink">
                 {language === "th" ? "พอร์ทัลสมาชิก" : "MEMBER PORTAL"}
@@ -254,8 +254,8 @@ export default function MemberAuthView({
             </div>
           </div>
 
-          {/* RIGHT — Club Activities */}
-          <div className="space-y-4">
+          {/* RIGHT — Club Activities (first on mobile) */}
+          <div className="order-1 lg:order-2 space-y-4">
             <div className="border-b border-brand-ink/20 pb-3">
               <h3 className="font-display text-base font-bold uppercase tracking-wider text-brand-ink">
                 {language === "th" ? "กิจกรรมชมรม" : "CLUB ACTIVITIES"}

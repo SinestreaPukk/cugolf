@@ -423,6 +423,25 @@ export default function MemberAuthView({
               {loading && <Loader2 size={12} className="animate-spin" />}
               {loading ? (language === "th" ? "กำลังลงทะเบียน..." : "CREATING PROFILE...") : (language === "th" ? "สมัครสมาชิกชมรม" : "SUBMIT REGISTRATION")}
             </button>
+
+            {/* Line OpenChat QR */}
+            <div className="mt-4 border-t border-brand-ink/10 pt-4 flex flex-col items-center gap-3">
+              <p className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-widest text-center">
+                {language === "th" ? "เข้าร่วมกลุ่ม Line OpenChat สมาชิก CU Golf Club" : "Join the CU Golf Club Member Line OpenChat"}
+              </p>
+              <div className="bg-white p-2 border border-brand-ink/20 shadow-[2px_2px_0px_rgba(218,95,142,0.3)]">
+                <img
+                  src="/line-openchat-qr.jpeg"
+                  alt="Line OpenChat QR Code — CU Golf Club Members"
+                  className="w-32 h-32 object-contain"
+                />
+              </div>
+              <p className="font-sans text-[10px] text-stone-500 text-center leading-relaxed max-w-xs">
+                {language === "th"
+                  ? "สแกน QR Code เพื่อเข้าร่วม Line OpenChat สำหรับสมาชิกชมรมกอล์ฟจุฬาฯ"
+                  : "Scan the QR code above to join the exclusive Line OpenChat group for CU Golf Club members."}
+              </p>
+            </div>
           </form>
         )}
       </div>

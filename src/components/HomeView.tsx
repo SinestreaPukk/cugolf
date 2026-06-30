@@ -60,15 +60,32 @@ export default function HomeView({ news, scores, roster, gallery, welcomeSection
      <p className="font-sans text-sm md:text-base text-stone-400 max-w-md leading-relaxed">
        {siteLabels?.homeMembershipDescription || "Expand your network and elevate your game. We are actively looking for new student members to join our representative squads and co-curricular programs."}
      </p>
+     <div className="pt-2">
+       <Link
+         to="/membership"
+         className="inline-flex items-center gap-3 bg-brand-neutral text-brand-ink px-10 py-5 font-mono text-xs font-black tracking-widest uppercase hover:bg-brand-pink hover:text-brand-neutral transition-all duration-350 shadow-[4px_4px_0px_rgba(218,95,142,1)] hover:shadow-none translate-y-0 hover:translate-y-1 hover:translate-x-1 border-2 border-transparent"
+       >
+         {siteLabels?.homeMembershipButtonText || "REGISTER NOW"} <ArrowRight size={16} />
+       </Link>
+     </div>
    </div>
 
-   <div className="shrink-0 relative z-10">
-     <Link
-       to="/membership"
-       className="inline-flex items-center gap-3 bg-brand-neutral text-brand-ink px-10 py-5 font-mono text-xs font-black tracking-widest uppercase hover:bg-brand-pink hover:text-brand-neutral transition-all duration-350 shadow-[4px_4px_0px_rgba(218,95,142,1)] hover:shadow-none translate-y-0 hover:translate-y-1 hover:translate-x-1 border-2 border-transparent"
-     >
-       {siteLabels?.homeMembershipButtonText || "REGISTER NOW"} <ArrowRight size={16} />
-     </Link>
+   <div className="shrink-0 relative z-10 flex flex-col items-center gap-3">
+     <div className="bg-brand-neutral p-3 border-2 border-brand-neutral/20 shadow-[4px_4px_0px_rgba(218,95,142,0.4)]">
+       <img
+         src="/line-openchat-qr.jpeg"
+         alt="Line OpenChat QR Code"
+         className="w-36 h-36 md:w-44 md:h-44 object-contain"
+       />
+     </div>
+     <div className="text-center space-y-0.5">
+       <p className="font-mono text-[10px] font-black tracking-widest uppercase text-brand-neutral/80">
+         LINE OPENCHAT
+       </p>
+       <p className="font-sans text-[11px] text-stone-400">
+         {language === "th" ? "สแกนเพื่อเข้าร่วมกลุ่ม Line สมาชิก" : "Scan to join the CU Golf Club member group"}
+       </p>
+     </div>
    </div>
  </section>
 

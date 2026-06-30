@@ -45,9 +45,10 @@ export default function MemberAuthView({
   const [instagram, setInstagram] = useState("");
   const [lineId, setLineId] = useState("");
   const [pdpaConsent, setPdpaConsent] = useState(false);
+  const [pdpaError, setPdpaError] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, boolean>>({});
 
-  const clearErrors = () => { setErrorMsg(""); setSuccessMsg(""); setFieldErrors({}); };
+  const clearErrors = () => { setErrorMsg(""); setSuccessMsg(""); setFieldErrors({}); setPdpaError(false); };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -90,7 +91,10 @@ export default function MemberAuthView({
       setErrorMsg(language === "th" ? "กรุณากรอกข้อมูลที่ไฮไลต์ด้านล่างให้ครบถ้วน" : "Please complete the highlighted fields below.");
       return;
     }
-    if (!pdpaConsent) return;
+    if (!pdpaConsent) {
+      setPdpaError(true);
+      return;
+    }
     setLoading(true);
     try {
       const res = await registerMember({
@@ -446,15 +450,15 @@ export default function MemberAuthView({
             </div>
 
             {/* PDPA Consent */}
-            <div className="flex items-start gap-2">
+            <div className={`flex items-start gap-2 transition-all ${pdpaError ? "bg-red-50 border border-red-400 px-2 py-1.5 -mx-2 rounded" : ""}`}>
               <input
                 type="checkbox"
                 id="pdpa_consent"
                 checked={pdpaConsent}
-                onChange={(e) => setPdpaConsent(e.target.checked)}
+                onChange={(e) => { setPdpaConsent(e.target.checked); if (e.target.checked) setPdpaError(false); }}
                 className="h-3 w-3 mt-0.5 shrink-0 cursor-pointer"
               />
-              <label htmlFor="pdpa_consent" className="text-[10px] text-stone-400 leading-relaxed cursor-pointer">
+              <label htmlFor="pdpa_consent" className={`text-[10px] leading-relaxed cursor-pointer transition-colors ${pdpaError ? "text-red-500 font-semibold" : "text-stone-400"}`}>
                 {language === "th" ? (
                   <>
                     ยอมรับ{" "}
@@ -475,8 +479,8 @@ export default function MemberAuthView({
 
             <button
               type="submit"
-              disabled={loading || !pdpaConsent}
-              className="mt-2 w-full bg-brand-ink hover:bg-brand-pink text-brand-neutral hover:text-brand-neutral py-3 text-xs font-mono font-bold uppercase tracking-widest transition-all duration-200 cursor-pointer flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={loading}
+              className={`mt-2 w-full bg-brand-ink text-brand-neutral py-3 text-xs font-mono font-bold uppercase tracking-widest transition-all duration-200 flex justify-center items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed ${!pdpaConsent ? "opacity-50 cursor-not-allowed" : "hover:bg-brand-pink cursor-pointer"}`}
             >
               {loading && <Loader2 size={12} className="animate-spin" />}
               {loading ? (language === "th" ? "กำลังลงทะเบียน..." : "CREATING PROFILE...") : (language === "th" ? "สมัครสมาชิกชมรม" : "SUBMIT REGISTRATION")}

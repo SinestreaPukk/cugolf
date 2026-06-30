@@ -327,6 +327,7 @@ export interface DatabaseState {
   staff: Staff[];
   scores: TournamentScore[];
   gallery: GalleryImage[];
+  memberEvents: MemberEvent[];
   welcomeSection: WelcomeSection;
   upcomingActivity: UpcomingActivity;
   homeSponsorSection: HomeSponsorSection;
@@ -335,6 +336,23 @@ export interface DatabaseState {
   siteSettings: SiteSettings;
   siteLabels: SiteLabels;
   siteLabelsThai?: SiteLabels;
+}
+
+export interface MemberEvent {
+  id: string;
+  title: string;
+  titleThai?: string;
+  description?: string;
+  descriptionThai?: string;
+  date?: string;
+  time?: string;
+  location?: string;
+  locationThai?: string;
+  imageUrl?: string;
+  registrationOpen: boolean;
+  googleFormUrl?: string;
+  isVisible: boolean;
+  created_at?: string;
 }
 
 export interface Member {

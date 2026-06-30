@@ -1,4 +1,4 @@
-import { DatabaseState, NewsItem, Player, Staff, TournamentScore, GalleryImage, WelcomeSection, UpcomingActivity, Sponsor, SiteSettings, SiteLabels, HomeSponsorSection, ClubActivityContent, Member } from "../types";
+import { DatabaseState, NewsItem, Player, Staff, TournamentScore, GalleryImage, WelcomeSection, UpcomingActivity, Sponsor, SiteSettings, SiteLabels, HomeSponsorSection, ClubActivityContent, Member, MemberEvent } from "../types";
 
 async function handleResponse(res: Response, defaultError: string) {
   const text = await res.text();
@@ -364,6 +364,33 @@ export async function changePassword(oldPassword: string, newPassword: string, t
     body: JSON.stringify({ oldPassword, newPassword })
   });
   return handleResponse(res, "Failed to change password");
+}
+
+// MEMBER EVENTS CRUD (admin-protected)
+export async function createMemberEvent(item: Partial<MemberEvent>, token: string): Promise<{ success: boolean; item: MemberEvent }> {
+  const res = await fetch("/api/member-events", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+    body: JSON.stringify(item)
+  });
+  return handleResponse(res, "Failed to create member event");
+}
+
+export async function updateMemberEvent(id: string, item: Partial<MemberEvent>, token: string): Promise<{ success: boolean }> {
+  const res = await fetch(`/api/member-events/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+    body: JSON.stringify(item)
+  });
+  return handleResponse(res, "Failed to update member event");
+}
+
+export async function deleteMemberEvent(id: string, token: string): Promise<{ success: boolean }> {
+  const res = await fetch(`/api/member-events/${id}`, {
+    method: "DELETE",
+    headers: { "Authorization": `Bearer ${token}` }
+  });
+  return handleResponse(res, "Failed to delete member event");
 }
 
 export async function syncMembersToSheets(token: string): Promise<{ success: boolean; synced?: number; total?: number; errors?: number; message?: string }> {

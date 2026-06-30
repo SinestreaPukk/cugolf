@@ -8,7 +8,7 @@ import RosterView from"./RosterView";
 import StaffView from"./StaffView";
 import ScoresView from"./ScoresView";
 import SponsorsView from"./SponsorsView";
-import { DatabaseState, NewsItem, Player, Staff, TournamentScore, GalleryImage, PlayerScore, WelcomeSection, Sponsor, SiteSettings, Competition, ClubActivityContent } from"../types";
+import { DatabaseState, NewsItem, Player, Staff, TournamentScore, GalleryImage, PlayerScore, WelcomeSection, Sponsor, SiteSettings, Competition, ClubActivityContent, MemberEvent } from"../types";
 import {
  loginAdmin,
  createNews,
@@ -42,7 +42,10 @@ import {
  syncMembersToSheets,
  getAdminMembers,
  updateAdminMember,
- deleteAdminMember
+ deleteAdminMember,
+ createMemberEvent,
+ updateMemberEvent,
+ deleteMemberEvent
 } from"../utils/api";
 import {
  Plus, Trash2, Edit, Save, FileText, Sparkles, LogOut, Users,
@@ -202,7 +205,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
 
  // Visual CMS State
  const [activeSectionId, setActiveSectionId] = useState<string | null>(null);
- const [activeView, setActiveView] = useState<"home"|"blog"|"club"|"roster"|"staff"|"scores"|"sponsors"|"settings"|"gallery"|"upcoming"|"admins"|"members">("home");
+ const [activeView, setActiveView] = useState<"home"|"blog"|"club"|"roster"|"staff"|"scores"|"sponsors"|"settings"|"gallery"|"upcoming"|"admins"|"members"|"portal-events">("home");
 
  // Admin emails management states and handlers
  const [adminEmails, setAdminEmails] = useState<string[]>([]);
@@ -225,6 +228,68 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  const [editFaculty, setEditFaculty] = useState("");
  const [editInstagram, setEditInstagram] = useState("");
  const [editLineId, setEditLineId] = useState("");
+
+ // Portal events state
+ const [editingEventId, setEditingEventId] = useState<string | null>(null);
+ const [evtTitle, setEvtTitle] = useState("");
+ const [evtTitleThai, setEvtTitleThai] = useState("");
+ const [evtDescription, setEvtDescription] = useState("");
+ const [evtDescriptionThai, setEvtDescriptionThai] = useState("");
+ const [evtDate, setEvtDate] = useState("");
+ const [evtTime, setEvtTime] = useState("");
+ const [evtLocation, setEvtLocation] = useState("");
+ const [evtLocationThai, setEvtLocationThai] = useState("");
+ const [evtImageUrl, setEvtImageUrl] = useState("");
+ const [evtRegistrationOpen, setEvtRegistrationOpen] = useState(false);
+ const [evtGoogleFormUrl, setEvtGoogleFormUrl] = useState("");
+ const [evtIsVisible, setEvtIsVisible] = useState(true);
+
+ const clearEventForm = () => {
+   setEditingEventId(null); setEvtTitle(""); setEvtTitleThai(""); setEvtDescription(""); setEvtDescriptionThai("");
+   setEvtDate(""); setEvtTime(""); setEvtLocation(""); setEvtLocationThai(""); setEvtImageUrl("");
+   setEvtRegistrationOpen(false); setEvtGoogleFormUrl(""); setEvtIsVisible(true);
+ };
+
+ const handleEditEventTrigger = (evt: MemberEvent) => {
+   setEditingEventId(evt.id); setEvtTitle(evt.title); setEvtTitleThai(evt.titleThai || "");
+   setEvtDescription(evt.description || ""); setEvtDescriptionThai(evt.descriptionThai || "");
+   setEvtDate(evt.date || ""); setEvtTime(evt.time || ""); setEvtLocation(evt.location || "");
+   setEvtLocationThai(evt.locationThai || ""); setEvtImageUrl(evt.imageUrl || "");
+   setEvtRegistrationOpen(evt.registrationOpen); setEvtGoogleFormUrl(evt.googleFormUrl || "");
+   setEvtIsVisible(evt.isVisible); window.scrollTo({ top: 0, behavior: "smooth" });
+ };
+
+ const handleSaveEvent = async () => {
+   if (!adminToken) return;
+   const payload = {
+     title: evtTitle, titleThai: evtTitleThai || null, description: evtDescription || null,
+     descriptionThai: evtDescriptionThai || null, date: evtDate || null, time: evtTime || null,
+     location: evtLocation || null, locationThai: evtLocationThai || null,
+     imageUrl: evtImageUrl || null, registrationOpen: evtRegistrationOpen,
+     googleFormUrl: evtGoogleFormUrl || null, isVisible: evtIsVisible
+   };
+   try {
+     if (editingEventId) {
+       await updateMemberEvent(editingEventId, payload, adminToken);
+     } else {
+       await createMemberEvent(payload, adminToken);
+     }
+     clearEventForm();
+     refreshState();
+   } catch (err: any) {
+     triggerErrorMsg(err.message || "Failed to save event.");
+   }
+ };
+
+ const handleDeleteEvent = async (id: string) => {
+   if (!adminToken || !confirm("Delete this event?")) return;
+   try {
+     await deleteMemberEvent(id, adminToken);
+     refreshState();
+   } catch (err: any) {
+     triggerErrorMsg(err.message || "Failed to delete event.");
+   }
+ };
  const [editPassword, setEditPassword] = useState("");
  const [memberSearch, setMemberSearch] = useState("");
 
@@ -2397,6 +2462,93 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  </div>
  );
 
+ case "portal-events":
+   return (
+     <div className="space-y-12">
+       <div className="space-y-6">
+         <h2 className="font-display text-lg font-bold uppercase tracking-wider text-brand-ink flex items-center gap-2 border-b border-brand-ink/10 pb-2">
+           <Calendar size={20} className="text-brand-pink" /> PORTAL EVENTS
+         </h2>
+         <button
+           onClick={() => { clearEventForm(); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+           className="w-full bg-brand-ink text-brand-neutral py-3 font-mono text-[10px] font-bold uppercase flex items-center justify-center gap-2 hover:bg-brand-pink"
+         >
+           <Plus size={14} /> ADD NEW EVENT
+         </button>
+
+         <div className="space-y-6 mt-8">
+           <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2">
+             {editingEventId ? "EDITING EVENT" : "NEW EVENT FORM"}
+           </h3>
+           <div className="space-y-4">
+             <div className="grid grid-cols-2 gap-4">
+               <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Title (EN)</label><input type="text" value={evtTitle} onChange={e => setEvtTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs font-bold" /></div>
+               <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Title (TH)</label><input type="text" value={evtTitleThai} onChange={e => setEvtTitleThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
+             </div>
+             <div className="grid grid-cols-2 gap-4">
+               <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Date (YYYY-MM-DD)</label><input type="date" value={evtDate} onChange={e => setEvtDate(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
+               <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Time</label><input type="time" value={evtTime} onChange={e => setEvtTime(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
+             </div>
+             <div className="grid grid-cols-2 gap-4">
+               <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Location (EN)</label><input type="text" value={evtLocation} onChange={e => setEvtLocation(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
+               <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Location (TH)</label><input type="text" value={evtLocationThai} onChange={e => setEvtLocationThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
+             </div>
+             <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Description (EN)</label><textarea rows={3} value={evtDescription} onChange={e => setEvtDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
+             <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Description (TH)</label><textarea rows={3} value={evtDescriptionThai} onChange={e => setEvtDescriptionThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
+             <ImageUploadWidget id="evt_img" label="EVENT IMAGE" value={evtImageUrl} onChange={setEvtImageUrl} />
+             <div className="space-y-1.5"><label className="font-mono text-[9px] font-bold uppercase">Google Form URL (Registration Link)</label><input type="url" value={evtGoogleFormUrl} onChange={e => setEvtGoogleFormUrl(e.target.value)} placeholder="https://docs.google.com/forms/..." className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs" /></div>
+             <div className="flex flex-col gap-2">
+               <div className="flex items-center gap-2">
+                 <input type="checkbox" id="evt_reg_open" checked={evtRegistrationOpen} onChange={e => setEvtRegistrationOpen(e.target.checked)} className="h-4 w-4 accent-brand-pink" />
+                 <label htmlFor="evt_reg_open" className="font-mono text-[9px] font-bold uppercase">REGISTRATION OPEN (Shows register button)</label>
+               </div>
+               <div className="flex items-center gap-2">
+                 <input type="checkbox" id="evt_visible" checked={evtIsVisible} onChange={e => setEvtIsVisible(e.target.checked)} className="h-4 w-4 accent-brand-pink" />
+                 <label htmlFor="evt_visible" className="font-mono text-[9px] font-bold uppercase">VISIBLE TO MEMBERS</label>
+               </div>
+             </div>
+           </div>
+           <div className="flex gap-4 pt-4 border-t border-brand-ink/10">
+             <button onClick={clearEventForm} className="flex-1 bg-brand-stone py-3 font-mono text-[10px] font-bold uppercase hover:bg-stone-200">CLEAR FORM</button>
+             <button onClick={handleSaveEvent} className="flex-1 bg-brand-ink text-brand-neutral py-3 font-mono text-[10px] font-bold uppercase hover:bg-brand-pink flex justify-center items-center gap-1.5"><Save size={12} /> SAVE EVENT</button>
+           </div>
+         </div>
+
+         <div className="pt-12">
+           <h3 className="font-mono text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2 mb-4">ALL EVENTS</h3>
+           <div className="space-y-3">
+             {(dbState.memberEvents || []).map(evt => (
+               <div key={evt.id} className="border border-stone-200 p-4 bg-brand-neutral flex items-start justify-between gap-4 hover:border-brand-pink transition-colors">
+                 <div className="flex-grow space-y-1">
+                   <div className="flex items-center gap-2 flex-wrap">
+                     <h4 className="font-display text-xs font-bold uppercase">{evt.title}</h4>
+                     <span className={`text-[8px] font-mono font-bold px-1.5 py-0.5 ${evt.registrationOpen ? "bg-emerald-100 text-emerald-700" : "bg-stone-100 text-stone-500"}`}>
+                       {evt.registrationOpen ? "REG OPEN" : "REG CLOSED"}
+                     </span>
+                     <span className={`text-[8px] font-mono font-bold px-1.5 py-0.5 ${evt.isVisible ? "bg-blue-100 text-blue-700" : "bg-stone-100 text-stone-500"}`}>
+                       {evt.isVisible ? "VISIBLE" : "HIDDEN"}
+                     </span>
+                   </div>
+                   <p className="font-mono text-[9px] text-stone-500">
+                     {evt.date ? evt.date : "No date"}{evt.time ? ` · ${evt.time}` : ""}{evt.location ? ` · ${evt.location}` : ""}
+                   </p>
+                   {evt.googleFormUrl && <p className="font-mono text-[9px] text-blue-500 truncate">{evt.googleFormUrl}</p>}
+                 </div>
+                 <div className="flex gap-1 shrink-0">
+                   <button onClick={() => handleEditEventTrigger(evt)} className="p-1.5 bg-brand-stone hover:bg-stone-200"><Edit size={10} /></button>
+                   <button onClick={() => handleDeleteEvent(evt.id)} className="p-1.5 bg-red-50 text-red-600 hover:bg-red-100"><Trash2 size={10} /></button>
+                 </div>
+               </div>
+             ))}
+             {(dbState.memberEvents || []).length === 0 && (
+               <p className="text-[10px] font-mono text-stone-400 text-center py-8">No events yet. Add one above.</p>
+             )}
+           </div>
+         </div>
+       </div>
+     </div>
+   );
+
  case "sponsors":
    return (
      <div className="space-y-12">
@@ -3173,6 +3325,22 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
    return (
      <SponsorsView sponsors={dbState.sponsors || []} siteLabels={dbState.siteLabels} isAdmin={false} />
    );
+ case "portal-events":
+   return (
+     <div className="p-6 space-y-4 font-sans text-xs text-brand-ink">
+       <p className="font-mono text-[9px] uppercase tracking-widest text-stone-400">MEMBER PORTAL PREVIEW — {(dbState.memberEvents || []).length} event(s)</p>
+       {(dbState.memberEvents || []).filter(e => e.isVisible).map(evt => (
+         <div key={evt.id} className="border border-brand-ink/20 p-4 bg-brand-neutral space-y-1">
+           <div className="flex items-center gap-2">
+             <span className="font-bold uppercase">{evt.title}</span>
+             <span className={`text-[8px] font-mono px-1.5 py-0.5 ${evt.registrationOpen ? "bg-emerald-100 text-emerald-700" : "bg-stone-100 text-stone-400"}`}>{evt.registrationOpen ? "OPEN" : "CLOSED"}</span>
+           </div>
+           {evt.date && <p className="text-[10px] text-stone-500">{evt.date}{evt.time ? ` · ${evt.time}` : ""}</p>}
+           {evt.location && <p className="text-[10px] text-stone-500">{evt.location}</p>}
+         </div>
+       ))}
+     </div>
+   );
  case "gallery":
  case "upcoming":
    return (
@@ -3229,6 +3397,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  { id:"blog", label:"ACTIVITIES & BLOG"},
  { id:"club", label:"CLUB ACTIVITIES"},
  { id:"upcoming", label:"UPCOMING"},
+ { id:"portal-events", label:"PORTAL EVENTS"},
  { id:"gallery", label:"GALLERY"},
  { id:"roster", label:"ROSTER"},
  { id:"staff", label:"STAFF"},

@@ -193,12 +193,13 @@ app.post("/api/upload", async (req, res) => {
 // REST endpoints for the Database Layer
 app.get("/api/db", async (req, res) => {
   try {
-    const collections = ["news", "roster", "staff", "scores", "gallery", "sponsors"];
+    const collections = ["news", "roster", "staff", "scores", "gallery", "sponsors", "member_events"];
     const results = await Promise.all(collections.map(c => supabase.from(c).select("*")));
-    
+
     const db: any = {};
     collections.forEach((name, index) => {
-      db[name] = results[index].data || [];
+      const key = name === "member_events" ? "memberEvents" : name;
+      db[key] = results[index].data || [];
     });
 
     // Fetch site configs
@@ -783,6 +784,48 @@ app.put("/api/staff/:id", async (req, res) => {
 
 app.delete("/api/staff/:id", async (req, res) => {
   const { error } = await supabase.from("staff").delete().eq("id", req.params.id);
+  if (error) return res.status(500).json({ success: false, message: error.message });
+  res.json({ success: true });
+});
+
+// MEMBER EVENTS CRUD (admin-only)
+app.post("/api/member-events", async (req, res) => {
+  const decoded = verifyMemberToken(req.headers.authorization?.replace("Bearer ", "") || "");
+  if (!decoded?.isAdmin) return res.status(403).json({ success: false, message: "Access denied." });
+  const newItem = {
+    id: `mevent-${Date.now()}`,
+    title: req.body.title || "New Event",
+    titleThai: req.body.titleThai || null,
+    description: req.body.description || null,
+    descriptionThai: req.body.descriptionThai || null,
+    date: req.body.date || null,
+    time: req.body.time || null,
+    location: req.body.location || null,
+    locationThai: req.body.locationThai || null,
+    imageUrl: req.body.imageUrl || null,
+    registrationOpen: req.body.registrationOpen ?? false,
+    googleFormUrl: req.body.googleFormUrl || null,
+    isVisible: req.body.isVisible ?? true
+  };
+  const { error } = await supabase.from("member_events").insert(newItem);
+  if (error) return res.status(500).json({ success: false, message: error.message });
+  res.json({ success: true, item: newItem });
+});
+
+app.put("/api/member-events/:id", async (req, res) => {
+  const decoded = verifyMemberToken(req.headers.authorization?.replace("Bearer ", "") || "");
+  if (!decoded?.isAdmin) return res.status(403).json({ success: false, message: "Access denied." });
+  const { title, titleThai, description, descriptionThai, date, time, location, locationThai, imageUrl, registrationOpen, googleFormUrl, isVisible } = req.body;
+  const update: Record<string, any> = { title, titleThai, description, descriptionThai, date, time, location, locationThai, imageUrl, registrationOpen, googleFormUrl, isVisible };
+  const { error } = await supabase.from("member_events").update(update).eq("id", req.params.id);
+  if (error) return res.status(500).json({ success: false, message: error.message });
+  res.json({ success: true });
+});
+
+app.delete("/api/member-events/:id", async (req, res) => {
+  const decoded = verifyMemberToken(req.headers.authorization?.replace("Bearer ", "") || "");
+  if (!decoded?.isAdmin) return res.status(403).json({ success: false, message: "Access denied." });
+  const { error } = await supabase.from("member_events").delete().eq("id", req.params.id);
   if (error) return res.status(500).json({ success: false, message: error.message });
   res.json({ success: true });
 });

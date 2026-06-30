@@ -264,6 +264,7 @@ function AppContent() {
                 siteSettings={dbState?.siteSettings}
                 adminToken={adminToken}
                 setAdminToken={syncAdminToken}
+                memberEvents={dbState?.memberEvents || []}
               />
             } />
             <Route path="/admin" element={

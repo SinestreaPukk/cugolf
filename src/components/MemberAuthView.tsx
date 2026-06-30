@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { registerMember, loginMember } from "../utils/api";
-import { Member, SiteSettings } from "../types";
+import { Member, MemberEvent, SiteSettings } from "../types";
 import { useLanguage } from "../utils/LanguageContext";
 import { useNavigate, Link } from "react-router-dom";
-import { Loader2, CheckCircle2 } from "lucide-react";
+import { Loader2, CheckCircle2, Calendar, Clock, MapPin, ExternalLink } from "lucide-react";
 
 interface MemberAuthViewProps {
   memberUser: any;
@@ -13,6 +13,7 @@ interface MemberAuthViewProps {
   siteSettings?: SiteSettings;
   adminToken: string | null;
   setAdminToken: (token: string | null) => void;
+  memberEvents?: MemberEvent[];
 }
 
 export default function MemberAuthView({
@@ -22,7 +23,8 @@ export default function MemberAuthView({
   setMemberToken,
   siteSettings,
   adminToken,
-  setAdminToken
+  setAdminToken,
+  memberEvents = []
 }: MemberAuthViewProps) {
   const { language } = useLanguage();
   const navigate = useNavigate();
@@ -133,118 +135,213 @@ export default function MemberAuthView({
 
   if (memberUser) {
     const profile = memberUser.profile || {};
+    const visibleEvents = memberEvents.filter(e => e.isVisible);
+
     return (
-      <div className="mx-auto max-w-md py-8 animate-fade-in text-brand-ink">
-        <div className="bg-brand-neutral border border-brand-ink p-6 space-y-6 shadow-[4px_4px_0px_rgba(18,18,18,1)]">
-          <div className="border-b border-brand-ink/10 pb-4 text-center space-y-1">
-            <h3 className="font-display text-base font-bold uppercase tracking-wider text-brand-ink">
-              {language === "th" ? "พอร์ทัลสมาชิก" : "MEMBER PORTAL"}
-            </h3>
-            <p className="text-[9px] text-neutral-400 font-mono tracking-widest uppercase">
-              ID: CUGC-{memberUser.id?.substring(0, 8).toUpperCase()}
-            </p>
-          </div>
+      <div className="animate-fade-in text-brand-ink py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 items-start">
 
-          <div className="space-y-3 font-sans text-xs">
-            {profile.prefix && (
-              <div className="flex justify-between border-b border-brand-ink/10 pb-2">
-                <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "คำนำหน้า" : "PREFIX"}</span>
-                <span className="font-bold text-brand-ink">{profile.prefix}</span>
-              </div>
-            )}
-            <div className="flex justify-between border-b border-brand-ink/10 pb-2">
-              <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "ชื่อ-นามสกุล" : "NAME"}</span>
-              <span className="font-bold text-brand-ink uppercase">{memberUser.name}</span>
+          {/* LEFT — Member Card */}
+          <div className="bg-brand-neutral border border-brand-ink p-6 space-y-6 shadow-[4px_4px_0px_rgba(18,18,18,1)]">
+            <div className="border-b border-brand-ink/10 pb-4 text-center space-y-1">
+              <h3 className="font-display text-base font-bold uppercase tracking-wider text-brand-ink">
+                {language === "th" ? "พอร์ทัลสมาชิก" : "MEMBER PORTAL"}
+              </h3>
+              <p className="text-[9px] text-neutral-400 font-mono tracking-widest uppercase">
+                ID: CUGC-{memberUser.id?.substring(0, 8).toUpperCase()}
+              </p>
             </div>
-            <div className="flex justify-between border-b border-brand-ink/10 pb-2">
-              <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "อีเมล" : "EMAIL"}</span>
-              <span className="font-bold text-brand-ink">{memberUser.email}</span>
-            </div>
-            <div className="flex justify-between border-b border-brand-ink/10 pb-2">
-              <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "รหัสนิสิต" : "STUDENT ID"}</span>
-              <span className="font-bold text-brand-ink">{profile.studentId || "—"}</span>
-            </div>
-            <div className="flex justify-between border-b border-brand-ink/10 pb-2">
-              <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "ชั้นปี" : "YEAR"}</span>
-              <span className="font-bold text-brand-ink uppercase">
-                {profile.year ? (language === "th" ? profile.year.replace("Year", "ชั้นปีที่") : profile.year) : "—"}
-              </span>
-            </div>
-            <div className="flex justify-between border-b border-brand-ink/10 pb-2">
-              <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "คณะ" : "FACULTY"}</span>
-              <span className="font-bold text-brand-ink uppercase">{profile.faculty || "—"}</span>
-            </div>
-            {profile.instagram && (
-              <div className="flex justify-between border-b border-brand-ink/10 pb-2">
-                <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Instagram</span>
-                <span className="font-bold text-brand-ink">{profile.instagram}</span>
-              </div>
-            )}
-            {profile.lineId && (
-              <div className="flex justify-between border-b border-brand-ink/10 pb-2">
-                <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Line ID</span>
-                <span className="font-bold text-brand-ink">{profile.lineId}</span>
-              </div>
-            )}
-          </div>
 
-          {memberUser.isAdmin && (
-            <div className="space-y-3 pt-2 border-t border-brand-ink/10">
-              <span className="font-mono text-[9px] font-bold text-brand-pink tracking-[0.2em] uppercase block">
-                {language === "th" ? "สิทธิ์ผู้ดูแลระบบ (ADMIN)" : "ADMINISTRATOR PRIVILEGES"}
-              </span>
-              {!adminToken ? (
-                <div className="space-y-2">
-                  <button
-                    onClick={() => {
-                      setAdminToken(memberToken);
-                      localStorage.setItem("cu-golf-club-admin-token", memberToken || "");
-                    }}
-                    className="w-full inline-flex justify-center items-center bg-brand-pink hover:bg-brand-ink text-brand-neutral hover:text-brand-neutral py-2.5 border border-brand-ink text-xs font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer"
-                  >
-                    ⚡ {language === "th" ? "เปิดโหมดแก้ไขข้อมูล" : "ACTIVATE EDITING MODE"}
-                  </button>
-                  <p className="text-[9.5px] text-stone-500 font-sans leading-normal">
-                    {language === "th"
-                      ? "การเปิดโหมดแก้ไขจะแสดงแถบ CMS และปุ่มแก้ไขบนหน้าเว็บต่างๆ เพื่อให้คุณแก้ไขข้อมูลได้ทันที"
-                      : "Activating editing mode displays the CMS active bar and edit actions on public pages to let you modify website content."}
-                  </p>
+            <div className="space-y-3 font-sans text-xs">
+              {profile.prefix && (
+                <div className="flex justify-between border-b border-brand-ink/10 pb-2">
+                  <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "คำนำหน้า" : "PREFIX"}</span>
+                  <span className="font-bold text-brand-ink">{profile.prefix}</span>
                 </div>
-              ) : (
-                <div className="space-y-2.5">
-                  <button
-                    onClick={() => {
-                      setAdminToken(null);
-                      localStorage.removeItem("cu-golf-club-admin-token");
-                    }}
-                    className="w-full inline-flex justify-center items-center bg-brand-neutral hover:bg-stone-100 text-brand-ink py-2.5 border-2 border-brand-ink text-xs font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer"
-                  >
-                    ❌ {language === "th" ? "ปิดโหมดแก้ไขข้อมูล" : "DEACTIVATE EDITING MODE"}
-                  </button>
-                  <Link
-                    to="/admin"
-                    className="w-full inline-flex justify-center items-center bg-brand-ink hover:bg-neutral-800 text-brand-neutral hover:text-brand-neutral py-2.5 border border-brand-ink text-xs font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer"
-                  >
-                    ⚙️ {language === "th" ? "เข้าสู่ระบบจัดการหลังบ้าน (CMS)" : "ENTER ADMIN CMS PANEL"}
-                  </Link>
-                  <p className="text-[9.5px] text-stone-500 font-sans leading-normal">
-                    {language === "th"
-                      ? "คุณกำลังอยู่ในโหมดแก้ไขข้อมูล (แถบควบคุมถูกเปิดใช้งาน) ปิดโหมดแก้ไขหากต้องการพรีวิวหน้าเว็บแบบผู้เยี่ยมชมทั่วไป"
-                      : "You are currently in editing mode (CMS is active). Deactivate editing mode to preview the site as a regular visitor."}
-                  </p>
+              )}
+              <div className="flex justify-between border-b border-brand-ink/10 pb-2">
+                <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "ชื่อ-นามสกุล" : "NAME"}</span>
+                <span className="font-bold text-brand-ink uppercase">{memberUser.name}</span>
+              </div>
+              <div className="flex justify-between border-b border-brand-ink/10 pb-2">
+                <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "อีเมล" : "EMAIL"}</span>
+                <span className="font-bold text-brand-ink text-right break-all">{memberUser.email}</span>
+              </div>
+              <div className="flex justify-between border-b border-brand-ink/10 pb-2">
+                <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "รหัสนิสิต" : "STUDENT ID"}</span>
+                <span className="font-bold text-brand-ink">{profile.studentId || "—"}</span>
+              </div>
+              <div className="flex justify-between border-b border-brand-ink/10 pb-2">
+                <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "ชั้นปี" : "YEAR"}</span>
+                <span className="font-bold text-brand-ink uppercase">
+                  {profile.year ? (language === "th" ? profile.year.replace("Year", "ชั้นปีที่") : profile.year) : "—"}
+                </span>
+              </div>
+              <div className="flex justify-between border-b border-brand-ink/10 pb-2">
+                <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">{language === "th" ? "คณะ" : "FACULTY"}</span>
+                <span className="font-bold text-brand-ink uppercase">{profile.faculty || "—"}</span>
+              </div>
+              {profile.instagram && (
+                <div className="flex justify-between border-b border-brand-ink/10 pb-2">
+                  <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Instagram</span>
+                  <span className="font-bold text-brand-ink">{profile.instagram}</span>
+                </div>
+              )}
+              {profile.lineId && (
+                <div className="flex justify-between border-b border-brand-ink/10 pb-2">
+                  <span className="font-mono text-[9px] font-bold text-neutral-400 uppercase tracking-wider">Line ID</span>
+                  <span className="font-bold text-brand-ink">{profile.lineId}</span>
                 </div>
               )}
             </div>
-          )}
 
-          <div className="pt-2">
-            <button
-              onClick={handleLogout}
-              className="w-full bg-brand-stone hover:bg-red-50 hover:text-red-600 text-brand-ink py-2.5 border border-brand-ink text-xs font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer"
-            >
-              {language === "th" ? "ออกจากระบบ" : "DISCONNECT SESSION"}
-            </button>
+            {memberUser.isAdmin && (
+              <div className="space-y-3 pt-2 border-t border-brand-ink/10">
+                <span className="font-mono text-[9px] font-bold text-brand-pink tracking-[0.2em] uppercase block">
+                  {language === "th" ? "สิทธิ์ผู้ดูแลระบบ (ADMIN)" : "ADMINISTRATOR PRIVILEGES"}
+                </span>
+                {!adminToken ? (
+                  <div className="space-y-2">
+                    <button
+                      onClick={() => {
+                        setAdminToken(memberToken);
+                        localStorage.setItem("cu-golf-club-admin-token", memberToken || "");
+                      }}
+                      className="w-full inline-flex justify-center items-center bg-brand-pink hover:bg-brand-ink text-brand-neutral hover:text-brand-neutral py-2.5 border border-brand-ink text-xs font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                    >
+                      ⚡ {language === "th" ? "เปิดโหมดแก้ไขข้อมูล" : "ACTIVATE EDITING MODE"}
+                    </button>
+                    <p className="text-[9.5px] text-stone-500 font-sans leading-normal">
+                      {language === "th"
+                        ? "การเปิดโหมดแก้ไขจะแสดงแถบ CMS และปุ่มแก้ไขบนหน้าเว็บต่างๆ เพื่อให้คุณแก้ไขข้อมูลได้ทันที"
+                        : "Activating editing mode displays the CMS active bar and edit actions on public pages to let you modify website content."}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-2.5">
+                    <button
+                      onClick={() => {
+                        setAdminToken(null);
+                        localStorage.removeItem("cu-golf-club-admin-token");
+                      }}
+                      className="w-full inline-flex justify-center items-center bg-brand-neutral hover:bg-stone-100 text-brand-ink py-2.5 border-2 border-brand-ink text-xs font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                    >
+                      ❌ {language === "th" ? "ปิดโหมดแก้ไขข้อมูล" : "DEACTIVATE EDITING MODE"}
+                    </button>
+                    <Link
+                      to="/admin"
+                      className="w-full inline-flex justify-center items-center bg-brand-ink hover:bg-neutral-800 text-brand-neutral hover:text-brand-neutral py-2.5 border border-brand-ink text-xs font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer"
+                    >
+                      ⚙️ {language === "th" ? "เข้าสู่ระบบจัดการหลังบ้าน (CMS)" : "ENTER ADMIN CMS PANEL"}
+                    </Link>
+                    <p className="text-[9.5px] text-stone-500 font-sans leading-normal">
+                      {language === "th"
+                        ? "คุณกำลังอยู่ในโหมดแก้ไขข้อมูล (แถบควบคุมถูกเปิดใช้งาน) ปิดโหมดแก้ไขหากต้องการพรีวิวหน้าเว็บแบบผู้เยี่ยมชมทั่วไป"
+                        : "You are currently in editing mode (CMS is active). Deactivate editing mode to preview the site as a regular visitor."}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div className="pt-2">
+              <button
+                onClick={handleLogout}
+                className="w-full bg-brand-stone hover:bg-red-50 hover:text-red-600 text-brand-ink py-2.5 border border-brand-ink text-xs font-mono font-bold uppercase tracking-wider transition-colors cursor-pointer"
+              >
+                {language === "th" ? "ออกจากระบบ" : "DISCONNECT SESSION"}
+              </button>
+            </div>
           </div>
+
+          {/* RIGHT — Club Activities */}
+          <div className="space-y-4">
+            <div className="border-b border-brand-ink/20 pb-3">
+              <h3 className="font-display text-base font-bold uppercase tracking-wider text-brand-ink">
+                {language === "th" ? "กิจกรรมชมรม" : "CLUB ACTIVITIES"}
+              </h3>
+              <p className="font-mono text-[9px] text-neutral-400 uppercase tracking-widest mt-1">
+                {language === "th" ? "กิจกรรมสำหรับสมาชิกเท่านั้น" : "MEMBER-EXCLUSIVE EVENTS"}
+              </p>
+            </div>
+
+            {visibleEvents.length === 0 ? (
+              <div className="border border-brand-ink/10 bg-brand-neutral p-10 text-center">
+                <p className="font-mono text-[10px] text-neutral-400 uppercase tracking-widest">
+                  {language === "th" ? "ยังไม่มีกิจกรรมในขณะนี้" : "No activities scheduled yet."}
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {visibleEvents.map(event => (
+                  <div key={event.id} className="bg-brand-neutral border border-brand-ink/20 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    {event.imageUrl && (
+                      <div className="h-36 overflow-hidden">
+                        <img src={event.imageUrl} alt={event.title} className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                    <div className="p-4 space-y-3">
+                      <div>
+                        <h4 className="font-display text-sm font-bold uppercase text-brand-ink leading-tight">
+                          {language === "th" && event.titleThai ? event.titleThai : event.title}
+                        </h4>
+                        {(event.date || event.time || event.location) && (
+                          <div className="mt-2 space-y-1">
+                            {event.date && (
+                              <div className="flex items-center gap-1.5 text-[10px] font-mono text-stone-500">
+                                <Calendar size={10} className="shrink-0" />
+                                <span>{event.date}{event.time ? ` · ${event.time}` : ""}</span>
+                              </div>
+                            )}
+                            {!event.date && event.time && (
+                              <div className="flex items-center gap-1.5 text-[10px] font-mono text-stone-500">
+                                <Clock size={10} className="shrink-0" />
+                                <span>{event.time}</span>
+                              </div>
+                            )}
+                            {event.location && (
+                              <div className="flex items-center gap-1.5 text-[10px] font-mono text-stone-500">
+                                <MapPin size={10} className="shrink-0" />
+                                <span>{language === "th" && event.locationThai ? event.locationThai : event.location}</span>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                      {(event.description || event.descriptionThai) && (
+                        <p className="text-[11px] font-sans text-stone-600 leading-relaxed line-clamp-3">
+                          {language === "th" && event.descriptionThai ? event.descriptionThai : event.description}
+                        </p>
+                      )}
+                      {event.googleFormUrl && (
+                        event.registrationOpen ? (
+                          <a
+                            href={event.googleFormUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-1 w-full inline-flex items-center justify-center gap-1.5 bg-brand-ink hover:bg-brand-pink text-brand-neutral py-2 text-[10px] font-mono font-bold uppercase tracking-wider transition-colors"
+                          >
+                            <ExternalLink size={10} />
+                            {language === "th" ? "ลงทะเบียน" : "REGISTER NOW"}
+                          </a>
+                        ) : (
+                          <div className="mt-1 w-full inline-flex items-center justify-center gap-1.5 bg-stone-100 text-stone-400 py-2 text-[10px] font-mono font-bold uppercase tracking-wider cursor-not-allowed">
+                            {language === "th" ? "ปิดรับสมัคร" : "REGISTRATION CLOSED"}
+                          </div>
+                        )
+                      )}
+                      {!event.googleFormUrl && event.registrationOpen && (
+                        <div className="mt-1 w-full inline-flex items-center justify-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 py-2 text-[10px] font-mono font-bold uppercase tracking-wider">
+                          {language === "th" ? "เปิดรับสมัคร" : "REGISTRATION OPEN"}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
         </div>
       </div>
     );

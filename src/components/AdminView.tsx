@@ -3474,8 +3474,9 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  <div id="admin_dashboard"className="animate-fade-in bg-brand-neutral min-h-screen flex flex-col overflow-hidden">
  
  {/* CMS UPPER DASHBOARD PANEL HEADER */}
- <section className="bg-brand-neutral border-b-2 border-brand-ink px-6 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4 z-50 shrink-0">
- <div className="flex items-center gap-6">
+ <section className="bg-brand-neutral border-b-2 border-brand-ink z-50 shrink-0">
+ {/* Row 1: Title + Action Buttons */}
+ <div className="px-6 py-4 flex items-center justify-between gap-4">
  <div className="space-y-1">
  <span className="font-display text-[9px] font-black text-brand-pink tracking-[0.3em] uppercase block">
  REGISTRY ACTIVE
@@ -3484,7 +3485,24 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  ADMIN CMS
  </h1>
  </div>
- <div className="hidden md:flex items-center gap-1 border-l-2 border-neutral-200 pl-6">
+ <div className="flex items-center gap-3">
+ <button
+ onClick={refreshState}
+ className="border-2 border-brand-ink hover:bg-neutral-50 px-3 py-1.5 text-[10px] font-display font-black text-brand-ink uppercase flex items-center gap-2 bg-brand-neutral transition-colors cursor-pointer"
+ >
+ <RefreshCw size={12} /> SYNC
+ </button>
+ <button
+ onClick={handleLogout}
+ className="border-2 border-brand-ink text-brand-neutral bg-brand-ink hover:bg-neutral-800 px-3 py-1.5 text-[10px] font-display font-black uppercase flex items-center gap-2 transition-colors cursor-pointer"
+ >
+ <LogOut size={12} /> EXIT
+ </button>
+ </div>
+ </div>
+ {/* Row 2: All Tabs (scrollable) */}
+ <div className="border-t border-neutral-200 overflow-x-auto">
+ <div className="flex items-center gap-0 px-6 min-w-max">
  {[
  { id:"home", label:"HOMEPAGE"},
  { id:"blog", label:"ACTIVITIES & BLOG"},
@@ -3507,7 +3525,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  setActiveView(tab.id as any);
  setActiveSectionId(null);
  }}
- className={`px-4 py-2 font-display text-[10px] font-black tracking-widest uppercase transition-all ${
+ className={`px-4 py-2.5 font-display text-[10px] font-black tracking-widest uppercase transition-all whitespace-nowrap ${
  activeView === tab.id
  ?"bg-brand-ink text-brand-neutral"
  :"text-stone-500 hover:text-brand-ink hover:bg-brand-stone"
@@ -3517,21 +3535,6 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  </button>
  ))}
  </div>
- </div>
-
- <div className="flex items-center gap-3">
- <button
- onClick={refreshState}
- className="border-2 border-brand-ink hover:bg-neutral-50 px-3 py-1.5 text-[10px] font-display font-black text-brand-ink uppercase flex items-center gap-2 bg-brand-neutral transition-colors cursor-pointer"
- >
- <RefreshCw size={12} /> SYNC
- </button>
- <button
- onClick={handleLogout}
- className="border-2 border-brand-ink text-brand-neutral bg-brand-ink hover:bg-neutral-800 px-3 py-1.5 text-[10px] font-display font-black uppercase flex items-center gap-2 transition-colors cursor-pointer"
- >
- <LogOut size={12} /> EXIT
- </button>
  </div>
  </section>
 

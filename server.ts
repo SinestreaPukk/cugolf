@@ -274,6 +274,17 @@ app.get("/api/db", async (req, res) => {
       };
     }
 
+    if (!db.simulatorSection || Object.keys(db.simulatorSection).length === 0) {
+      db.simulatorSection = {
+        title: "GOLF SIMULATOR ROOM",
+        subtitle: "COMING SOON",
+        description: "Our state-of-the-art indoor golf simulator room is coming soon — a dedicated space for year-round training, technique refinement, and competitive simulations.",
+        descriptionThai: "",
+        showSection: true,
+        photos: []
+      };
+    }
+
     if (!db.welcomeSection || Object.keys(db.welcomeSection).length === 0) {
       db.welcomeSection = {
         imageUrl: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?auto=format&fit=crop&q=80&w=1200",
@@ -850,6 +861,15 @@ app.delete("/api/instagram-posts/:id", async (req, res) => {
   const decoded = verifyMemberToken(req.headers.authorization?.replace("Bearer ", "") || "");
   if (!decoded?.isAdmin) return res.status(403).json({ success: false, message: "Access denied." });
   const { error } = await supabase.from("instagram_posts").delete().eq("id", req.params.id);
+  if (error) return res.status(500).json({ success: false, message: error.message });
+  res.json({ success: true });
+});
+
+// SIMULATOR SECTION
+app.put("/api/simulator-section", async (req, res) => {
+  const decoded = verifyMemberToken(req.headers.authorization?.replace("Bearer ", "") || "");
+  if (!decoded?.isAdmin) return res.status(403).json({ success: false, message: "Access denied." });
+  const { error } = await supabase.from("site_config").upsert({ key: "simulator_section", data: req.body, updated_at: new Date().toISOString() });
   if (error) return res.status(500).json({ success: false, message: error.message });
   res.json({ success: true });
 });

@@ -321,6 +321,21 @@ export interface ClubActivityContent {
   showLegacy: boolean;
 }
 
+export interface SimulatorPhoto {
+  id: string;
+  imageUrl: string;
+  caption?: string;
+}
+
+export interface SimulatorSection {
+  title?: string;
+  subtitle?: string;
+  description?: string;
+  descriptionThai?: string;
+  showSection?: boolean;
+  photos?: SimulatorPhoto[];
+}
+
 export interface DatabaseState {
   news: NewsItem[];
   roster: Player[];
@@ -337,6 +352,7 @@ export interface DatabaseState {
   siteSettings: SiteSettings;
   siteLabels: SiteLabels;
   siteLabelsThai?: SiteLabels;
+  simulatorSection?: SimulatorSection;
 }
 
 export interface InstagramPost {

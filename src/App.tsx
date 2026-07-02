@@ -217,6 +217,7 @@ function AppContent() {
                 roster={dbState.roster || []}
                 gallery={dbState.gallery || []}
                 instagramPosts={dbState.instagramPosts || []}
+                simulatorSection={dbState.simulatorSection}
                 welcomeSection={dbState.welcomeSection}
                 upcomingActivity={dbState.upcomingActivity}
                 clubActivity={dbState.clubActivity}
@@ -270,6 +271,7 @@ function AppContent() {
                 roster={dbState.roster || []}
                 gallery={dbState.gallery || []}
                 instagramPosts={dbState.instagramPosts || []}
+                simulatorSection={dbState.simulatorSection}
                 welcomeSection={dbState.welcomeSection}
                 upcomingActivity={dbState.upcomingActivity}
                 clubActivity={dbState.clubActivity}

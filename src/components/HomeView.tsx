@@ -1,4 +1,4 @@
-import { NewsItem, TournamentScore, Player, WelcomeSection, UpcomingActivity, SiteLabels, SiteSettings, HomeSponsorSection, Sponsor, AdminEditProps, GalleryImage, ClubActivityContent, InstagramPost } from "../types";
+import { NewsItem, TournamentScore, Player, WelcomeSection, UpcomingActivity, SiteLabels, SiteSettings, HomeSponsorSection, Sponsor, AdminEditProps, GalleryImage, ClubActivityContent, InstagramPost, SimulatorSection } from "../types";
 import { ArrowRight, Calendar, User, ChevronRight, BookOpen, Clock, Trophy, Target, MapPin, ArrowUpRight, Edit, Image } from "lucide-react";
 import { fmtDate } from "../utils/format";
 import { useState } from "react";
@@ -12,6 +12,7 @@ interface HomeViewProps extends AdminEditProps {
   roster: Player[];
   gallery: GalleryImage[];
   instagramPosts?: InstagramPost[];
+  simulatorSection?: SimulatorSection;
   welcomeSection: WelcomeSection;
   upcomingActivity: UpcomingActivity;
   clubActivity?: ClubActivityContent;
@@ -21,7 +22,7 @@ interface HomeViewProps extends AdminEditProps {
   siteSettings?: SiteSettings;
 }
 
-export default function HomeView({ news, scores, roster, gallery, instagramPosts = [], welcomeSection, upcomingActivity, clubActivity, homeSponsorSection, sponsors, siteLabels, siteSettings, isAdmin, onEditSection, activeSectionId }: HomeViewProps) {
+export default function HomeView({ news, scores, roster, gallery, instagramPosts = [], simulatorSection, welcomeSection, upcomingActivity, clubActivity, homeSponsorSection, sponsors, siteLabels, siteSettings, isAdmin, onEditSection, activeSectionId }: HomeViewProps) {
  const { language } = useLanguage();
  // Sort by rank (descending) and then by date (descending)
 
@@ -341,6 +342,63 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
      </a>
    </div>
  </section>
+
+
+ {/* Golf Simulator Room — Coming Soon */}
+ {simulatorSection?.showSection !== false && (
+   <section className="border-t border-brand-ink/10 pt-16 pb-4">
+     <div className="bg-brand-ink text-brand-neutral overflow-hidden">
+       <div className="px-8 py-12 md:px-16 md:py-16">
+         <div className="flex flex-col md:flex-row md:items-start gap-10">
+           {/* Left: text */}
+           <div className="flex-1 space-y-4">
+             <span className="inline-block font-display text-[9px] font-black tracking-[0.4em] uppercase text-brand-pink border border-brand-pink px-3 py-1">
+               {simulatorSection?.subtitle || "COMING SOON"}
+             </span>
+             <h2 className="font-display text-3xl md:text-4xl font-black uppercase tracking-tight leading-none text-brand-neutral">
+               {simulatorSection?.title || "GOLF SIMULATOR ROOM"}
+             </h2>
+             <p className="font-sans text-sm text-brand-neutral/70 leading-relaxed max-w-md">
+               {language === "th" && simulatorSection?.descriptionThai
+                 ? simulatorSection.descriptionThai
+                 : simulatorSection?.description || "Our state-of-the-art indoor golf simulator room is coming soon — a dedicated space for year-round training, technique refinement, and competitive simulations."}
+             </p>
+           </div>
+           {/* Right: status badge */}
+           <div className="flex-shrink-0 flex flex-col items-center justify-center border-2 border-brand-neutral/20 px-8 py-6 gap-2 min-w-[140px]">
+             <div className="w-2.5 h-2.5 rounded-full bg-brand-pink animate-pulse" />
+             <span className="font-display text-[9px] font-black tracking-[0.3em] uppercase text-brand-neutral/60">STATUS</span>
+             <span className="font-display text-sm font-black uppercase text-brand-neutral">IN PROGRESS</span>
+           </div>
+         </div>
+
+         {/* Photo grid */}
+         {simulatorSection?.photos && simulatorSection.photos.length > 0 ? (
+           <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-1">
+             {simulatorSection.photos.map(photo => (
+               <div key={photo.id} className="aspect-video bg-brand-neutral/10 overflow-hidden group relative">
+                 <img src={photo.imageUrl} alt={photo.caption || "Simulator room"} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
+                 {photo.caption && (
+                   <div className="absolute bottom-0 inset-x-0 bg-brand-ink/60 px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                     <p className="font-display text-[8px] text-brand-neutral truncate">{photo.caption}</p>
+                   </div>
+                 )}
+               </div>
+             ))}
+           </div>
+         ) : (
+           <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-1">
+             {Array.from({ length: 4 }).map((_, i) => (
+               <div key={i} className="aspect-video bg-brand-neutral/5 border border-brand-neutral/10 flex items-center justify-center">
+                 <span className="font-display text-[8px] text-brand-neutral/20 uppercase tracking-widest">PHOTO</span>
+               </div>
+             ))}
+           </div>
+         )}
+       </div>
+     </div>
+   </section>
+ )}
 
  </div>
  );

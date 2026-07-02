@@ -8,7 +8,7 @@ import RosterView from"./RosterView";
 import StaffView from"./StaffView";
 import ScoresView from"./ScoresView";
 import SponsorsView from"./SponsorsView";
-import { DatabaseState, NewsItem, Player, Staff, TournamentScore, GalleryImage, PlayerScore, WelcomeSection, Sponsor, SiteSettings, Competition, ClubActivityContent, MemberEvent } from"../types";
+import { DatabaseState, NewsItem, Player, Staff, TournamentScore, GalleryImage, PlayerScore, WelcomeSection, Sponsor, SiteSettings, Competition, ClubActivityContent, MemberEvent, SimulatorPhoto } from"../types";
 import { fmtDate } from"../utils/format";
 import {
  loginAdmin,
@@ -48,7 +48,8 @@ import {
  updateMemberEvent,
  deleteMemberEvent,
  createInstagramPost,
- deleteInstagramPost
+ deleteInstagramPost,
+ updateSimulatorSection
 } from"../utils/api";
 import {
  Plus, Trash2, Edit, Save, FileText, Sparkles, LogOut, Users,
@@ -539,6 +540,15 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
   const [igPostUrl, setIgPostUrl] = useState("");
   const [igCaption, setIgCaption] = useState("");
 
+  // Simulator section states
+  const [simTitle, setSimTitle] = useState(dbState.simulatorSection?.title || "GOLF SIMULATOR ROOM");
+  const [simSubtitle, setSimSubtitle] = useState(dbState.simulatorSection?.subtitle || "COMING SOON");
+  const [simDescription, setSimDescription] = useState(dbState.simulatorSection?.description || "");
+  const [simDescriptionThai, setSimDescriptionThai] = useState(dbState.simulatorSection?.descriptionThai || "");
+  const [simShowSection, setSimShowSection] = useState(dbState.simulatorSection?.showSection ?? true);
+  const [simPhotoUrl, setSimPhotoUrl] = useState("");
+  const [simPhotoCaption, setSimPhotoCaption] = useState("");
+
   const handleSaveIgPost = async () => {
     if (!igImageUrl) { triggerErrorMsg("Please upload an image first."); return; }
     try {
@@ -552,6 +562,44 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
     if (!confirm("Remove this post from the feed?")) return;
     try { await deleteInstagramPost(id, adminToken!); refreshState(); }
     catch (err: any) { triggerErrorMsg(err.message || "Failed to delete post."); }
+  };
+
+  const buildSimulatorPayload = (photos?: SimulatorPhoto[]) => ({
+    title: simTitle,
+    subtitle: simSubtitle,
+    description: simDescription,
+    descriptionThai: simDescriptionThai,
+    showSection: simShowSection,
+    photos: photos ?? (dbState.simulatorSection?.photos || [])
+  });
+
+  const handleSaveSimulatorSettings = async () => {
+    if (!adminToken) return;
+    try {
+      await updateSimulatorSection(buildSimulatorPayload(), adminToken);
+      triggerSuccessMsg("Simulator section saved.");
+      refreshState();
+    } catch (err: any) { triggerErrorMsg(err.message || "Failed to save."); }
+  };
+
+  const handleAddSimulatorPhoto = async () => {
+    if (!simPhotoUrl) { triggerErrorMsg("Upload a photo first."); return; }
+    const newPhoto: SimulatorPhoto = { id: `sim-${Date.now()}`, imageUrl: simPhotoUrl, caption: simPhotoCaption || undefined };
+    const updatedPhotos = [...(dbState.simulatorSection?.photos || []), newPhoto];
+    try {
+      await updateSimulatorSection(buildSimulatorPayload(updatedPhotos), adminToken!);
+      setSimPhotoUrl(""); setSimPhotoCaption("");
+      refreshState();
+    } catch (err: any) { triggerErrorMsg(err.message || "Failed to add photo."); }
+  };
+
+  const handleDeleteSimulatorPhoto = async (id: string) => {
+    if (!confirm("Remove this photo?")) return;
+    const updatedPhotos = (dbState.simulatorSection?.photos || []).filter(p => p.id !== id);
+    try {
+      await updateSimulatorSection(buildSimulatorPayload(updatedPhotos), adminToken!);
+      refreshState();
+    } catch (err: any) { triggerErrorMsg(err.message || "Failed to delete photo."); }
   };
 
   // Welcome page CMS states
@@ -865,6 +913,13 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
   setCaShowCompetitions(dbState.clubActivity.showCompetitions ?? true);
   setCaShowTraining(dbState.clubActivity.showTraining ?? true);
   setCaShowLegacy(dbState.clubActivity.showLegacy ?? true);
+  }
+  if (dbState?.simulatorSection) {
+    setSimTitle(dbState.simulatorSection.title || "GOLF SIMULATOR ROOM");
+    setSimSubtitle(dbState.simulatorSection.subtitle || "COMING SOON");
+    setSimDescription(dbState.simulatorSection.description || "");
+    setSimDescriptionThai(dbState.simulatorSection.descriptionThai || "");
+    setSimShowSection(dbState.simulatorSection.showSection ?? true);
   }
  }, [dbState]);
 
@@ -2054,9 +2109,76 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  </div>
  </div>
  </div>
+
+ {/* SIMULATOR ROOM */}
+ <div className="space-y-6 pt-12 border-t-4 border-brand-ink">
+   <h2 className="font-display text-lg font-bold uppercase tracking-wider text-brand-ink flex items-center gap-2 border-b border-brand-ink/10 pb-2">
+     <Trophy size={20} className="text-brand-pink" /> GOLF SIMULATOR ROOM
+   </h2>
+   <div className="space-y-4">
+     <div className="flex items-center gap-2 py-1">
+       <input id="sim_show" type="checkbox" checked={simShowSection} onChange={(e) => setSimShowSection(e.target.checked)} className="h-4 w-4 accent-brand-pink" />
+       <label htmlFor="sim_show" className="font-display text-[9px] font-bold text-brand-ink/75 uppercase">SHOW THIS SECTION ON HOMEPAGE</label>
+     </div>
+     <div className="space-y-1.5">
+       <label className="font-display text-[9px] font-bold text-brand-ink/60 uppercase block">MAIN TITLE</label>
+       <input type="text" value={simTitle} onChange={(e) => setSimTitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none" placeholder="GOLF SIMULATOR ROOM" />
+     </div>
+     <div className="space-y-1.5">
+       <label className="font-display text-[9px] font-bold text-brand-ink/60 uppercase block">BADGE / STATUS TAG</label>
+       <input type="text" value={simSubtitle} onChange={(e) => setSimSubtitle(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none" placeholder="COMING SOON" />
+     </div>
+     <div className="space-y-1.5">
+       <label className="font-display text-[9px] font-bold text-brand-ink/60 uppercase block">DESCRIPTION (EN)</label>
+       <textarea rows={4} value={simDescription} onChange={(e) => setSimDescription(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none leading-relaxed" />
+     </div>
+     <div className="space-y-1.5">
+       <label className="font-display text-[9px] font-bold text-brand-ink/60 uppercase block">DESCRIPTION (TH)</label>
+       <textarea rows={4} value={simDescriptionThai} onChange={(e) => setSimDescriptionThai(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none leading-relaxed" />
+     </div>
+     <button onClick={handleSaveSimulatorSettings} className="w-full bg-brand-ink text-brand-neutral hover:bg-brand-pink px-6 py-3 font-display text-xs font-bold tracking-wider uppercase flex items-center justify-center gap-1.5 transition-colors cursor-pointer">
+       <Save size={14} /> SAVE SIMULATOR SETTINGS
+     </button>
+   </div>
+
+   {/* Add photo */}
+   <div className="space-y-4 pt-8 border-t border-brand-ink/10">
+     <h3 className="font-display text-[11px] font-black text-brand-ink uppercase tracking-widest">ADD ROOM PHOTO</h3>
+     <ImageUploadWidget id="sim_photo" label="ROOM PHOTO" value={simPhotoUrl} onChange={setSimPhotoUrl} />
+     <div className="space-y-1.5">
+       <label className="font-display text-[9px] font-bold text-brand-ink/60 uppercase block">CAPTION (OPTIONAL)</label>
+       <input type="text" value={simPhotoCaption} onChange={(e) => setSimPhotoCaption(e.target.value)} className="w-full bg-brand-neutral border border-brand-ink/20 p-2 text-xs focus:outline-none" placeholder="e.g. Simulator bay 1" />
+     </div>
+     <button onClick={handleAddSimulatorPhoto} className="w-full bg-brand-ink text-brand-neutral py-3 font-display text-[10px] font-bold uppercase flex items-center justify-center gap-2 hover:bg-brand-pink">
+       <Plus size={14} /> ADD PHOTO
+     </button>
+   </div>
+
+   {/* Photo list */}
+   <div className="pt-4">
+     <h3 className="font-display text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2 mb-4">
+       ROOM PHOTOS ({(dbState.simulatorSection?.photos || []).length})
+     </h3>
+     <div className="grid grid-cols-3 gap-3">
+       {(dbState.simulatorSection?.photos || []).map(photo => (
+         <div key={photo.id} className="group relative aspect-video border border-brand-ink/10 bg-brand-stone overflow-hidden">
+           <img src={photo.imageUrl} alt={photo.caption || "Simulator photo"} className="w-full h-full object-cover" />
+           <div className="absolute inset-0 bg-brand-ink/80 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-2">
+             {photo.caption && <p className="text-[7px] text-brand-neutral font-display truncate w-full text-center">{photo.caption}</p>}
+             <button onClick={() => handleDeleteSimulatorPhoto(photo.id)} className="text-red-400 text-[8px] font-bold flex items-center gap-1 hover:text-red-300"><Trash2 size={8} /> REMOVE</button>
+           </div>
+         </div>
+       ))}
+       {(dbState.simulatorSection?.photos || []).length === 0 && (
+         <p className="col-span-3 text-[10px] font-display text-stone-400 text-center py-8">No photos yet. Upload the first room photo above.</p>
+       )}
+     </div>
+   </div>
+ </div>
+
  </div>
  );
- 
+
  case"blog":
  return (
  <div className="space-y-12">

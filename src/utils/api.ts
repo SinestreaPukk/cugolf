@@ -384,6 +384,16 @@ export async function deleteInstagramPost(id: string, token: string): Promise<{ 
   return handleResponse(res, "Failed to delete Instagram post");
 }
 
+// SIMULATOR SECTION (admin-protected)
+export async function updateSimulatorSection(data: any, token: string): Promise<{ success: boolean }> {
+  const res = await fetch("/api/simulator-section", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+    body: JSON.stringify(data)
+  });
+  return handleResponse(res, "Failed to update simulator section");
+}
+
 // MEMBER EVENTS CRUD (admin-protected)
 export async function createMemberEvent(item: Partial<MemberEvent>, token: string): Promise<{ success: boolean; item: MemberEvent }> {
   const res = await fetch("/api/member-events", {

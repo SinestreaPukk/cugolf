@@ -1,3 +1,4 @@
+import React from "react";
 import { useLanguage } from "../utils/LanguageContext";
 import { ShieldCheck, Mail } from "lucide-react";
 

@@ -39,7 +39,6 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
  return (
  <div id="home_view"className="space-y-16 animate-fade-in px-4 md:px-0">
  
- {/* Dynamic Legacy welcome slider and photo layout */}
  {(siteSettings?.showHomeWelcome ?? true) && (
  <WelcomeSectionView 
  welcomeSection={welcomeSection} 

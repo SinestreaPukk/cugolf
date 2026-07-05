@@ -13,7 +13,6 @@ export default function Footer({ siteSettings, siteLabels }: FooterProps) {
  const { language } = useLanguage();
  return (
  <footer className="border-t border-brand-ink bg-brand-neutral text-stone-900 mt-24">
- {/* Prime Editorial Banner */}
  <div className="grid grid-cols-1 border-b border-brand-ink md:grid-cols-2">
  {(siteSettings?.showFooterMission ?? true) && (
  <div className="border-b border-brand-ink p-8 md:border-b-0 md:border-r md:border-brand-ink md:p-12 bg-brand-neutral">
@@ -33,7 +32,6 @@ export default function Footer({ siteSettings, siteLabels }: FooterProps) {
  )}
  </div>
 
- {/* Main Directory & Links Grid */}
  <div className="mx-auto max-w-7xl px-6 py-12 md:py-16">
  <div className="grid grid-cols-1 gap-12 md:grid-cols-4">
  

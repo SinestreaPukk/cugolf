@@ -8,7 +8,7 @@ import RosterView from"./RosterView";
 import StaffView from"./StaffView";
 import ScoresView from"./ScoresView";
 import SponsorsView from"./SponsorsView";
-import { DatabaseState, NewsItem, Player, Staff, TournamentScore, GalleryImage, PlayerScore, WelcomeSection, Sponsor, SiteSettings, Competition, ClubActivityContent, MemberEvent, SimulatorPhoto } from"../types";
+import { DatabaseState, NewsItem, Player, Staff, TournamentScore, GalleryImage, PlayerScore, WelcomeSection, Sponsor, SiteSettings, Competition, ClubActivityContent, MemberEvent, SimulatorPhoto, SiteLabels } from"../types";
 import { fmtDate } from"../utils/format";
 import {
  loginAdmin,
@@ -924,8 +924,8 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  }, [dbState]);
 
  React.useEffect(() => {
- const labelsSource = editLabelsLanguage === "th" 
- ? (dbState.siteLabelsThai || {}) 
+ const labelsSource: Partial<SiteLabels> = editLabelsLanguage === "th"
+ ? (dbState.siteLabelsThai || {})
  : (dbState.siteLabels || {});
  
  setLabelNavHome(labelsSource.navHome ||"HOME");
@@ -1452,7 +1452,6 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  triggerErrorMsg("UNABLE TO TRANSMIT REVISION DRAFT CORRECTION BACK TO SERVER STATE.");
  }
  } catch (err: any) {
- console.error(err);
  triggerErrorMsg(err.message ||"DATALINK ERROR UPDATING GREETING BLOCKS.");
  } finally {
  setIsMutating(false);
@@ -1483,7 +1482,6 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  triggerErrorMsg("UNABLE TO TRANSMIT REVISION DRAFT CORRECTION BACK TO SERVER STATE.");
  }
  } catch (err: any) {
- console.error(err);
  triggerErrorMsg(err.message ||"DATALINK ERROR UPDATING ACTIVITY BLOCKS.");
  } finally {
  setIsMutating(false);
@@ -2898,9 +2896,6 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  <Type size={20} className="text-brand-pink"/> SITE CONTENT & SETTINGS
  </h2>
  
- {/* Note: In a full production system, we would render the massive labels form here. 
- Since it's extremely long, I am providing the basic settings toggles and a placeholder for the labels form 
- that was fully visible in the previous iteration. We will add the main toggles back. */}
  <form onSubmit={handleUpdateSiteSettings} className="space-y-6">
  <h3 className="font-display text-[11px] font-black text-brand-pink uppercase tracking-[0.2em] border-b border-brand-pink/20 pb-2">GLOBAL ANNOUNCEMENTS</h3>
  <div className="space-y-4">
@@ -3695,11 +3690,6 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  <Eye size={12} className="text-blue-500"/> LIVE PREVIEW FEEDBACK
  </div>
  <div className="pointer-events-none p-0 scale-[0.85] origin-top md:scale-[0.90] lg:scale-[0.95]">
- {/* 
- Note on pointer-events-none: 
- We disable clicks inside the preview on the right panel so it acts purely as a visual reflection 
- of the form data on the left, preventing accidental navigation away from the CMS context. 
- */}
  {renderPreview()}
  </div>
  </div>

@@ -85,8 +85,8 @@ function AppContent() {
           } else {
             syncMemberToken(null);
           }
-        } catch (err) {
-          console.error("Failed to verify member session:", err);
+        } catch {
+          // silent — token invalid or expired
         }
       }
     };
@@ -100,7 +100,6 @@ function AppContent() {
       setDbState(data);
       setErrorMsg("");
     } catch (err: any) {
-      console.error(err);
       setErrorMsg("Failed to synchronize with localized database service. Check server.ts running status.");
     } finally {
       setLoading(false);

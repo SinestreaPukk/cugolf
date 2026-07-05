@@ -96,7 +96,6 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  return (
  <header className="sticky top-0 z-50 border-b border-brand-ink bg-brand-neutral/90 backdrop-blur-md transition-all duration-350">
  <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:py-5">
- {/* Logo / Brand Name in impact editorial typography */}
  <Link
  to="/"
  onClick={() => setIsOpen(false)}
@@ -113,7 +112,6 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  </div>
  </Link>
 
- {/* Desktop Navigation Links */}
  <nav className="hidden items-center gap-8 md:flex">
  {navLinks.map((link) => (
  link.dropdown ? (
@@ -165,7 +163,6 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
  </nav>
 
 
-  {/* Action button - Admin portal trigger */}
   <div className="hidden items-center gap-6 md:flex">
     <div className="flex items-center gap-4">
       <a
@@ -199,7 +196,6 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
 
 
 
-    {/* Desktop Language Switch Toggle */}
     <button
       onClick={() => setLanguage(language === "en" ? "th" : "en")}
       className="transition-all duration-300 hover:opacity-85 hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center bg-transparent outline-none focus:outline-none select-none"
@@ -210,7 +206,6 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
   </div>
 
   <div className="flex items-center gap-4 md:hidden">
-    {/* Mobile Language Switch Toggle */}
     <button
       onClick={() => setLanguage(language === "en" ? "th" : "en")}
       className="transition-all duration-300 hover:opacity-85 hover:scale-105 active:scale-95 cursor-pointer flex items-center justify-center bg-transparent outline-none focus:outline-none select-none"
@@ -219,7 +214,6 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
       {language === "en" ? <ThaiFlag size={20} /> : <UKFlag size={20} />}
     </button>
 
-    {/* Mobile menu panel trigger */}
     <button
     onClick={() => setIsOpen(!isOpen)}
     className="p-1.5 text-neutral-800 cursor-pointer"
@@ -230,7 +224,6 @@ export default function Navbar({ currentTab, isAdminLoggedIn, siteLabels, siteSe
   </div>
  </div>
 
- {/* Mobile Menu Panel */}
  {isOpen && (
  <div className="fixed inset-x-0 top-[76px] border-b border-brand-ink bg-brand-neutral/95 backdrop-blur-md px-6 py-8 md:hidden animate-fade-in z-50 overflow-y-auto max-h-[calc(100vh-76px)]">
  <div className="flex flex-col gap-5">

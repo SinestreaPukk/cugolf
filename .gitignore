@@ -6,3 +6,9 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Runtime user uploads (served from Supabase Storage)
+uploads/
+
+# Legacy local database (migrated to Supabase)
+data/db.json

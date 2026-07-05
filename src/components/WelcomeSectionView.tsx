@@ -16,12 +16,12 @@ export default function WelcomeSectionView({ welcomeSection, siteLabels, isAdmin
  if (!welcomeSection) return null;
 
  const isActive = activeSectionId ==="home_welcome";
- const hoverClasses = isAdmin 
- ? `relative transition-all duration-200 cursor-pointer ${isActive ? 'ring-4 ring-[#da5f8e] z-40' : 'hover:ring-4 hover:ring-[#da5f8e]/50'}` 
+ const hoverClasses = isAdmin
+ ? `relative transition-all duration-200 cursor-pointer ${isActive ? 'ring-4 ring-[#da5f8e] z-40' : 'hover:ring-4 hover:ring-[#da5f8e]/50'}`
  :"";
 
  return (
- <section 
+ <section
  id="welcome_legacy_section"
  className={`mx-auto max-w-7xl pt-2 animate-fade-in space-y-10 ${hoverClasses}`}
  onClick={(e) => {
@@ -36,8 +36,7 @@ export default function WelcomeSectionView({ welcomeSection, siteLabels, isAdmin
  <Edit size={12} /> EDIT WELCOME HERO
  </div>
  )}
- 
- {/* 1. Large Wide Panoramic Team / Welcoming Photo (matching premium full-bleed imagery) */}
+
  <div className="relative w-screen left-1/2 -translate-x-1/2 -mt-10 md:-mt-14 border-b border-stone-200/80 bg-brand-ink overflow-hidden h-[320px] sm:h-[400px] md:h-[480px] transition-all duration-500">
  <img
  src={welcomeSection.imageUrl || defaultBanner}
@@ -45,10 +44,7 @@ export default function WelcomeSectionView({ welcomeSection, siteLabels, isAdmin
  referrerPolicy="no-referrer"
  className="w-full h-full object-cover select-none object-center transition-transform duration-700 hover:scale-[1.01] brightness-[0.4]"
  />
- {/* Subtle premium dark gradient overlay */}
  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"/>
- 
- {/* Align overlay to max-w-7xl container bounds */}
  <div className="absolute inset-0 flex items-end">
  <div className="mx-auto max-w-7xl px-4 md:px-6 w-full pb-8 text-brand-neutral space-y-2 z-10 drop-shadow-none">
  <p className="font-sans text-5xl sm:text-6xl md:text-7xl font-black leading-[0.9] uppercase tracking-tighter border-0 border-[#000000]">
@@ -63,13 +59,8 @@ export default function WelcomeSectionView({ welcomeSection, siteLabels, isAdmin
  </div>
  </div>
 
- {/* 2. Structured Magazine Content Grid (Sleek minimalist Split block) */}
  <div className="grid grid-cols-1 md:grid-cols-6 bg-brand-neutral overflow-hidden">
- 
- {/* Left Col (4/6 wide): Big Typography, Description and Quotes of Chula Golf legacy */}
  <div className="p-6 md:p-8 pt-5 md:pt-6 md:col-span-4 flex flex-col justify-start bg-brand-neutral text-stone-900 space-y-3.5">
- 
- {/* Main Title Headers */}
  <div className="space-y-4">
  <h1 className="font-thai text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold italic text-brand-pink tracking-wide leading-tight py-0 antialiased pb-2">
  {welcomeSection.titleThai ||"น้ำใจน้องพี่สีชมพู"}
@@ -79,19 +70,16 @@ export default function WelcomeSectionView({ welcomeSection, siteLabels, isAdmin
  </h2>
  </div>
 
- {/* Secondary explanation of Chula golf legacy */}
  <p className="font-sans text-[12px] md:text-[13px] font-medium text-stone-600 leading-relaxed text-justify whitespace-pre-line">
  {language === "th" && welcomeSection.descriptionThai ? welcomeSection.descriptionThai : (welcomeSection.description || `With a legacy of excellence on campus, the Chulalongkorn University Golf Club is actively expanding.\n\nWe are actively looking for new members to help shape the future of the club. Join us on the course to build lasting memories, enjoy your time at Chula University`)}
  </p>
  </div>
 
- {/* Right Col (2/6 wide): 3-Golfers Premium Artwork Block */}
- <div 
+ <div
  onClick={() => navigate("/roster")}
  className="md:col-span-2 bg-brand-neutral flex items-center justify-center p-3.5 min-h-[210px] md:min-h-[250px] relative overflow-hidden cursor-pointer group transition-all duration-300 hover:brightness-95"
  title="Click to view our Varsity Squad Roster"
  >
- {/* Three Golfers PNG Silhouette Art */}
  <img
  src={golfersSilhouette}
  alt="Three Chula golfers in color silhouette overlays"

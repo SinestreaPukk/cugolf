@@ -353,6 +353,7 @@ export interface DatabaseState {
   siteLabels: SiteLabels;
   siteLabelsThai?: SiteLabels;
   simulatorSection?: SimulatorSection;
+  memberEventsOrder?: string[];
 }
 
 export interface InstagramPost {

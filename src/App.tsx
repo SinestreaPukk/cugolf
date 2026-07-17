@@ -246,7 +246,14 @@ function AppContent() {
                 siteSettings={dbState?.siteSettings}
                 adminToken={adminToken}
                 setAdminToken={syncAdminToken}
-                memberEvents={dbState?.memberEvents || []}
+                memberEvents={(() => {
+                  const events = dbState?.memberEvents || [];
+                  const order: string[] = Array.isArray(dbState?.memberEventsOrder) ? dbState.memberEventsOrder : [];
+                  if (!order.length) return events;
+                  const ordered = order.map(id => events.find(e => e.id === id)).filter((e): e is typeof events[0] => !!e);
+                  const rest = events.filter(e => !order.includes(e.id));
+                  return [...ordered, ...rest];
+                })()}
               />
             } />
             <Route path="/admin" element={

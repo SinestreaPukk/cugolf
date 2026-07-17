@@ -384,6 +384,16 @@ export async function deleteInstagramPost(id: string, token: string): Promise<{ 
   return handleResponse(res, "Failed to delete Instagram post");
 }
 
+// MEMBER EVENTS ORDER (admin-protected)
+export async function reorderMemberEvents(orderedIds: string[], token: string): Promise<{ success: boolean }> {
+  const res = await fetch("/api/member-events/reorder", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+    body: JSON.stringify({ orderedIds })
+  });
+  return handleResponse(res, "Failed to save event order");
+}
+
 // SIMULATOR SECTION (admin-protected)
 export async function updateSimulatorSection(data: any, token: string): Promise<{ success: boolean }> {
   const res = await fetch("/api/simulator-section", {

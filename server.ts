@@ -824,6 +824,16 @@ app.post("/api/member-events", async (req, res) => {
   res.json({ success: true, item: newItem });
 });
 
+app.put("/api/member-events/reorder", async (req, res) => {
+  const decoded = verifyMemberToken(req.headers.authorization?.replace("Bearer ", "") || "");
+  if (!decoded?.isAdmin) return res.status(403).json({ success: false, message: "Access denied." });
+  const { orderedIds } = req.body;
+  if (!Array.isArray(orderedIds)) return res.status(400).json({ success: false, message: "orderedIds must be an array." });
+  const { error } = await supabase.from("site_config").upsert({ key: "member_events_order", data: orderedIds, updated_at: new Date().toISOString() });
+  if (error) return res.status(500).json({ success: false, message: error.message });
+  res.json({ success: true });
+});
+
 app.put("/api/member-events/:id", async (req, res) => {
   const decoded = verifyMemberToken(req.headers.authorization?.replace("Bearer ", "") || "");
   if (!decoded?.isAdmin) return res.status(403).json({ success: false, message: "Access denied." });

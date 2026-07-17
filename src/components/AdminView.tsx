@@ -49,11 +49,12 @@ import {
  deleteMemberEvent,
  createInstagramPost,
  deleteInstagramPost,
- updateSimulatorSection
+ updateSimulatorSection,
+ reorderMemberEvents
 } from"../utils/api";
 import {
  Plus, Trash2, Edit, Save, FileText, Sparkles, LogOut, Users,
- Trophy, Image, Sparkle, Lock, Eye, AlertCircle, RefreshCw, X, Check, HelpCircle, Heart, Settings, Calendar, Award, Type, ArrowUpRight, ArrowRight, Layout
+ Trophy, Image, Sparkle, Lock, Eye, AlertCircle, RefreshCw, X, Check, HelpCircle, Heart, Settings, Calendar, Award, Type, ArrowUpRight, ArrowRight, Layout, GripVertical
 } from"lucide-react";
 
 interface ImageUploadWidgetProps {
@@ -248,6 +249,10 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  const [evtGoogleFormUrl, setEvtGoogleFormUrl] = useState("");
  const [evtIsVisible, setEvtIsVisible] = useState(true);
 
+ // Drag-to-reorder state for portal events
+ const [evtDraggedId, setEvtDraggedId] = useState<string | null>(null);
+ const [evtDragOverId, setEvtDragOverId] = useState<string | null>(null);
+
  const clearEventForm = () => {
    setEditingEventId(null); setEvtTitle(""); setEvtTitleThai(""); setEvtDescription(""); setEvtDescriptionThai("");
    setEvtDate(""); setEvtTime(""); setEvtLocation(""); setEvtLocationThai(""); setEvtImageUrl("");
@@ -297,6 +302,48 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
      triggerErrorMsg(err.message || "Failed to delete event.");
    }
  };
+
+ const getSortedEvents = (): MemberEvent[] => {
+   const events = dbState.memberEvents || [];
+   const order: string[] = Array.isArray(dbState.memberEventsOrder) ? dbState.memberEventsOrder : [];
+   if (order.length === 0) return events;
+   const ordered = order.map(id => events.find(e => e.id === id)).filter((e): e is MemberEvent => !!e);
+   const unordered = events.filter(e => !order.includes(e.id));
+   return [...ordered, ...unordered];
+ };
+
+ const handleEvtDragStart = (e: React.DragEvent, id: string) => {
+   setEvtDraggedId(id);
+   e.dataTransfer.effectAllowed = "move";
+ };
+
+ const handleEvtDragOver = (e: React.DragEvent, id: string) => {
+   e.preventDefault();
+   e.dataTransfer.dropEffect = "move";
+   if (id !== evtDraggedId) setEvtDragOverId(id);
+ };
+
+ const handleEvtDrop = async (e: React.DragEvent, targetId: string) => {
+   e.preventDefault();
+   if (!evtDraggedId || evtDraggedId === targetId) {
+     setEvtDraggedId(null); setEvtDragOverId(null);
+     return;
+   }
+   const current = getSortedEvents().map(ev => ev.id);
+   const fromIdx = current.indexOf(evtDraggedId);
+   const toIdx = current.indexOf(targetId);
+   const newOrder = [...current];
+   newOrder.splice(fromIdx, 1);
+   newOrder.splice(toIdx, 0, evtDraggedId);
+   setEvtDraggedId(null); setEvtDragOverId(null);
+   try {
+     await reorderMemberEvents(newOrder, adminToken!);
+     refreshState();
+   } catch (err: any) {
+     triggerErrorMsg(err.message || "Failed to save order.");
+   }
+ };
+
  const [editPassword, setEditPassword] = useState("");
  const [memberSearch, setMemberSearch] = useState("");
 
@@ -2664,17 +2711,36 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
          </div>
 
          <div className="pt-12">
-           <h3 className="font-display text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2 mb-4">ALL EVENTS</h3>
-           <div className="space-y-3">
-             {(dbState.memberEvents || []).map(evt => (
-               <div key={evt.id} className="border border-stone-200 p-4 bg-brand-neutral flex items-start justify-between gap-4 hover:border-brand-pink transition-colors">
-                 <div className="flex-grow space-y-1">
+           <h3 className="font-display text-[11px] font-black text-brand-ink uppercase tracking-widest border-b border-brand-ink/10 pb-2 mb-1">ALL EVENTS</h3>
+           <p className="font-display text-[9px] text-stone-400 mb-4">Drag the <span className="inline-flex items-center gap-0.5">⠿</span> handle to reorder. Top = highest priority.</p>
+           <div className="space-y-2">
+             {getSortedEvents().map((evt, idx) => (
+               <div
+                 key={evt.id}
+                 draggable
+                 onDragStart={e => handleEvtDragStart(e, evt.id)}
+                 onDragOver={e => handleEvtDragOver(e, evt.id)}
+                 onDrop={e => handleEvtDrop(e, evt.id)}
+                 onDragEnd={() => { setEvtDraggedId(null); setEvtDragOverId(null); }}
+                 className={`border p-4 bg-brand-neutral flex items-start gap-3 transition-all select-none ${
+                   evtDraggedId === evt.id ? "opacity-40 border-brand-pink scale-[0.99]" :
+                   evtDragOverId === evt.id ? "border-brand-pink bg-brand-pink/5 shadow-md" :
+                   "border-stone-200 hover:border-brand-ink/30"
+                 }`}
+               >
+                 {/* Drag handle */}
+                 <div className="flex-shrink-0 flex flex-col items-center gap-1 pt-0.5 cursor-grab active:cursor-grabbing text-stone-300 hover:text-stone-500 transition-colors">
+                   <GripVertical size={16} />
+                   <span className="font-display text-[7px] font-bold text-stone-300">#{idx + 1}</span>
+                 </div>
+
+                 <div className="flex-grow space-y-1 min-w-0">
                    <div className="flex items-center gap-2 flex-wrap">
                      <h4 className="font-display text-xs font-bold uppercase">{evt.title}</h4>
                      <span className={`text-[8px] font-display font-bold px-1.5 py-0.5 ${
                        (evt.registrationStatus || (evt.registrationOpen ? "open" : "closed")) === "open" ? "bg-emerald-100 text-emerald-700" :
-                       (evt.registrationStatus === "not_open") ? "bg-amber-100 text-amber-700" :
-                       (evt.registrationStatus === "delayed") ? "bg-yellow-100 text-yellow-700" :
+                       evt.registrationStatus === "not_open" ? "bg-amber-100 text-amber-700" :
+                       evt.registrationStatus === "delayed" ? "bg-yellow-100 text-yellow-700" :
                        "bg-stone-100 text-stone-500"}`}>
                        {evt.registrationStatus === "not_open" ? "NOT OPEN YET" :
                         evt.registrationStatus === "delayed" ? "DELAYED" :
@@ -2689,6 +2755,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
                    </p>
                    {evt.googleFormUrl && <p className="font-display text-[9px] text-blue-500 truncate">{evt.googleFormUrl}</p>}
                  </div>
+
                  <div className="flex gap-1 shrink-0">
                    <button onClick={() => handleEditEventTrigger(evt)} className="p-1.5 bg-brand-stone hover:bg-stone-200"><Edit size={10} /></button>
                    <button onClick={() => handleDeleteEvent(evt.id)} className="p-1.5 bg-red-50 text-red-600 hover:bg-red-100"><Trash2 size={10} /></button>

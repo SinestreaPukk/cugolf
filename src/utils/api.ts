@@ -1,5 +1,14 @@
 import { DatabaseState, NewsItem, Player, Staff, TournamentScore, GalleryImage, WelcomeSection, UpcomingActivity, Sponsor, SiteSettings, SiteLabels, HomeSponsorSection, ClubActivityContent, Member, MemberEvent, InstagramPost } from "../types";
 
+export class ApiError extends Error {
+  status: number;
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
+
 async function handleResponse(res: Response, defaultError: string) {
   const text = await res.text();
   let data: any = {};
@@ -7,11 +16,19 @@ async function handleResponse(res: Response, defaultError: string) {
     try {
       data = JSON.parse(text);
     } catch (e) {
-      throw new Error(`${defaultError} (Invalid response from server)`);
+      throw new ApiError(`${defaultError} (Invalid response from server)`, res.status);
     }
   }
   if (!res.ok) {
-    throw new Error(data.message || defaultError);
+    const message = data.message || defaultError;
+    // Every admin-protected route replies 403 with an "Access denied" message when the
+    // token is missing, invalid, or expired. Signal the CMS to drop the stale session
+    // and prompt a re-login, rather than leaving the admin stuck on "Access denied".
+    if (res.status === 403 && typeof message === "string" && message.startsWith("Access denied")
+        && typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("admin-auth-expired"));
+    }
+    throw new ApiError(message, res.status);
   }
   return data;
 }

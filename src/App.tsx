@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
 import { DatabaseState } from "./types";
-import { getDatabaseState, getMemberProfile } from "./utils/api";
+import { getDatabaseState, getMemberProfile, ApiError } from "./utils/api";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import HomeView from "./components/HomeView";
@@ -30,10 +30,14 @@ function AppContent() {
     return localStorage.getItem("cu-golf-club-admin-token");
   });
 
+  // Set when an admin request is rejected, so /membership can explain the sudden logout
+  const [adminSessionExpired, setAdminSessionExpired] = useState(false);
+
   const syncAdminToken = (token: string | null) => {
     setAdminToken(token);
     if (token) {
       localStorage.setItem("cu-golf-club-admin-token", token);
+      setAdminSessionExpired(false);
     } else {
       localStorage.removeItem("cu-golf-club-admin-token");
     }
@@ -75,22 +79,41 @@ function AppContent() {
   };
 
   // Verify member session on token change or app startup
-  useEffect(() => {
-    const verifyMemberSession = async () => {
-      if (memberToken) {
-        try {
-          const res = await getMemberProfile(memberToken);
-          if (res.success && res.user) {
-            syncMemberUser(res.user);
-          } else {
-            syncMemberToken(null);
-          }
-        } catch {
-          // silent — token invalid or expired
-        }
+  const verifyMemberSession = async () => {
+    if (!memberToken) return;
+    try {
+      const res = await getMemberProfile(memberToken);
+      if (res.success && res.user) {
+        syncMemberUser(res.user);
+      } else {
+        syncMemberToken(null);
       }
-    };
+    } catch (err) {
+      // Only a rejection from the server itself means the session is gone. A network
+      // failure must stay silent, or a brief connectivity blip logs the member out.
+      if (err instanceof ApiError && (err.status === 401 || err.status === 403)) {
+        syncMemberToken(null);
+        syncMemberUser(null);
+      }
+    }
+  };
+
+  useEffect(() => {
     verifyMemberSession();
+  }, [memberToken]);
+
+  // The admin token is the member token re-used as an editing credential, so a 403 from
+  // any admin route means that shared session is no longer accepted. Drop the editing
+  // credential, flag the notice for /membership, and re-check the member session to see
+  // whether the whole login died or only the admin privilege was revoked.
+  useEffect(() => {
+    const onAuthExpired = () => {
+      syncAdminToken(null);
+      setAdminSessionExpired(true);
+      verifyMemberSession();
+    };
+    window.addEventListener("admin-auth-expired", onAuthExpired);
+    return () => window.removeEventListener("admin-auth-expired", onAuthExpired);
   }, [memberToken]);
 
   // Service state fetching
@@ -246,6 +269,8 @@ function AppContent() {
                 siteSettings={dbState?.siteSettings}
                 adminToken={adminToken}
                 setAdminToken={syncAdminToken}
+                adminSessionExpired={adminSessionExpired}
+                dismissAdminSessionExpired={() => setAdminSessionExpired(false)}
                 memberEvents={(() => {
                   const events = dbState?.memberEvents || [];
                   const order: string[] = Array.isArray(dbState?.memberEventsOrder) ? dbState.memberEventsOrder : [];

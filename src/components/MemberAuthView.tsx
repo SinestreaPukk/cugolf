@@ -3,7 +3,7 @@ import { registerMember, loginMember } from "../utils/api";
 import { Member, MemberEvent, SiteSettings } from "../types";
 import { useLanguage } from "../utils/LanguageContext";
 import { useNavigate, Link } from "react-router-dom";
-import { Loader2, CheckCircle2, Calendar, Clock, MapPin, ExternalLink } from "lucide-react";
+import { Loader2, CheckCircle2, Calendar, Clock, MapPin, ExternalLink, AlertCircle, X } from "lucide-react";
 import { fmtDate } from "../utils/format";
 
 interface MemberAuthViewProps {
@@ -14,6 +14,8 @@ interface MemberAuthViewProps {
   siteSettings?: SiteSettings;
   adminToken: string | null;
   setAdminToken: (token: string | null) => void;
+  adminSessionExpired?: boolean;
+  dismissAdminSessionExpired?: () => void;
   memberEvents?: MemberEvent[];
 }
 
@@ -25,6 +27,8 @@ export default function MemberAuthView({
   siteSettings,
   adminToken,
   setAdminToken,
+  adminSessionExpired = false,
+  dismissAdminSessionExpired,
   memberEvents = []
 }: MemberAuthViewProps) {
   const { language } = useLanguage();
@@ -134,12 +138,34 @@ export default function MemberAuthView({
     navigate("/");
   };
 
+  // Shown when the CMS kicked the admin back here because the editing session was rejected
+  const sessionExpiredBanner = adminSessionExpired ? (
+    <div className="border-2 border-brand-ink bg-amber-50 text-brand-ink text-xs p-3.5 font-display font-bold uppercase flex items-start gap-2">
+      <AlertCircle size={14} className="mt-px shrink-0" />
+      <span className="flex-1 leading-relaxed">
+        {language === "th"
+          ? "เซสชันผู้ดูแลระบบหมดอายุ กรุณาเข้าสู่ระบบใหม่แล้วเปิดโหมดแก้ไขข้อมูลอีกครั้ง"
+          : "Your admin session expired. Please log in again and re-activate editing mode."}
+      </span>
+      {dismissAdminSessionExpired && (
+        <button
+          onClick={dismissAdminSessionExpired}
+          aria-label={language === "th" ? "ปิดข้อความ" : "Dismiss"}
+          className="shrink-0 text-brand-ink/50 hover:text-brand-ink transition-colors cursor-pointer"
+        >
+          <X size={14} />
+        </button>
+      )}
+    </div>
+  ) : null;
+
   if (memberUser) {
     const profile = memberUser.profile || {};
     const visibleEvents = memberEvents.filter(e => e.isVisible);
 
     return (
-      <div className="animate-fade-in text-brand-ink py-8">
+      <div className="animate-fade-in text-brand-ink py-8 space-y-4">
+        {sessionExpiredBanner}
         <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 items-start">
 
           {/* LEFT — Member Card (below activities on mobile) */}
@@ -365,7 +391,8 @@ export default function MemberAuthView({
   }
 
   return (
-    <div className="mx-auto max-w-md py-8 animate-fade-in text-brand-ink">
+    <div className="mx-auto max-w-md py-8 animate-fade-in text-brand-ink space-y-4">
+      {sessionExpiredBanner}
       <div className="bg-brand-neutral border border-brand-ink p-6 md:p-8 space-y-6 shadow-[4px_4px_0px_rgba(18,18,18,1)]">
 
         <div className={`flex border-b border-brand-ink/20 text-xs font-black uppercase ${language === "th" ? "font-sans tracking-normal" : "font-display tracking-widest"}`}>

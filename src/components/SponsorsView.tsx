@@ -1,6 +1,7 @@
 import { Target, ArrowUpRight, Award, Shield, CheckCircle, Edit } from"lucide-react";
 import { Sponsor, SiteLabels, AdminEditProps } from"../types";
 import { useLanguage } from "../utils/LanguageContext";
+import OptimizedImage from "./OptimizedImage";
 
 interface SponsorsViewProps extends AdminEditProps {
  sponsors?: Sponsor[];
@@ -57,9 +58,11 @@ export default function SponsorsView({ sponsors, siteLabels, isAdmin, onEditSect
  >
  <div className="aspect-[16/9] w-full bg-stone-50 border-b border-stone-100 flex items-center justify-center p-8">
  {brand.imageUrl ? (
- <img 
- src={brand.imageUrl} 
- alt={language === "th" && brand.nameThai ? brand.nameThai : brand.name} 
+ <OptimizedImage
+ src={brand.imageUrl}
+ alt={language === "th" && brand.nameThai ? brand.nameThai : brand.name}
+ width={480}
+ sizes="(min-width: 768px) 33vw, 100vw"
  className="max-h-full max-w-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500"
  />
  ) : (

@@ -1,29 +1,36 @@
-import { useEffect, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
-import { DatabaseState } from "./types";
-import { getDatabaseState, getMemberProfile, ApiError } from "./utils/api";
+import { ShellContent } from "./types";
+import { getMemberProfile, ApiError } from "./utils/api";
+import { usePageContent } from "./utils/contentClient";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import HomeView from "./components/HomeView";
-import RosterView from "./components/RosterView";
-import StaffView from "./components/StaffView";
-import ScoresView from "./components/ScoresView";
-import SponsorsView from "./components/SponsorsView";
-import BlogView from "./components/BlogView";
-import AboutClubView from "./components/AboutClubView";
-import ActivityDetailView from "./components/ActivityDetailView";
-import AdminView from "./components/AdminView";
-import MemberAuthView from "./components/MemberAuthView";
-import PrivacyView from "./components/PrivacyView";
-import { ShieldCheck, RefreshCw, AlertCircle } from "lucide-react";
+import {
+  HomePage,
+  BlogPage,
+  ClubPage,
+  ActivityPage,
+  RosterPage,
+  StaffPage,
+  ScoresPage,
+  SponsorsPage,
+  MembershipPage,
+  AdminPage,
+  PageSkeleton
+} from "./pages";
+import { ShieldCheck, AlertCircle } from "lucide-react";
 import { LanguageProvider, useLanguage } from "./utils/LanguageContext";
+
+const PrivacyView = lazy(() => import("./components/PrivacyView"));
 
 function AppContent() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [dbState, setDbState] = useState<DatabaseState | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [errorMsg, setErrorMsg] = useState<string>("");
+  const { language } = useLanguage();
+
+  // Only the chrome (navbar, marquee, footer) loads at app start. Everything else is
+  // fetched by the route that actually needs it.
+  const shell = usePageContent<ShellContent>("shell");
 
   // Persistent authenticated administrator token in local storage
   const [adminToken, setAdminToken] = useState<string | null>(() => {
@@ -116,43 +123,24 @@ function AppContent() {
     return () => window.removeEventListener("admin-auth-expired", onAuthExpired);
   }, [memberToken]);
 
-  // Service state fetching
-  const refreshState = async () => {
-    try {
-      const data = await getDatabaseState();
-      setDbState(data);
-      setErrorMsg("");
-    } catch (err: any) {
-      setErrorMsg("Failed to synchronize with localized database service. Check server.ts running status.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    refreshState();
-  }, []);
-
   // Back to top scroll effect on route change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [location.pathname]);
 
-  // Fatal load error page
-  if (errorMsg && !dbState) {
+  // Fatal load error page — only the shell failing is fatal; a single section failing
+  // is handled by that route.
+  if (shell.error && !shell.data) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-brand-neutral p-6 text-brand-ink font-sans text-center">
         <div className="border border-red-500/20 bg-red-500/5 p-8 max-w-md space-y-4">
           <AlertCircle size={36} className="mx-auto text-red-600" />
           <h2 className="font-display text-base font-bold uppercase tracking-tight">DATALINK CONNECTION FAILURE</h2>
           <p className="text-xs leading-relaxed text-brand-ink/70">
-            {errorMsg}
+            Failed to synchronize with localized database service. Check server.ts running status.
           </p>
           <button
-            onClick={() => {
-              setLoading(true);
-              refreshState();
-            }}
+            onClick={() => void shell.refresh()}
             className="inline-flex items-center gap-2 bg-brand-ink text-brand-neutral px-5 py-2 text-xs font-display uppercase font-bold hover:bg-brand-pink transition-all cursor-pointer"
           >
             RETRY DIRECTORY SYNC
@@ -162,20 +150,27 @@ function AppContent() {
     );
   }
 
-  // Allow app to run if we have cached or initial state, otherwise show a "waking up" screen for Render sleep mitigation
-  if (!dbState) return null;
+  if (!shell.data) return null;
 
-  const { language } = useLanguage();
+  const { siteSettings, siteLabels, siteLabelsThai } = shell.data;
 
   // Resolve labels based on language, merging with siteLabels as fallback
-  const labels = (language === "th" && dbState.siteLabelsThai && Object.keys(dbState.siteLabelsThai).length > 0)
-    ? { ...dbState.siteLabels, ...dbState.siteLabelsThai }
-    : dbState.siteLabels;
+  const labels = (language === "th" && siteLabelsThai && Object.keys(siteLabelsThai).length > 0)
+    ? { ...siteLabels, ...siteLabelsThai }
+    : siteLabels;
 
   // Resolve marqueeText based on language
-  const marqueeText = (language === "th" && dbState.siteSettings?.marqueeTextThai)
-    ? dbState.siteSettings.marqueeTextThai
-    : dbState.siteSettings?.marqueeText;
+  const marqueeText = (language === "th" && siteSettings?.marqueeTextThai)
+    ? siteSettings.marqueeTextThai
+    : siteSettings?.marqueeText;
+
+  // Chrome-level props shared by every route.
+  const chrome = {
+    siteLabels: labels,
+    siteSettings,
+    isAdmin: !!adminToken,
+    onEditSection: (id: string) => navigate(`/admin?edit=${id}`)
+  };
 
   return (
     <div className="flex min-h-screen flex-col bg-brand-stone text-neutral-900">
@@ -183,7 +178,7 @@ function AppContent() {
         currentTab={location.pathname.substring(1) || "home"}
         isAdminLoggedIn={!!adminToken}
         siteLabels={labels}
-        siteSettings={dbState?.siteSettings}
+        siteSettings={siteSettings}
         memberUser={memberUser}
         onLogout={() => {
           syncMemberToken(null);
@@ -191,7 +186,7 @@ function AppContent() {
         }}
       />
 
-      {(dbState?.siteSettings?.showMarquee ?? true) && (
+      {(siteSettings?.showMarquee ?? true) && (
         <div className="w-full bg-brand-neutral text-brand-ink py-2 overflow-hidden border-b border-brand-ink select-none relative z-30 flex items-center h-11 md:h-14">
           <div className="w-full overflow-hidden whitespace-nowrap flex items-center">
             <div className="animate-marquee inline-flex shrink-0 font-sans text-2xl md:text-3xl uppercase font-black tracking-tighter gap-6 leading-none" style={{ animationDuration: '45s' }}>
@@ -231,94 +226,45 @@ function AppContent() {
             </div>
           )}
 
-          <Routes>
-            <Route path="/" element={
-              <HomeView
-                news={dbState.news || []}
-                scores={dbState.scores || []}
-                roster={dbState.roster || []}
-                gallery={dbState.gallery || []}
-                instagramPosts={dbState.instagramPosts || []}
-                simulatorSection={dbState.simulatorSection}
-                welcomeSection={dbState.welcomeSection}
-                upcomingActivity={dbState.upcomingActivity}
-                clubActivity={dbState.clubActivity}
-                homeSponsorSection={dbState.homeSponsorSection}
-                sponsors={dbState.sponsors || []}
-                siteLabels={labels}
-                siteSettings={dbState.siteSettings}
-                isAdmin={!!adminToken}
-                onEditSection={(id) => navigate(`/admin?edit=${id}`)}
-              />
-            } />
-            <Route path="/blog" element={<BlogView news={dbState.news || []} siteLabels={labels} siteSettings={dbState.siteSettings} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
-            <Route path="/activities" element={<BlogView news={dbState.news || []} siteLabels={labels} siteSettings={dbState.siteSettings} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
-            <Route path="/activities/blog" element={<BlogView news={dbState.news || []} siteLabels={labels} siteSettings={dbState.siteSettings} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
-            <Route path="/activities/club" element={<AboutClubView clubActivity={dbState.clubActivity} scores={dbState.scores || []} siteLabels={labels} siteSettings={dbState.siteSettings} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
-            <Route path="/activities/:id" element={<ActivityDetailView news={dbState.news || []} siteLabels={labels} siteSettings={dbState.siteSettings} isAdmin={!!adminToken} />} />
-            <Route path="/roster" element={<RosterView roster={dbState.roster || []} siteLabels={labels} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
-            <Route path="/staff" element={<StaffView staff={dbState.staff || []} siteLabels={labels} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
-            <Route path="/scores" element={<ScoresView scores={dbState.scores || []} siteLabels={labels} isAdmin={!!adminToken} onEditSection={(id) => navigate(`/admin?edit=${id}`)} />} />
-            <Route path="/sponsors" element={<SponsorsView sponsors={dbState.sponsors || []} siteLabels={labels} isAdmin={!!adminToken} />} />
-            <Route path="/membership" element={
-              <MemberAuthView
-                memberUser={memberUser}
-                setMemberUser={syncMemberUser}
-                memberToken={memberToken}
-                setMemberToken={syncMemberToken}
-                siteSettings={dbState?.siteSettings}
-                adminToken={adminToken}
-                setAdminToken={syncAdminToken}
-                adminSessionExpired={adminSessionExpired}
-                dismissAdminSessionExpired={() => setAdminSessionExpired(false)}
-                memberEvents={(() => {
-                  const events = dbState?.memberEvents || [];
-                  const order: string[] = Array.isArray(dbState?.memberEventsOrder) ? dbState.memberEventsOrder : [];
-                  if (!order.length) return events;
-                  const ordered = order.map(id => events.find(e => e.id === id)).filter((e): e is typeof events[0] => !!e);
-                  const rest = events.filter(e => !order.includes(e.id));
-                  return [...ordered, ...rest];
-                })()}
-              />
-            } />
-            <Route path="/admin" element={
-              adminToken ? (
-                <AdminView
-                  dbState={dbState}
-                  refreshState={refreshState}
+          <Suspense fallback={<PageSkeleton />}>
+            <Routes>
+              <Route path="/" element={<HomePage {...chrome} />} />
+              <Route path="/blog" element={<BlogPage {...chrome} />} />
+              <Route path="/activities" element={<BlogPage {...chrome} />} />
+              <Route path="/activities/blog" element={<BlogPage {...chrome} />} />
+              <Route path="/activities/club" element={<ClubPage {...chrome} />} />
+              <Route path="/activities/:id" element={<ActivityPage {...chrome} />} />
+              <Route path="/roster" element={<RosterPage {...chrome} />} />
+              <Route path="/staff" element={<StaffPage {...chrome} />} />
+              <Route path="/scores" element={<ScoresPage {...chrome} />} />
+              <Route path="/sponsors" element={<SponsorsPage {...chrome} />} />
+              <Route path="/membership" element={
+                <MembershipPage
+                  memberUser={memberUser}
+                  setMemberUser={syncMemberUser}
+                  memberToken={memberToken}
+                  setMemberToken={syncMemberToken}
+                  siteSettings={siteSettings}
                   adminToken={adminToken}
                   setAdminToken={syncAdminToken}
+                  adminSessionExpired={adminSessionExpired}
+                  dismissAdminSessionExpired={() => setAdminSessionExpired(false)}
                 />
-              ) : (
-                <Navigate to="/membership" replace />
-              )
-            } />
-            <Route path="/privacy" element={<PrivacyView />} />
-            {/* Fallback */}
-            <Route path="*" element={
-              <HomeView
-                news={dbState.news || []}
-                scores={dbState.scores || []}
-                roster={dbState.roster || []}
-                gallery={dbState.gallery || []}
-                instagramPosts={dbState.instagramPosts || []}
-                simulatorSection={dbState.simulatorSection}
-                welcomeSection={dbState.welcomeSection}
-                upcomingActivity={dbState.upcomingActivity}
-                clubActivity={dbState.clubActivity}
-                homeSponsorSection={dbState.homeSponsorSection}
-                sponsors={dbState.sponsors || []}
-                siteLabels={labels}
-                siteSettings={dbState.siteSettings}
-                isAdmin={!!adminToken}
-                onEditSection={(id) => navigate(`/admin?edit=${id}`)}
-              />
-            } />
-          </Routes>
+              } />
+              <Route path="/admin" element={
+                adminToken
+                  ? <AdminPage adminToken={adminToken} setAdminToken={syncAdminToken} />
+                  : <Navigate to="/membership" replace />
+              } />
+              <Route path="/privacy" element={<PrivacyView />} />
+              {/* Fallback */}
+              <Route path="*" element={<HomePage {...chrome} />} />
+            </Routes>
+          </Suspense>
         </div>
       </main>
 
-      <Footer siteSettings={dbState?.siteSettings} siteLabels={labels} />
+      <Footer siteSettings={siteSettings} siteLabels={labels} />
     </div>
   );
 }
@@ -332,4 +278,3 @@ export default function App() {
     </LanguageProvider>
   );
 }
-

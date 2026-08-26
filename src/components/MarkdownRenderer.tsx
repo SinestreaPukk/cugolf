@@ -1,3 +1,5 @@
+import OptimizedImage from "./OptimizedImage";
+
 // Robust Markdown-like parser with image support
 export default function MarkdownRenderer({ text }: { text: string }) {
  if (!text) return null;
@@ -12,9 +14,11 @@ export default function MarkdownRenderer({ text }: { text: string }) {
  if (imgMatch) {
  return (
  <div key={idx} className="my-8">
- <img 
- src={imgMatch[2]} 
- alt={imgMatch[1]} 
+ <OptimizedImage
+ src={imgMatch[2]}
+ alt={imgMatch[1]}
+ width={1280}
+ sizes="(min-width: 768px) 768px, 100vw"
  className="w-full h-auto border border-stone-100"
  />
  {imgMatch[1] && (

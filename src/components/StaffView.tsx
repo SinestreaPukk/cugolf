@@ -1,6 +1,7 @@
 import { Staff, SiteLabels, AdminEditProps } from"../types";
 import { Award, ShieldAlert, GraduationCap, Star, Edit } from"lucide-react";
 import { useLanguage } from "../utils/LanguageContext";
+import OptimizedImage from "./OptimizedImage";
 
 interface StaffViewProps extends AdminEditProps {
  staff: Staff[];
@@ -57,10 +58,12 @@ export default function StaffView({ staff, siteLabels, isAdmin, onEditSection, a
  <div className="space-y-6">
  {/* Photo frame */}
  <div className="relative aspect-square border border-brand-ink overflow-hidden bg-brand-stone">
- <img
+ <OptimizedImage
  src={person.imageUrl}
  alt={person.name}
  referrerPolicy="no-referrer"
+ width={480}
+ sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
  className="w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-105"
  />
  </div>

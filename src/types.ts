@@ -356,6 +356,67 @@ export interface DatabaseState {
   memberEventsOrder?: string[];
 }
 
+// ---------------------------------------------------------------------------
+// Page-scoped content payloads (GET /api/content?page=…)
+//
+// Each view declares exactly what it needs instead of receiving the entire
+// DatabaseState. DatabaseState itself is now only used by the CMS.
+// ---------------------------------------------------------------------------
+
+/** Navbar, marquee and footer chrome — fetched once and shared by every route. */
+export type ShellContent = Pick<DatabaseState, "siteSettings" | "siteLabels" | "siteLabelsThai">;
+
+export interface HomeContent {
+  news: NewsItem[];
+  scores: TournamentScore[];
+  sponsors: Sponsor[];
+  instagramPosts: InstagramPost[];
+  welcomeSection: WelcomeSection;
+  homeSponsorSection: HomeSponsorSection;
+  simulatorSection?: SimulatorSection;
+}
+
+export interface Pagination {
+  total: number;
+  limit: number;
+  offset: number;
+  hasMore: boolean;
+}
+
+export interface BlogContent {
+  news: NewsItem[];
+  pagination: Pagination;
+}
+
+export interface ActivityContent {
+  article: NewsItem;
+}
+
+export interface ClubContent {
+  clubActivity: ClubActivityContent;
+}
+
+export interface RosterContent {
+  roster: Player[];
+}
+
+export interface StaffContent {
+  staff: Staff[];
+}
+
+export interface ScoresContent {
+  scores: TournamentScore[];
+}
+
+export interface SponsorsContent {
+  sponsors: Sponsor[];
+}
+
+export interface MembershipContent {
+  memberEvents: MemberEvent[];
+  memberEventsOrder: string[];
+}
+
 export interface InstagramPost {
   id: string;
   imageUrl: string;

@@ -3502,8 +3502,6 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  <HomeView
  news={dbState.news || []}
  scores={dbState.scores || []}
- roster={dbState.roster || []}
- gallery={dbState.gallery || []}
  welcomeSection={{
  ...dbState.welcomeSection,
  imageUrl: welcomeImageUrl,
@@ -3513,7 +3511,6 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  legacyQuoteAuthor: welcomeLegacyQuoteAuthor,
  description: welcomeDescription
  }}
- upcomingActivity={dbState.upcomingActivity}
  homeSponsorSection={{
  ...dbState.homeSponsorSection,
  title: homeSponTitle,
@@ -3560,7 +3557,6 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
  showTraining: caShowTraining,
  showLegacy: caShowLegacy
  }}
- scores={dbState.scores || []}
  siteLabels={dbState.siteLabels}
  siteSettings={dbState.siteSettings}
  isAdmin={false}
@@ -3624,19 +3620,7 @@ export default function AdminView({ dbState, refreshState, adminToken, setAdminT
      <HomeView
        news={dbState.news || []}
        scores={dbState.scores || []}
-       roster={dbState.roster || []}
-       gallery={dbState.gallery || []}
        welcomeSection={dbState.welcomeSection}
-       upcomingActivity={{
-         ...dbState.upcomingActivity,
-         title: upcomingTitle,
-         description: upcomingDescription,
-         imageUrl: upcomingImageUrl,
-         date: upcomingDate,
-         location: upcomingLocation,
-         registrationUrl: upcomingRegUrl,
-         showSection: upcomingShowSection
-       }}
        sponsors={dbState.sponsors || []}
        siteLabels={dbState.siteLabels}
        siteSettings={dbState.siteSettings}

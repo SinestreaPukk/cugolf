@@ -9,7 +9,18 @@ export class ApiError extends Error {
   }
 }
 
-async function handleResponse(res: Response, defaultError: string) {
+/**
+ * Registered by the content cache at import time. Every successful write goes through
+ * `handleResponse`, so this is the single place that has to drop cached page slices —
+ * an editor never sees their own change served from a stale cache.
+ */
+let onMutation: (() => void) | null = null;
+
+export function setMutationListener(listener: () => void): void {
+  onMutation = listener;
+}
+
+async function handleResponse(res: Response, defaultError: string, isMutation = false) {
   const text = await res.text();
   let data: any = {};
   if (text) {
@@ -30,6 +41,7 @@ async function handleResponse(res: Response, defaultError: string) {
     }
     throw new ApiError(message, res.status);
   }
+  if (isMutation) onMutation?.();
   return data;
 }
 
@@ -55,7 +67,7 @@ export async function createNews(item: Partial<NewsItem>): Promise<{ success: bo
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item)
   });
-  return handleResponse(res, "Failed to create news article");
+  return handleResponse(res, "Failed to create news article", true);
 }
 
 export async function updateNews(id: string, item: Partial<NewsItem>): Promise<{ success: boolean; item: NewsItem }> {
@@ -64,12 +76,12 @@ export async function updateNews(id: string, item: Partial<NewsItem>): Promise<{
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item)
   });
-  return handleResponse(res, "Failed to update news article");
+  return handleResponse(res, "Failed to update news article", true);
 }
 
 export async function deleteNews(id: string): Promise<{ success: boolean }> {
   const res = await fetch(`/api/news/${id}`, { method: "DELETE" });
-  return handleResponse(res, "Failed to delete news article");
+  return handleResponse(res, "Failed to delete news article", true);
 }
 
 // ROSTER PLAYERS CRUD
@@ -79,7 +91,7 @@ export async function createPlayer(item: Partial<Player>): Promise<{ success: bo
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item)
   });
-  return handleResponse(res, "Failed to create player record");
+  return handleResponse(res, "Failed to create player record", true);
 }
 
 export async function updatePlayer(id: string, item: Partial<Player>): Promise<{ success: boolean; item: Player }> {
@@ -88,12 +100,12 @@ export async function updatePlayer(id: string, item: Partial<Player>): Promise<{
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item)
   });
-  return handleResponse(res, "Failed to update player record");
+  return handleResponse(res, "Failed to update player record", true);
 }
 
 export async function deletePlayer(id: string): Promise<{ success: boolean }> {
   const res = await fetch(`/api/roster/${id}`, { method: "DELETE" });
-  return handleResponse(res, "Failed to delete player record");
+  return handleResponse(res, "Failed to delete player record", true);
 }
 
 // STAFF CRUD
@@ -103,7 +115,7 @@ export async function createStaff(item: Partial<Staff>): Promise<{ success: bool
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item)
   });
-  return handleResponse(res, "Failed to create staff record");
+  return handleResponse(res, "Failed to create staff record", true);
 }
 
 export async function updateStaff(id: string, item: Partial<Staff>): Promise<{ success: boolean; item: Staff }> {
@@ -112,12 +124,12 @@ export async function updateStaff(id: string, item: Partial<Staff>): Promise<{ s
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item)
   });
-  return handleResponse(res, "Failed to update staff record");
+  return handleResponse(res, "Failed to update staff record", true);
 }
 
 export async function deleteStaff(id: string): Promise<{ success: boolean }> {
   const res = await fetch(`/api/staff/${id}`, { method: "DELETE" });
-  return handleResponse(res, "Failed to delete staff record");
+  return handleResponse(res, "Failed to delete staff record", true);
 }
 
 // SCORES CRUD
@@ -127,7 +139,7 @@ export async function createTournamentScore(item: Partial<TournamentScore>): Pro
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item)
   });
-  return handleResponse(res, "Failed to create tournament result");
+  return handleResponse(res, "Failed to create tournament result", true);
 }
 
 export async function updateTournamentScore(id: string, item: Partial<TournamentScore>): Promise<{ success: boolean; item: TournamentScore }> {
@@ -136,12 +148,12 @@ export async function updateTournamentScore(id: string, item: Partial<Tournament
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item)
   });
-  return handleResponse(res, "Failed to update tournament result");
+  return handleResponse(res, "Failed to update tournament result", true);
 }
 
 export async function deleteTournamentScore(id: string): Promise<{ success: boolean }> {
   const res = await fetch(`/api/scores/${id}`, { method: "DELETE" });
-  return handleResponse(res, "Failed to delete tournament result");
+  return handleResponse(res, "Failed to delete tournament result", true);
 }
 
 // GALLERY CRUD
@@ -151,12 +163,12 @@ export async function createGalleryImage(item: Partial<GalleryImage>): Promise<{
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item)
   });
-  return handleResponse(res, "Failed to add gallery image");
+  return handleResponse(res, "Failed to add gallery image", true);
 }
 
 export async function deleteGalleryImage(id: string): Promise<{ success: boolean }> {
   const res = await fetch(`/api/gallery/${id}`, { method: "DELETE" });
-  return handleResponse(res, "Failed to delete gallery image");
+  return handleResponse(res, "Failed to delete gallery image", true);
 }
 
 // WELCOME SECTION UPDATE
@@ -166,7 +178,7 @@ export async function updateWelcomeSection(item: WelcomeSection): Promise<{ succ
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item)
   });
-  return handleResponse(res, "Failed to update welcome section");
+  return handleResponse(res, "Failed to update welcome section", true);
 }
 
 // UPCOMING ACTIVITY UPDATE
@@ -176,7 +188,7 @@ export async function updateUpcomingActivity(item: UpcomingActivity): Promise<{ 
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item)
   });
-  return handleResponse(res, "Failed to update upcoming activity");
+  return handleResponse(res, "Failed to update upcoming activity", true);
 }
 
 // SPONSORS CRUD
@@ -186,7 +198,7 @@ export async function createSponsor(item: Partial<Sponsor>): Promise<{ success: 
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item)
   });
-  return handleResponse(res, "Failed to create sponsor");
+  return handleResponse(res, "Failed to create sponsor", true);
 }
 
 export async function updateSponsor(id: string, item: Partial<Sponsor>): Promise<{ success: boolean; item: Sponsor }> {
@@ -195,12 +207,12 @@ export async function updateSponsor(id: string, item: Partial<Sponsor>): Promise
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item)
   });
-  return handleResponse(res, "Failed to update sponsor");
+  return handleResponse(res, "Failed to update sponsor", true);
 }
 
 export async function deleteSponsor(id: string): Promise<{ success: boolean }> {
   const res = await fetch(`/api/sponsors/${id}`, { method: "DELETE" });
-  return handleResponse(res, "Failed to delete sponsor");
+  return handleResponse(res, "Failed to delete sponsor", true);
 }
 
 // SITE SETTINGS UPDATE
@@ -210,7 +222,7 @@ export async function updateSiteSettings(item: SiteSettings): Promise<{ success:
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item)
   });
-  return handleResponse(res, "Failed to update site settings");
+  return handleResponse(res, "Failed to update site settings", true);
 }
 
 export async function updateSiteLabels(item: Partial<SiteLabels>): Promise<{ success: boolean; siteLabels: SiteLabels }> {
@@ -219,7 +231,7 @@ export async function updateSiteLabels(item: Partial<SiteLabels>): Promise<{ suc
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item)
   });
-  return handleResponse(res, "Failed to update site labels");
+  return handleResponse(res, "Failed to update site labels", true);
 }
 
 export async function updateSiteLabelsThai(item: Partial<SiteLabels>): Promise<{ success: boolean; siteLabelsThai: SiteLabels }> {
@@ -228,7 +240,7 @@ export async function updateSiteLabelsThai(item: Partial<SiteLabels>): Promise<{
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item)
   });
-  return handleResponse(res, "Failed to update Thai site labels");
+  return handleResponse(res, "Failed to update Thai site labels", true);
 }
 
 export async function updateHomeSponsorSection(item: HomeSponsorSection): Promise<{ success: boolean }> {
@@ -237,7 +249,7 @@ export async function updateHomeSponsorSection(item: HomeSponsorSection): Promis
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item)
   });
-  return handleResponse(res, "Failed to update home sponsor section");
+  return handleResponse(res, "Failed to update home sponsor section", true);
 }
 
 export async function updateClubActivity(item: ClubActivityContent): Promise<{ success: boolean }> {
@@ -246,7 +258,7 @@ export async function updateClubActivity(item: ClubActivityContent): Promise<{ s
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(item)
   });
-  return handleResponse(res, "Failed to update club activity content");
+  return handleResponse(res, "Failed to update club activity content", true);
 }
 
 // PHOTO FILES ASYNC UPLOADER
@@ -390,7 +402,7 @@ export async function createInstagramPost(item: Partial<InstagramPost>, token: s
     headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
     body: JSON.stringify(item)
   });
-  return handleResponse(res, "Failed to create Instagram post");
+  return handleResponse(res, "Failed to create Instagram post", true);
 }
 
 export async function deleteInstagramPost(id: string, token: string): Promise<{ success: boolean }> {
@@ -398,7 +410,7 @@ export async function deleteInstagramPost(id: string, token: string): Promise<{ 
     method: "DELETE",
     headers: { "Authorization": `Bearer ${token}` }
   });
-  return handleResponse(res, "Failed to delete Instagram post");
+  return handleResponse(res, "Failed to delete Instagram post", true);
 }
 
 // MEMBER EVENTS ORDER (admin-protected)
@@ -408,7 +420,7 @@ export async function reorderMemberEvents(orderedIds: string[], token: string): 
     headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
     body: JSON.stringify({ orderedIds })
   });
-  return handleResponse(res, "Failed to save event order");
+  return handleResponse(res, "Failed to save event order", true);
 }
 
 // SIMULATOR SECTION (admin-protected)
@@ -418,7 +430,7 @@ export async function updateSimulatorSection(data: any, token: string): Promise<
     headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
     body: JSON.stringify(data)
   });
-  return handleResponse(res, "Failed to update simulator section");
+  return handleResponse(res, "Failed to update simulator section", true);
 }
 
 // MEMBER EVENTS CRUD (admin-protected)
@@ -428,7 +440,7 @@ export async function createMemberEvent(item: Partial<MemberEvent>, token: strin
     headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
     body: JSON.stringify(item)
   });
-  return handleResponse(res, "Failed to create member event");
+  return handleResponse(res, "Failed to create member event", true);
 }
 
 export async function updateMemberEvent(id: string, item: Partial<MemberEvent>, token: string): Promise<{ success: boolean }> {
@@ -437,7 +449,7 @@ export async function updateMemberEvent(id: string, item: Partial<MemberEvent>, 
     headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
     body: JSON.stringify(item)
   });
-  return handleResponse(res, "Failed to update member event");
+  return handleResponse(res, "Failed to update member event", true);
 }
 
 export async function deleteMemberEvent(id: string, token: string): Promise<{ success: boolean }> {
@@ -445,7 +457,7 @@ export async function deleteMemberEvent(id: string, token: string): Promise<{ su
     method: "DELETE",
     headers: { "Authorization": `Bearer ${token}` }
   });
-  return handleResponse(res, "Failed to delete member event");
+  return handleResponse(res, "Failed to delete member event", true);
 }
 
 export async function syncMembersToSheets(token: string): Promise<{ success: boolean; synced?: number; total?: number; errors?: number; message?: string }> {

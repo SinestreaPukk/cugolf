@@ -1,25 +1,25 @@
 import { NewsItem, SiteLabels, SiteSettings } from"../types";
-import { Calendar, User, ArrowLeft, Clock } from"lucide-react";
-import { Link, useParams, Navigate } from"react-router-dom";
+import { ArrowLeft } from"lucide-react";
+import { Link, Navigate } from"react-router-dom";
 import { useEffect } from"react";
 import MarkdownRenderer from"./MarkdownRenderer";
+import OptimizedImage from "./OptimizedImage";
 import { AdminEditProps } from"../types";
 import { useLanguage } from "../utils/LanguageContext";
 
 interface ActivityDetailViewProps extends AdminEditProps {
- news: NewsItem[];
+ /** A single article, fetched by id — this page no longer receives the whole archive. */
+ article: NewsItem | null;
  siteLabels?: SiteLabels;
  siteSettings?: SiteSettings;
 }
 
-export default function ActivityDetailView({ news, siteLabels }: ActivityDetailViewProps) {
+export default function ActivityDetailView({ article, siteLabels }: ActivityDetailViewProps) {
  const { language } = useLanguage();
- const { id } = useParams<{ id: string }>();
- const article = news.find((item) => item.id === id);
 
  useEffect(() => {
  window.scrollTo(0, 0);
- }, [id]);
+ }, [article?.id]);
 
  if (!article) {
  return <Navigate to="/activities"replace />;
@@ -49,9 +49,12 @@ export default function ActivityDetailView({ news, siteLabels }: ActivityDetailV
  </p>
 
  <div className="aspect-video overflow-hidden border border-stone-200">
- <img 
- src={article.imageUrl} 
- alt={language === "th" && article.titleThai ? article.titleThai : article.title} 
+ <OptimizedImage
+ src={article.imageUrl}
+ alt={language === "th" && article.titleThai ? article.titleThai : article.title}
+ width={1280}
+ sizes="(min-width: 768px) 768px, 100vw"
+ priority
  className="w-full h-full object-cover"
  />
  </div>

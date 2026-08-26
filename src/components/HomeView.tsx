@@ -1,28 +1,24 @@
-import { NewsItem, TournamentScore, Player, WelcomeSection, UpcomingActivity, SiteLabels, SiteSettings, HomeSponsorSection, Sponsor, AdminEditProps, GalleryImage, ClubActivityContent, InstagramPost, SimulatorSection } from "../types";
-import { ArrowRight, Calendar, User, ChevronRight, BookOpen, Clock, Trophy, Target, MapPin, ArrowUpRight, Edit, Image } from "lucide-react";
+import { NewsItem, TournamentScore, WelcomeSection, SiteLabels, SiteSettings, HomeSponsorSection, Sponsor, AdminEditProps, InstagramPost, SimulatorSection } from "../types";
+import { ArrowRight, ChevronRight, BookOpen, Trophy, ArrowUpRight, Edit } from "lucide-react";
 import { fmtDate } from "../utils/format";
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import WelcomeSectionView from "./WelcomeSectionView";
+import OptimizedImage from "./OptimizedImage";
 import { useLanguage } from "../utils/LanguageContext";
 
 interface HomeViewProps extends AdminEditProps {
   news: NewsItem[];
   scores: TournamentScore[];
-  roster: Player[];
-  gallery: GalleryImage[];
   instagramPosts?: InstagramPost[];
   simulatorSection?: SimulatorSection;
   welcomeSection: WelcomeSection;
-  upcomingActivity: UpcomingActivity;
-  clubActivity?: ClubActivityContent;
   homeSponsorSection?: HomeSponsorSection;
   sponsors: Sponsor[];
   siteLabels?: SiteLabels;
   siteSettings?: SiteSettings;
 }
 
-export default function HomeView({ news, scores, roster, gallery, instagramPosts = [], simulatorSection, welcomeSection, upcomingActivity, clubActivity, homeSponsorSection, sponsors, siteLabels, siteSettings, isAdmin, onEditSection, activeSectionId }: HomeViewProps) {
+export default function HomeView({ news, scores, instagramPosts = [], simulatorSection, welcomeSection, homeSponsorSection, sponsors, siteLabels, siteSettings, isAdmin, onEditSection, activeSectionId }: HomeViewProps) {
  const { language } = useLanguage();
  // Sort by rank (descending) and then by date (descending)
 
@@ -74,9 +70,11 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
 
    <div className="shrink-0 relative z-10 flex flex-col items-center gap-3">
      <div className="bg-brand-neutral p-3 border-2 border-brand-neutral/20 shadow-[4px_4px_0px_rgba(218,95,142,0.4)]">
-       <img
+       <OptimizedImage
          src="/line-openchat-qr.jpeg"
          alt="Line OpenChat QR Code"
+         width={176}
+         quality={90}
          className="w-36 h-36 md:w-44 md:h-44 object-contain"
        />
      </div>
@@ -172,10 +170,13 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
        {blogs.length > 0 ? blogs.map((blog, idx) => (
          <Link key={blog.id} to={`/activities/${blog.id}`} className="group block flex flex-col h-full border border-brand-ink bg-brand-neutral shadow-[4px_4px_0px_rgba(18,18,18,0.05)] hover:shadow-none hover:translate-y-1 hover:translate-x-1 transition-all">
            <div className="relative aspect-[16/9] overflow-hidden bg-brand-stone border-b border-brand-ink shrink-0">
-             <img 
-               src={blog.imageUrl} 
-               alt={blog.title} 
-               className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105" 
+             <OptimizedImage
+               src={blog.imageUrl}
+               alt={blog.title}
+               width={640}
+               sizes="(min-width: 768px) 33vw, 100vw"
+               priority={idx === 0}
+               className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
              />
              {idx === 0 && (
                <div className="absolute top-3 left-3 bg-brand-pink text-brand-neutral font-display text-[9px] font-black px-2 py-1 uppercase tracking-widest shadow-sm">
@@ -251,9 +252,11 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
        </div>
        {/* Feature Image */}
        <div className="lg:w-1/2 h-80 lg:h-auto relative overflow-hidden bg-brand-stone order-1 lg:order-2 border-b lg:border-b-0 lg:border-l border-brand-ink">
-         <img 
-           src={homeSponsorSection?.imageUrl || "https://images.unsplash.com/photo-1593111774240-d529f52ee4de?auto=format&fit=crop&q=80&w=1200"} 
-           alt="Sponsor partnership" 
+         <OptimizedImage
+           src={homeSponsorSection?.imageUrl || "https://images.unsplash.com/photo-1593111774240-d529f52ee4de?auto=format&fit=crop&q=80&w=1200"}
+           alt="Sponsor partnership"
+           width={960}
+           sizes="(min-width: 1024px) 50vw, 100vw"
            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
          />
        </div>
@@ -272,7 +275,7 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
              {(sponsors || []).map((sponsor, idx) => (
                <div key={`${sponsor.id}-${groupIdx}-${idx}`} className="flex items-center gap-4 shrink-0 px-4">
                  {sponsor.imageUrl ? (
-                   <img src={sponsor.imageUrl} alt={language === "th" && sponsor.nameThai ? sponsor.nameThai : sponsor.name} className="h-10 md:h-12 w-auto object-contain opacity-80 mix-blend-multiply" />
+                   <OptimizedImage src={sponsor.imageUrl} alt={language === "th" && sponsor.nameThai ? sponsor.nameThai : sponsor.name} width={192} className="h-10 md:h-12 w-auto object-contain opacity-80 mix-blend-multiply" />
                  ) : (
                    <span className="font-display text-lg font-black text-stone-300 uppercase">{language === "th" && sponsor.nameThai ? sponsor.nameThai : sponsor.name}</span>
                  )}
@@ -307,14 +310,14 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
          post.postUrl ? (
            <a key={post.id} href={post.postUrl} target="_blank" rel="noopener noreferrer"
              className="relative aspect-square overflow-hidden group bg-brand-stone">
-             <img src={post.imageUrl} alt={post.caption || "Instagram post"} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
+             <OptimizedImage src={post.imageUrl} alt={post.caption || "Instagram post"} width={320} sizes="(min-width: 1024px) 16vw, (min-width: 640px) 33vw, 50vw" className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" />
              <div className="absolute inset-0 bg-brand-ink/0 group-hover:bg-brand-ink/30 transition-all duration-300 flex items-center justify-center">
                <ArrowUpRight size={20} className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
              </div>
            </a>
          ) : (
            <div key={post.id} className="relative aspect-square overflow-hidden bg-brand-stone">
-             <img src={post.imageUrl} alt={post.caption || "Instagram post"} className="w-full h-full object-cover" />
+             <OptimizedImage src={post.imageUrl} alt={post.caption || "Instagram post"} width={320} sizes="(min-width: 1024px) 16vw, (min-width: 640px) 33vw, 50vw" className="w-full h-full object-cover" />
            </div>
          )
        ))}
@@ -376,7 +379,7 @@ export default function HomeView({ news, scores, roster, gallery, instagramPosts
            <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-1">
              {simulatorSection.photos.map(photo => (
                <div key={photo.id} className="aspect-video bg-brand-neutral/10 overflow-hidden group relative">
-                 <img src={photo.imageUrl} alt={photo.caption || "Simulator room"} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
+                 <OptimizedImage src={photo.imageUrl} alt={photo.caption || "Simulator room"} width={480} sizes="(min-width: 768px) 25vw, 50vw" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
                  {photo.caption && (
                    <div className="absolute bottom-0 inset-x-0 bg-brand-ink/60 px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                      <p className="font-display text-[8px] text-brand-neutral truncate">{photo.caption}</p>

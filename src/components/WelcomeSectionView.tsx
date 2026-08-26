@@ -1,8 +1,10 @@
 import { useNavigate } from"react-router-dom";
 import { WelcomeSection, SiteLabels, AdminEditProps } from"../types";
-import golfersSilhouette from"../assets/images/golfers_silhouette.png";
-import defaultBanner from"../assets/images/regenerated_image_1779791459213.jpg";
+// WebP re-encodes of the original PNG/JPEG artwork: 1.1MB -> 135KB and 1.0MB -> 307KB.
+import golfersSilhouette from"../assets/images/golfers_silhouette.webp";
+import defaultBanner from"../assets/images/regenerated_image_1779791459213.webp";
 import { Edit } from"lucide-react";
+import OptimizedImage from "./OptimizedImage";
 import { useLanguage } from "../utils/LanguageContext";
 
 interface WelcomeSectionViewProps extends AdminEditProps {
@@ -38,10 +40,12 @@ export default function WelcomeSectionView({ welcomeSection, siteLabels, isAdmin
  )}
 
  <div className="relative w-screen left-1/2 -translate-x-1/2 -mt-10 md:-mt-14 border-b border-stone-200/80 bg-brand-ink overflow-hidden h-[320px] sm:h-[400px] md:h-[480px] transition-all duration-500">
- <img
+ <OptimizedImage
  src={welcomeSection.imageUrl || defaultBanner}
  alt="Chulalongkorn University Golf Club Team welcoming banner"
  referrerPolicy="no-referrer"
+ width={1920}
+ priority
  className="w-full h-full object-cover select-none object-center transition-transform duration-700 hover:scale-[1.01] brightness-[0.4]"
  />
  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none"/>
@@ -80,10 +84,13 @@ export default function WelcomeSectionView({ welcomeSection, siteLabels, isAdmin
  className="md:col-span-2 bg-brand-neutral flex items-center justify-center p-3.5 min-h-[210px] md:min-h-[250px] relative overflow-hidden cursor-pointer group transition-all duration-300 hover:brightness-95"
  title="Click to view our Varsity Squad Roster"
  >
+ {/* Already a fingerprinted WebP bundle asset — no need to route it through /api/img. */}
  <img
  src={golfersSilhouette}
  alt="Three Chula golfers in color silhouette overlays"
  referrerPolicy="no-referrer"
+ loading="lazy"
+ decoding="async"
  className="w-full h-auto max-h-[230px] md:max-h-[270px] scale-[1.12] md:scale-[1.18] object-contain select-none relative z-10 transition-transform duration-500 group-hover:scale-[1.25]"
  />
  </div>

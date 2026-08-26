@@ -2,6 +2,7 @@ import { Player, SiteLabels, AdminEditProps } from"../types";
 import { useState } from"react";
 import { User, Search, Filter, ShieldCheck, ChevronRight, Edit } from"lucide-react";
 import { useLanguage } from "../utils/LanguageContext";
+import OptimizedImage from "./OptimizedImage";
 
 interface RosterViewProps extends AdminEditProps {
  roster: Player[];
@@ -118,10 +119,12 @@ export default function RosterView({ roster, siteLabels, isAdmin, onEditSection,
  >
  {/* Image Showcase */}
  <div className="relative aspect-square border-b border-brand-ink overflow-hidden bg-brand-stone">
- <img
+ <OptimizedImage
  src={player.imageUrl}
  alt={player.name}
  referrerPolicy="no-referrer"
+ width={480}
+ sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
  className="h-full w-full object-cover transition-all duration-500 ease-out group-hover:scale-105"
  />
  

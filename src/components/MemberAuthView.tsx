@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { registerMember, loginMember } from "../utils/api";
 import { Member, MemberEvent, SiteSettings } from "../types";
 import { useLanguage } from "../utils/LanguageContext";
+import OptimizedImage from "./OptimizedImage";
 import { useNavigate, Link } from "react-router-dom";
 import { Loader2, CheckCircle2, Calendar, Clock, MapPin, ExternalLink, AlertCircle, X } from "lucide-react";
 import { fmtDate } from "../utils/format";
@@ -304,7 +305,7 @@ export default function MemberAuthView({
                   <div key={event.id} className="bg-brand-neutral border border-brand-ink/20 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                     {event.imageUrl && (
                       <div className="h-36 overflow-hidden">
-                        <img src={event.imageUrl} alt={event.title} className="w-full h-full object-cover" />
+                        <OptimizedImage src={event.imageUrl} alt={event.title} width={480} sizes="(min-width: 768px) 33vw, 100vw" className="w-full h-full object-cover" />
                       </div>
                     )}
                     <div className="p-4 space-y-3">
@@ -577,9 +578,11 @@ export default function MemberAuthView({
                 {language === "th" ? "เข้าร่วมกลุ่ม Line OpenChat สมาชิก CU Golf Club" : "Join the CU Golf Club Member Line OpenChat"}
               </p>
               <div className="bg-white p-2 border border-brand-ink/20 shadow-[2px_2px_0px_rgba(218,95,142,0.3)]">
-                <img
+                <OptimizedImage
                   src="/line-openchat-qr.jpeg"
                   alt="Line OpenChat QR Code — CU Golf Club Members"
+                  width={128}
+                  quality={90}
                   className="w-32 h-32 object-contain"
                 />
               </div>

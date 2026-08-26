@@ -12,3 +12,6 @@ uploads/
 
 # Legacy local database (migrated to Supabase)
 data/db.json
+
+# On-disk cache for the /api/img optimizer
+.cache/

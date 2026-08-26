@@ -1,12 +1,12 @@
-import { SiteLabels, SiteSettings, TournamentScore, ClubActivityContent, AdminEditProps } from "../types";
+import { SiteLabels, SiteSettings, ClubActivityContent, AdminEditProps } from "../types";
 import { Trophy, Edit, Calendar } from "lucide-react";
 import { fmtDate } from "../utils/format";
 import { useEffect } from "react";
+import OptimizedImage from "./OptimizedImage";
 import { useLanguage } from "../utils/LanguageContext";
 
 interface AboutClubViewProps extends AdminEditProps {
   clubActivity: ClubActivityContent;
-  scores?: TournamentScore[];
   siteLabels?: SiteLabels;
   siteSettings?: SiteSettings;
 }
@@ -58,9 +58,11 @@ export default function AboutClubView({ clubActivity, siteLabels, isAdmin, onEdi
       <section className="relative h-[40vh] w-screen left-1/2 -translate-x-1/2 flex flex-col items-center justify-center text-center overflow-hidden bg-brand-ink">
         {renderEditOverlay("ca_hero", "EDIT HERO IMAGE")}
         <div className="absolute inset-0 opacity-60">
-          <img 
-            src={clubActivity.heroImageUrl || "/uploads/windsor_team_legacy.png"} 
+          <OptimizedImage
+            src={clubActivity.heroImageUrl || "/uploads/windsor_team_legacy.png"}
             alt="CU Golf Club Team"
+            width={1920}
+            priority
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-brand-ink/50 mix-blend-multiply" />
@@ -96,9 +98,11 @@ export default function AboutClubView({ clubActivity, siteLabels, isAdmin, onEdi
                 >
                   {/* Activity Image Showcase */}
                   <div className="relative aspect-[16/10] overflow-hidden bg-brand-stone border-b border-brand-ink">
-                    <img
+                    <OptimizedImage
                       src={comp.imageUrl || "https://images.unsplash.com/photo-1587174486073-ae5e5cff23aa?auto=format&fit=crop&q=80&w=800"}
                       alt={language === "th" && comp.titleThai ? comp.titleThai : comp.title}
+                      width={640}
+                      sizes="(min-width: 768px) 50vw, 100vw"
                       className="w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-105"
                     />
                     {diffVal && (

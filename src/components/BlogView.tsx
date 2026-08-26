@@ -1,15 +1,20 @@
 import { NewsItem, SiteLabels, SiteSettings, AdminEditProps } from"../types";
-import { ArrowRight, Calendar, Clock, BookOpen, ChevronRight, Edit } from"lucide-react";
+import { BookOpen, ChevronRight, Edit, Loader2 } from"lucide-react";
 import { Link } from"react-router-dom";
+import OptimizedImage from "./OptimizedImage";
 import { useLanguage } from "../utils/LanguageContext";
 
 interface BlogViewProps extends AdminEditProps {
  news: NewsItem[];
  siteLabels?: SiteLabels;
  siteSettings?: SiteSettings;
+ /** Set when the archive has more pages than the ones already fetched. */
+ hasMore?: boolean;
+ loadingMore?: boolean;
+ onLoadMore?: () => void;
 }
 
-export default function BlogView({ news, siteLabels, siteSettings, isAdmin, onEditSection, activeSectionId }: BlogViewProps) {
+export default function BlogView({ news, siteLabels, hasMore, loadingMore, onLoadMore, isAdmin, onEditSection, activeSectionId }: BlogViewProps) {
  const { language } = useLanguage();
  // Sort by rank (descending) and then by date (descending)
  const sortedNews = [...news].filter(n => n.isVisible !== false).sort((a, b) => {
@@ -67,10 +72,12 @@ export default function BlogView({ news, siteLabels, siteSettings, isAdmin, onEd
  >
  {/* Image Showcase */}
  <div className="relative aspect-[16/9] border-b border-neutral-100 overflow-hidden bg-stone-50">
- <img
+ <OptimizedImage
    src={blog.imageUrl}
    alt={language === "th" && blog.titleThai ? blog.titleThai : blog.title}
    referrerPolicy="no-referrer"
+   width={640}
+   sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
  />
  </div>
@@ -98,7 +105,22 @@ export default function BlogView({ news, siteLabels, siteSettings, isAdmin, onEd
  </Link>
  ))}
  </div>
- ) : (
+ ) : null}
+
+ {sortedNews.length > 0 && hasMore && (
+ <div className="flex justify-center pt-12">
+ <button
+ onClick={onLoadMore}
+ disabled={loadingMore}
+ className="inline-flex items-center gap-2 border-2 border-[#121212] bg-white px-10 py-4 font-display text-[10px] font-black tracking-widest uppercase text-neutral-950 transition-all hover:bg-[#da5f8e] hover:text-white disabled:opacity-50 cursor-pointer"
+ >
+ {loadingMore && <Loader2 size={14} className="animate-spin" />}
+ {loadingMore ? "LOADING…" : "LOAD MORE STORIES"}
+ </button>
+ </div>
+ )}
+
+ {sortedNews.length === 0 && (
  <div className="border border-dashed border-[#121212] p-20 text-center max-w-xl mx-auto bg-neutral-50">
  <BookOpen size={48} strokeWidth={1} className="mx-auto text-neutral-300 mb-6"/>
  <h3 className="font-display text-xl font-bold uppercase text-neutral-950 mb-3">
